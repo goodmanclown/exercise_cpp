@@ -2,15 +2,15 @@
  * a class representing the name index of phone book
  */
 
-#include "TrinaryTree.hxx"
+#include "BinaryTree.hxx"
 
 class PhoneBookEntry;
 
 
 /**
- * this is a class representing the name index of phone book, implemented as a TrinaryTree
+ * this is a class representing the name index of phone book, implemented as a BinaryTree
  */
-class PhoneBookNameIndex : public TrinaryTree {
+class PhoneBookNameIndex : public BinaryTree {
 
 public:
 

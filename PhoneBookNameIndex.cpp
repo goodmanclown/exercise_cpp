@@ -10,7 +10,7 @@ bool PhoneBookNameIndex::add(const char name[], PhoneBookEntry* entry)
 	// look up each character in the tree
 	uint32_t len = strlen(name);
 	uint32_t index = 0;
-	PhoneBookNameIndexEntry* node = dynamic_cast<PhoneBookNameIndexEntry*>(find(name[index]));
+	PhoneBookNameIndexEntry* node = dynamic_cast<PhoneBookNameIndexEntry*>(find(name[index++]));
 	for (; index < len && NULL != node; index++) {
 		node = dynamic_cast<PhoneBookNameIndexEntry*>(find(name[index]));
 	}

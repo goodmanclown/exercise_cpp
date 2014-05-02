@@ -1,12 +1,12 @@
 /**
  * class representing an entry in the name index of phone book
- * it is a subclass of TrinaryTreeNode since it will be stored in a TrinaryTree
+ * it is a subclass of BinaryTreeNode since it will be stored in a BinaryTree
  * each character of a name is stored as a value of the node
  * 
  * the node of the last character of the store will have a list of PhoneBookEntry of the name
  */ 
 
-#include "TrinaryTreeNode.hxx"
+#include "BinaryTreeNode.hxx"
 
 #include "PhoneBook.hxx"
 
@@ -14,7 +14,7 @@
 #include <string.h>
 
 
-class PhoneBookNameIndexEntry : public TrinaryTreeNode {
+class PhoneBookNameIndexEntry : public BinaryTreeNode {
 
 public:
 
@@ -25,7 +25,7 @@ public:
 	 * @param: name - a character of the name
 	 *
 	 */
-	PhoneBookNameIndexEntry(char name):TrinaryTreeNode(name) { };
+	PhoneBookNameIndexEntry(char name):BinaryTreeNode(name) { };
 
 
 	/**
