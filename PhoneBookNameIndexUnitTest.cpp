@@ -113,6 +113,10 @@ TEST(PhoneBookNameIndexUnitTest, add) {
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
+	ret =  tree.add("tim", entry);
+	EXPECT_EQ(false, ret);
+	cout << tree << endl;
+
   // <TechnicalDetails>
   //
   // EXPECT_EQ(expected, actual) is the same as
@@ -129,6 +133,61 @@ TEST(PhoneBookNameIndexUnitTest, add) {
   // </TechnicalDetails>
 }
 
+
+// Tests member api remove
+TEST(PhoneBookNameIndexUnitTest, remove) {
+
+	PhoneBookNameIndex tree;
+
+	PhoneBookEntry* entry = new PhoneBookEntry("joe", 4083339999, "san jose");
+
+	bool ret =  tree.add("joe", entry);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	entry = new PhoneBookEntry("jane", 4083329999, "san bruno");
+
+	ret =  tree.add("jane", entry);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	entry = new PhoneBookEntry("dave", 4083334999, "santa clara");
+
+	ret =  tree.add("dave", entry);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	entry = new PhoneBookEntry("mary", 4083359999, "sunnyvale");
+
+	ret =  tree.add("mary", entry);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	entry = new PhoneBookEntry("tim", 4083350000, "sunnyvale");
+
+	ret =  tree.add("tim", entry);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret =  tree.remove("mary");
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
 
 // Step 3. Call RUN_ALL_TESTS() in main().
 //

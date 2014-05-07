@@ -320,6 +320,8 @@ private:
     */
    BinaryTreeNode<T>* find(T value, BinaryTreeNode<T>& node)
    {
+		std::cout << "find " << value << ", " << node.getValue() << std::endl;
+
       // if the input node has the same value
       if (node.getValue() == value) return &node;
       else {
@@ -328,7 +330,7 @@ private:
 
          if (NULL != nextNode) {
             // move down the node to find another node that matches the input value
-            find(value, *nextNode);
+            return find(value, *nextNode);
          }
 
          // no next node, the input value is not in the tree
@@ -352,11 +354,13 @@ private:
 
       // print out less than nodes
       if (NULL != node.getLessThanPtr()) {
+      	out << "L ";
          traverse(out, *node.getLessThanPtr());
       }
 
       // print out greater than nodes
       if (NULL != node.getGreaterThanPtr()) {
+      	out << "R ";
          traverse(out, *node.getGreaterThanPtr());
       }
 
