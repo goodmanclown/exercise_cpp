@@ -74,15 +74,16 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 
-BinaryTreeNode.o : $(USER_DIR)/BinaryTreeNode.cpp $(USER_DIR)/BinaryTreeNode.hxx $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/BinaryTreeNode.cpp
+#BinaryTreeNode.o : $(USER_DIR)/BinaryTreeNode.cpp $(USER_DIR)/BinaryTreeNode.hxx $(GTEST_HEADERS)
+#	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/BinaryTreeNode.cpp
 
-BinaryTree.o : $(USER_DIR)/BinaryTree.cpp $(USER_DIR)/BinaryTree.hxx $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/BinaryTree.cpp
+#BinaryTree.o : $(USER_DIR)/BinaryTree.cpp $(USER_DIR)/BinaryTree.hxx $(GTEST_HEADERS)
+#	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/BinaryTree.cpp
 
 BinaryTreeUnitTest.o : $(USER_DIR)/BinaryTreeUnitTest.cpp \
                      $(USER_DIR)/BinaryTree.hxx $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/BinaryTreeUnitTest.cpp
 
-BinaryTreeUnitTest : BinaryTreeUnitTest.o BinaryTree.o BinaryTreeNode.o gtest_main.a
+#BinaryTreeUnitTest : BinaryTreeUnitTest.o BinaryTree.o BinaryTreeNode.o gtest_main.a
+BinaryTreeUnitTest : BinaryTreeUnitTest.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@

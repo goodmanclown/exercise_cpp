@@ -95,6 +95,24 @@ TEST(PhoneBookNameIndexUnitTest, add) {
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
+	entry = new PhoneBookEntry("dave", 4083334999, "santa clara");
+
+	ret =  tree.add("dave", entry);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	entry = new PhoneBookEntry("mary", 4083359999, "sunnyvale");
+
+	ret =  tree.add("mary", entry);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	entry = new PhoneBookEntry("tim", 4083350000, "sunnyvale");
+
+	ret =  tree.add("tim", entry);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
   // <TechnicalDetails>
   //
   // EXPECT_EQ(expected, actual) is the same as
