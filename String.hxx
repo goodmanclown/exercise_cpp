@@ -39,8 +39,6 @@ public:
 
 private:
 	
-	bool match(uint32_t index, const char str[]);
-
 	/**
 	 * length of string
 	 */
