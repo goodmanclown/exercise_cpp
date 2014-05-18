@@ -4,13 +4,17 @@
 
 #include "BinaryTree.hxx"
 
+#include <string>
+
+using std::string;
+
 class PhoneBookEntry;
 
 
 /**
  * this is a class representing the name index of phone book, implemented as a BinaryTree
  */
-class PhoneBookNameIndex : public BinaryTree {
+class PhoneBookNameIndex : public BinaryTree<string> {
 
 public:
 

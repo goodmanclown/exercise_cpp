@@ -49,7 +49,12 @@ public:
 	 *
 	 * @return value of mGreaterThanPtr, or mLessThanPtr
     */
-	BinaryTreeNode<T>* getPtr(const BinaryTreeNode<T>& rhs) const;
+	BinaryTreeNode<T>* getPtr(const BinaryTreeNode<T>& rhs) const { 
+		if (rhs > *this) return mGreaterThanPtr; 
+		else if (rhs < *this) return mLessThanPtr; 
+
+		return NULL;
+	};
 
 
 	/**
@@ -59,7 +64,14 @@ public:
 	 *
 	 * @return value of mGreaterThanPtr, or mLessThanPtr
     */
-	BinaryTreeNode<T>* getPtr(uint32_t rhs) const;
+	BinaryTreeNode<T>* getPtr(T rhs) const
+	{ 
+		if (*this < rhs) return mGreaterThanPtr; 
+		else if (*this > rhs) return mLessThanPtr; 
+
+		return NULL;
+	};
+
 
 
 	/**
@@ -67,7 +79,14 @@ public:
     * 				 if input has value greater than this node, set to mGreaterThanPtr
     * 				 if input has value less than this node, set to mLessThanPtr
     */
-	void setPtr(BinaryTreeNode<T>* ptr);
+	void setPtr(BinaryTreeNode<T>* ptr)
+	{
+		// is input a null pointer
+		if (NULL == ptr) return;
+
+		if (*ptr > *this) mGreaterThanPtr = ptr;
+		else if (*ptr < *this) mLessThanPtr = ptr;
+	};
 
 
 	/**
@@ -77,7 +96,19 @@ public:
 	 *
 	 * @return true if remove ok, false if input value does not match with this node, or this node has no ptr set
     */
-	bool remove(const BinaryTreeNode<T>& rhs);
+	bool remove(const BinaryTreeNode<T>& rhs)
+	{ 
+		if (NULL != mGreaterThanPtr && rhs == *mGreaterThanPtr) {
+			mGreaterThanPtr = NULL;
+			return true;
+		}
+		else if (NULL != mLessThanPtr && rhs == *mLessThanPtr) {
+			mLessThanPtr = NULL;
+			return true;
+		}
+
+		return false;
+	};
 
 
 	/**
@@ -173,7 +204,7 @@ private:
 	 * @param: rhs - value to copied from
 	 *
 	 */
-	BinaryTreeNode<T>& operator=(const BinaryTreeNode<T>& rhs);
+	BinaryTreeNode<T>& operator=(const BinaryTreeNode<T>& rhs) { };
 
 
 	/**

@@ -8,13 +8,13 @@
 
 #include "BinaryTreeNode.hxx"
 
-#include "PhoneBook.hxx"
+#include <string>
 
-#include <stdint.h>
-#include <string.h>
+using std::string;
 
+class PhoneBookEntry;
 
-class PhoneBookNameIndexEntry : public BinaryTreeNode {
+class PhoneBookNameIndexEntry : public BinaryTreeNode<string> {
 
 public:
 
@@ -25,7 +25,7 @@ public:
 	 * @param: name - a character of the name
 	 *
 	 */
-	PhoneBookNameIndexEntry(char name):BinaryTreeNode(name) { };
+	PhoneBookNameIndexEntry(const string& name):BinaryTreeNode<string>(name) { };
 
 
 	/**
@@ -36,9 +36,16 @@ public:
 
 	/**
 	 *
-	 * @return a reference to mPhoneBook
+	 * @return a pointer to mPhoneBookEntry
 	 */
-	PhoneBook& getPhoneBook() { return mPhoneBook; };
+	PhoneBookEntry* getPhoneBookEntry() { return mPhoneBookEntry; };
+
+
+	/**
+	 *
+	 * @param entry - a pointer to mPhoneBookEntry
+	 */
+	void setPhoneBookEntry(PhoneBookEntry* entry) { mPhoneBookEntry = entry; };
 
 
 protected:
@@ -47,9 +54,9 @@ protected:
 private:
 
 	/**
-	 * a PhoneBook
+	 * a PhoneBookEntry
 	 */
-	PhoneBook		mPhoneBook;
+	PhoneBookEntry*	mPhoneBookEntry;
 
 };
 

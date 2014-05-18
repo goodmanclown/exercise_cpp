@@ -252,7 +252,7 @@ TrinaryTreeNodePtr TrinaryTree::find(uint32_t value, TrinaryTreeNode& node)
 
 		if (NULL != nextNode) {
 			// move down the node to find another node that matches the input value
-			find(value, *nextNode);
+			return find(value, *nextNode);
 		}
 
 		// no next node, the input value is not in the tree

@@ -1,3 +1,6 @@
+#ifndef __PHONE_BOOK_ENTRY_
+#define _PHONE_BOOK_ENTRY_
+
 /**
  * class representing an entry in the phone book
  * it is a subclass of SingLinkedListNode since it will be stored in a singular linked list
@@ -153,4 +156,4 @@ private:
 
 };
 
-
+#endif // _PHONE_BOOK_ENTRY_

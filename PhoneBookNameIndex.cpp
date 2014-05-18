@@ -7,41 +7,21 @@ using namespace std;
 
 bool PhoneBookNameIndex::add(const char name[], PhoneBookEntry* entry)
 {
-	// look up each character in the tree
-	uint32_t len = strlen(name);
-	uint32_t index = 0;
-	PhoneBookNameIndexEntry* node = dynamic_cast<PhoneBookNameIndexEntry*>(find(name[index++]));
-	for (; index < len && NULL != node; index++) {
-		node = dynamic_cast<PhoneBookNameIndexEntry*>(find(name[index]));
-	}
-	
-	if (index == len) {
-		// this name is already in the tree
-		// add the entry to the last node
-		if (NULL != node) {
-			node->getPhoneBook().add(entry); 
-			return true;
-		}
-	}
-	else {
+	// look up the name in the tree
+	string nameIndex = name;
+	BinaryTreeNode<string>* node = find(nameIndex);
+
+	if (NULL == node) {
 		// the full name is not in the tree
-		// add the remaining character to the tree
-		bool ret = true;
-		PhoneBookNameIndexEntry* node = NULL;
-		for (; index < len && ret == true; index++) {
-
-			node = new (nothrow) PhoneBookNameIndexEntry(name[index]);
-			if (NULL == node) return false;
-
-			ret = insert(node);
-		}
+		PhoneBookNameIndexEntry* index = new PhoneBookNameIndexEntry(nameIndex);
+		bool ret = insert(index);
 	
 		if (true == ret) {
-			// all the nodes have been inserted
+			// find the name again
+			PhoneBookNameIndexEntry* node = dynamic_cast<PhoneBookNameIndexEntry*>(find(nameIndex));
+			if (node) {
+				node->setPhoneBookEntry(entry);
 
-			// add the entry to the last node
-			if (NULL != node) {
-				node->getPhoneBook().add(entry); 
 				return true;
 			}
 		}
@@ -52,7 +32,15 @@ bool PhoneBookNameIndex::add(const char name[], PhoneBookEntry* entry)
 	
 bool PhoneBookNameIndex::remove(const char name[])
 {
-	return true;
+	// look up the name in the tree
+	string nameIndex = name;
+	BinaryTreeNode<string>* node = find(nameIndex);
+
+	if (NULL != node) {
+		return BinaryTree<string>::remove(nameIndex);
+	}
+
+	return false;
 }
 
 
