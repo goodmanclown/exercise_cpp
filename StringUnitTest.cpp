@@ -107,6 +107,68 @@ TEST(StringUnitTest, find) {
 }
 
 
+// Tests member api indexOf
+TEST(StringUnitTest, indexOf) {
+
+	String mep("abcdefghdefgh");
+
+	EXPECT_EQ(3, mep.indexOf("def"));
+
+	EXPECT_EQ(-1, mep.indexOf("dfe"));
+
+	EXPECT_EQ(-1, mep.indexOf("deg"));
+
+	EXPECT_EQ(6, mep.indexOf("gh"));
+
+	EXPECT_EQ(-1, mep.indexOf("ghi"));
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests member api lastIndexOf
+TEST(StringUnitTest, lastIndexOf) {
+
+	String mep("abcdefghdefgh");
+
+	EXPECT_EQ(8, mep.lastIndexOf("def"));
+
+	EXPECT_EQ(-1, mep.lastIndexOf("dfe"));
+
+	EXPECT_EQ(-1, mep.lastIndexOf("deg"));
+
+	EXPECT_EQ(11, mep.lastIndexOf("gh"));
+
+	EXPECT_EQ(-1, mep.lastIndexOf("ghi"));
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
 // Step 3. Call RUN_ALL_TESTS() in main().
 //
 // We do this by linking in src/gtest_main.cc file, which consists of

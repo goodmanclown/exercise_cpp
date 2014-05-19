@@ -1,6 +1,14 @@
 #include <stdint.h>
 
 #include <string.h>
+#include <vector>
+#include <string>
+
+using std::string;
+using std::vector;
+
+
+
 
 /**
  * class representing a string
@@ -35,7 +43,26 @@ public:
 	/**
 	 * @return true if input str is a substring 
 	 */
-	bool find(const char str[]);
+	bool find(const char str[]) const;
+
+
+	/**
+	 * @return index of 1st occurence of input str.  -1 otherwise
+	 */
+	int indexOf(const char str[]) const;
+
+
+	/**
+	 * @return index of last occurence of input str.  -1 otherwise
+	 */
+	int lastIndexOf(const char str[]) const;
+
+
+	/**
+	 * @return number of splitted string in output vector.  0 otherwise
+	 */
+	uint32_t split(const char delimit[], vector<string>& output) const;
+
 
 private:
 	
@@ -48,6 +75,7 @@ private:
 	/**
 	 * string
 	 */
-	char*		mStr; };
+	char*		mStr; 
+};
 
 
