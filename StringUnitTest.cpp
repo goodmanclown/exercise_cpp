@@ -169,6 +169,31 @@ TEST(StringUnitTest, lastIndexOf) {
   // </TechnicalDetails>
 }
 
+// Tests member api split
+TEST(StringUnitTest, split) {
+
+	String mep("abcd;efgh;defgh");
+	vector<String> output;
+	uint32_t ret = mep.split(';', output);
+
+	EXPECT_EQ(3, ret);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
 // Step 3. Call RUN_ALL_TESTS() in main().
 //
 // We do this by linking in src/gtest_main.cc file, which consists of

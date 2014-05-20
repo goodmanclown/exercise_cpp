@@ -2,11 +2,8 @@
 
 #include <string.h>
 #include <vector>
-#include <string>
 
-using std::string;
 using std::vector;
-
 
 
 
@@ -35,9 +32,67 @@ public:
 
 
 	/**
+	 * Constructor
+	 *
+	 */
+	String():mLen(0),mStr(NULL) { 
+	};
+
+
+	/**
+	 * Constructor
+	 *
+	 * @param: str 
+	 * @param: len 
+	 *
+	 */
+	String(const char str[], uint32_t len) { 
+		mLen = len;
+
+		mStr = new char[mLen];
+
+		strncpy(mStr, str, mLen);
+	};
+
+
+	/**
+	 * Constructor
+	 *
+	 * @param: rhs 
+	 *
+	 */
+	String(const String& rhs) { 
+		mLen = rhs.mLen;
+
+		mStr = new char[mLen];
+
+		strncpy(mStr, rhs.mStr, mLen);
+	};
+
+
+	/**
 	 * Destructor
 	 */
 	virtual ~String() { delete [] mStr; };
+
+
+	/**
+	 * assignment operator
+	 *
+	 * @param: rhs 
+	 *
+	 */
+	String& operator=(const String& rhs) { 
+		if (this == &rhs) return *this;
+
+		mLen = rhs.mLen;
+
+		mStr = new char[mLen];
+
+		strncpy(mStr, rhs.mStr, mLen);
+
+		return *this;
+	};
 
 
 	/**
@@ -61,7 +116,7 @@ public:
 	/**
 	 * @return number of splitted string in output vector.  0 otherwise
 	 */
-	uint32_t split(const char delimit[], vector<string>& output) const;
+	uint32_t split(char delimit, vector<String>& output) const;
 
 
 private:
