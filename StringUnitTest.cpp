@@ -177,6 +177,39 @@ TEST(StringUnitTest, split) {
 	uint32_t ret = mep.split(';', output);
 
 	EXPECT_EQ(3, ret);
+	EXPECT_EQ(String("abcd"), output[0]);
+	EXPECT_EQ(String("efgh"), output[1]);
+	EXPECT_EQ(String("defgh"), output[2]);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
+// Tests member api split
+TEST(StringUnitTest, splitArray) {
+
+	String mep("/abcd/;efgh;/defgh;12345");
+	vector<String> output;
+	uint32_t ret = mep.split(";/", output);
+
+	EXPECT_EQ(4, ret);
+	EXPECT_EQ(String("abcd"), output[0]);
+	EXPECT_EQ(String("efgh"), output[1]);
+	EXPECT_EQ(String("defgh"), output[2]);
+	EXPECT_EQ(String("12345"), output[3]);
 
   // <TechnicalDetails>
   //

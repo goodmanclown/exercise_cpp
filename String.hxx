@@ -96,6 +96,24 @@ public:
 
 
 	/**
+	 * equal operator
+	 *
+	 * @param: rhs 
+	 * @return true if equal 
+	 *
+	 */
+	bool operator==(const String& rhs) const { 
+		if (this == &rhs) return true;
+
+		if (mLen != rhs.mLen) return false;
+
+		if (strncmp(mStr, rhs.mStr, mLen) != 0) return false;
+
+		return true;
+	};
+
+
+	/**
 	 * @return true if input str is a substring 
 	 */
 	bool find(const char str[]) const;
@@ -111,6 +129,13 @@ public:
 	 * @return index of last occurence of input str.  -1 otherwise
 	 */
 	int lastIndexOf(const char str[]) const;
+
+
+	/**
+	 * @return number of splitted string in output vector.  0 otherwise
+	 */
+	uint32_t split(const char delimit[], vector<String>& output) const;
+
 
 
 	/**
