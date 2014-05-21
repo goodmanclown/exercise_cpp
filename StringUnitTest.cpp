@@ -227,6 +227,88 @@ TEST(StringUnitTest, splitArray) {
   // </TechnicalDetails>
 }
 
+// Tests member api split
+TEST(StringUnitTest, splitWord) {
+
+	String mep("applewood");
+
+	string splitted;
+	bool ret = mep.split(splitted);
+
+	EXPECT_TRUE(ret);
+	EXPECT_EQ("apple wood", splitted);
+
+	splitted = "";
+
+	String mep1("orange");
+	ret = mep1.split(splitted);
+
+	EXPECT_FALSE(ret);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests member api shuffle
+TEST(StringUnitTest, shuffle) {
+
+	String mep("a");
+
+	vector<string> output;
+	output.clear();
+	uint32_t ret = mep.shuffle(output);
+
+	EXPECT_EQ(1, ret);
+
+	String mep1("ab");
+
+	output.clear();
+	ret = mep1.shuffle(output);
+
+	EXPECT_EQ(2, ret);
+
+	String mep2("abc");
+
+	output.clear();
+	ret = mep2.shuffle(output);
+
+	EXPECT_EQ(6, ret);
+
+	String mep3("abcd");
+
+	output.clear();
+	ret = mep3.shuffle(output);
+
+	EXPECT_EQ(24, ret);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
 // Step 3. Call RUN_ALL_TESTS() in main().
 //
 // We do this by linking in src/gtest_main.cc file, which consists of

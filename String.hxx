@@ -2,8 +2,10 @@
 
 #include <string.h>
 #include <vector>
+#include <string>
 
 using std::vector;
+using std::string;
 
 
 
@@ -25,9 +27,11 @@ public:
 	String(const char str[]) { 
 		mLen = strlen(str);
 
-		mStr = new char[mLen];
+		mStr = new char[mLen+1];
 
 		strncpy(mStr, str, mLen);
+
+		mStr[mLen] = '\0';
 	};
 
 
@@ -49,9 +53,11 @@ public:
 	String(const char str[], uint32_t len) { 
 		mLen = len;
 
-		mStr = new char[mLen];
+		mStr = new char[mLen+1];
 
 		strncpy(mStr, str, mLen);
+
+		mStr[mLen] = '\0';
 	};
 
 
@@ -64,9 +70,14 @@ public:
 	String(const String& rhs) { 
 		mLen = rhs.mLen;
 
-		mStr = new char[mLen];
+		mStr = NULL;
+		if (mLen) {
+			mStr = new char[mLen+1];
 
-		strncpy(mStr, rhs.mStr, mLen);
+			strncpy(mStr, rhs.mStr, mLen);
+
+			mStr[mLen] = '\0';
+		}
 	};
 
 
@@ -87,9 +98,14 @@ public:
 
 		mLen = rhs.mLen;
 
-		mStr = new char[mLen];
+		mStr = NULL;
+		if (mLen) {
+			mStr = new char[mLen+1];
 
-		strncpy(mStr, rhs.mStr, mLen);
+			strncpy(mStr, rhs.mStr, mLen);
+
+			mStr[mLen] = '\0';
+		}
 
 		return *this;
 	};
@@ -144,8 +160,40 @@ public:
 	uint32_t split(char delimit, vector<String>& output) const;
 
 
+	/**
+	 * @return true if this string is splitted into multiple words 
+	 */
+	bool split(string& splitted) const;
+
+
+	/**
+	 * @return number of combination
+	 */
+	uint32_t shuffle(vector<string>& output) const;
+
+
 private:
 	
+
+	/**
+	 * @return true if this string is splitted into multiple words 
+	 */
+	bool split(const char word[], uint32_t len, string& splitted) const;
+
+
+
+	/**
+	 * @return number of combination
+	 */
+	uint32_t shuffle(const char word[], uint32_t len, vector<string>& output) const;
+
+
+	/**
+	 * @return true if input is a word in the internal word list
+    */
+	bool isWord(const char word[], uint32_t len) const;
+
+
 	/**
 	 * length of string
 	 */
