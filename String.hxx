@@ -189,9 +189,15 @@ private:
 
 
 	/**
+	 * @return number of combination
+	 */
+	uint32_t shuffleBySwap(const char word[], uint32_t len, vector<string>& output) const;
+
+
+	/**
 	 * @return true if input is a word in the internal word list
     */
-	bool isWord(const char word[], uint32_t len) const;
+	bool isWord(char word[], uint32_t len) const;
 
 
 	/**

@@ -292,17 +292,15 @@ uint32_t String::shuffle(const char word[], uint32_t len, vector<string>& output
 
 	// make a copy of the input string
 	char* temp = new char[len+1];
-
-	strncpy(temp, word, len);
-
-	temp[len] = '\0';
 	
 	for (uint32_t index = 0; index < len; index++) {
 
-		if (index > 0) {
-			// recopy the input
-			strncpy(temp, word, len);
+		// copy the input to a temp 
+		strncpy(temp, word, len);
+		temp[len] = '\0';
 
+		if (index > 0) {
+			// do this swap if not the 1st time in this loop
 			// swap the 1st character with the character at index to form a new combination
 			char tmp = temp[0];
 			temp[0] = temp[index];
@@ -325,6 +323,32 @@ uint32_t String::shuffle(const char word[], uint32_t len, vector<string>& output
 	} 
 
 	delete [] temp;
+
+	return output.size();
+}
+
+
+uint32_t String::shuffleBySwap(char word[], uint32_t len, vector<string>& output) const 
+{
+	if (len == 0) return 0;
+	
+	if (len == 1) {
+		output.push_back(string(word, len));
+		return 1;
+	}
+
+	for (uint32_t outerLoop = 0; outerLoop < len; outerLoop++) {
+
+		for (uint32_t innerLoop = 0; innerLoop < len-1; innerLoop++) {
+			// shuffle the characters by swapping without neighbor
+			char temp = word[innerLoop];
+			word[innerLoop] = word[innerLoop+1];
+			word[innerLoop+1] = temp;
+
+			// add the combination to the output vector
+			output.push_back(string(word, len));		
+		}
+	} 
 
 	return output.size();
 }
