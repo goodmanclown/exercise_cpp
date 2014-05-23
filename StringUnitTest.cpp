@@ -47,6 +47,7 @@
 #include "String.hxx"
 #include "gtest/gtest.h"
 
+using namespace std;
 
 // Step 2. Use the TEST macro to define your tests.
 //
@@ -278,6 +279,13 @@ TEST(StringUnitTest, shuffle) {
 	ret = mep1.shuffle(output);
 
 	EXPECT_EQ(2, ret);
+	
+	cout << "input ab" << endl;
+	cout << "output" << endl;
+	for (uint32_t i=0; i<ret; i++) 
+		cout << output[i] << endl;
+
+	cout << "input " << mep1.data() << endl;
 
 	String mep2("abc");
 
@@ -286,12 +294,26 @@ TEST(StringUnitTest, shuffle) {
 
 	EXPECT_EQ(6, ret);
 
+	cout << "input abc" << endl;
+	cout << "output" << endl;
+	for (uint32_t i=0; i<ret; i++) 
+		cout << output[i] << endl;
+
+	cout << "input " << mep2.data() << endl;
+
 	String mep3("abcd");
 
 	output.clear();
 	ret = mep3.shuffle(output);
 
 	EXPECT_EQ(24, ret);
+
+	cout << "input abcd" << endl;
+	cout << "output" << endl;
+	for (uint32_t i=0; i<ret; i++) 
+		cout << output[i] << endl;
+
+	cout << "input " << mep3.data() << endl;
 
   // <TechnicalDetails>
   //

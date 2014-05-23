@@ -172,6 +172,11 @@ public:
 	uint32_t shuffle(vector<string>& output) const;
 
 
+	/**
+	 * @return mStr
+	 */
+	const char* data() const { return mStr; };
+
 private:
 	
 
@@ -185,19 +190,13 @@ private:
 	/**
 	 * @return number of combination
 	 */
-	uint32_t shuffle(const char word[], uint32_t len, vector<string>& output) const;
-
-
-	/**
-	 * @return number of combination
-	 */
-	uint32_t shuffleBySwap(const char word[], uint32_t len, vector<string>& output) const;
+	uint32_t shuffle(char word[], uint32_t len, vector<string>& output) const;
 
 
 	/**
 	 * @return true if input is a word in the internal word list
     */
-	bool isWord(char word[], uint32_t len) const;
+	bool isWord(const char word[], uint32_t len) const;
 
 
 	/**

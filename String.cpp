@@ -250,22 +250,13 @@ uint32_t String::shuffle(vector<string>& output) const
 {
 	if (mLen == 0) return 0;
 
-	// make a copy of the internal string without spaces
-	char* temp = new char[mLen+1];
-
-	strncpy(temp, mStr, mLen);
-
-	temp[mLen] = '\0';
-	
-	uint32_t ret = shuffle(temp, mLen, output);
+	uint32_t ret = shuffle(mStr, mLen, output);
 		
-	delete [] temp;
-
 	return ret;
 }
 
 
-uint32_t String::shuffle(const char word[], uint32_t len, vector<string>& output) const 
+uint32_t String::shuffle(char word[], uint32_t len, vector<string>& output) const 
 {
 	if (len == 0) return 0;
 	
@@ -275,78 +266,47 @@ uint32_t String::shuffle(const char word[], uint32_t len, vector<string>& output
 	}
 
 	if (len == 2) {
-		output.push_back(string(word, len));
 
 		// swap the 2 characters to make the combination
-		char* temp = new char[len+1];
-		temp[0] = word[1];
-		temp[1] = word[0];
-		temp[len] = '\0';
+		char temp = word[0];
+		word[0] = word[1];
+		word[1] = temp;
+		output.push_back(string(word, len));
 
-		output.push_back(string(temp, len));
-
-		delete [] temp;
+		// swap again the 2 characters to make the combination, and restore the input
+		temp = word[0];
+		word[0] = word[1];
+		word[1] = temp;
+		output.push_back(string(word, len));
 
 		return 2;
 	} 
 
-	// make a copy of the input string
-	char* temp = new char[len+1];
-	
-	for (uint32_t index = 0; index < len; index++) {
-
-		// copy the input to a temp 
-		strncpy(temp, word, len);
-		temp[len] = '\0';
-
+	for (uint32_t index=0; index < len; index++) {
 		if (index > 0) {
-			// do this swap if not the 1st time in this loop
-			// swap the 1st character with the character at index to form a new combination
-			char tmp = temp[0];
-			temp[0] = temp[index];
-			temp[index] = tmp;
+			char temp = word[0];
+			word[0] = word[index];
+			word[index] = temp;
 		}
 
-		// call this api again with the substring
+		// call this api again with the new string
 		vector<string> output1;
 		output1.clear();
-		uint32_t ret = shuffle(&temp[1], len-1, output1);
+		uint32_t ret = shuffle(&word[1], len-1, output1);
 
 		if (ret > 0) {
 			// make a combination using the 1st character with output1 
 			for (uint32_t j=0; j < ret; j++) {
-				string str = string(temp, 1);
+				string str = string(word, 1);
 				str += output1[j];
 				output.push_back(str);
 			}
 		}
-	} 
 
-	delete [] temp;
-
-	return output.size();
-}
-
-
-uint32_t String::shuffleBySwap(char word[], uint32_t len, vector<string>& output) const 
-{
-	if (len == 0) return 0;
-	
-	if (len == 1) {
-		output.push_back(string(word, len));
-		return 1;
-	}
-
-	for (uint32_t outerLoop = 0; outerLoop < len; outerLoop++) {
-
-		for (uint32_t innerLoop = 0; innerLoop < len-1; innerLoop++) {
-			// shuffle the characters by swapping without neighbor
-			char temp = word[innerLoop];
-			word[innerLoop] = word[innerLoop+1];
-			word[innerLoop+1] = temp;
-
-			// add the combination to the output vector
-			output.push_back(string(word, len));		
+		if (index > 0) {
+			char temp = word[0];
+			word[0] = word[index];
+			word[index] = temp;
 		}
 	} 
 
