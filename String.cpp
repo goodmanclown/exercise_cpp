@@ -114,24 +114,14 @@ uint32_t String::split(const char delimit[], vector<String>& output) const
 
 			cout << " begin " << mStrIndexBegin << ", index " << mStrIndex << ", len " << substrlen << endl;
 
+			// make sure we don't have consecutive delimiter
 			if (substrlen > 0) {
 				// copy the substring to the output
 				output.push_back(String(&mStr[mStrIndexBegin], substrlen));
 			}
 
-			// move mStrIndex match against any character of delimit
-			while (mStrIndex < mLen) {
-
-				// see if this character is in the list of delimiter
-				uint32_t index=0;
-				for ( ; index < len && mStr[mStrIndex] != delimit[index]; index++) ;
-
-				// if yes, found a delimiter, continue to skip
-				if (index < len) mStrIndex++;
-				else break;
-			}
-
-			if (mStrIndex < mLen) mStrIndexBegin = mStrIndex;
+			// move the beginning index to right after the last found delimiter
+			if (mStrIndex < mLen) mStrIndexBegin = mStrIndex+1;
 		}
 	}
 
@@ -160,10 +150,10 @@ uint32_t String::split(char delimit, vector<String>& output) const
 			if (substrlen > 0) {
 				// copy the substring to the output
 				output.push_back(String(&mStr[mStrIndexBegin], substrlen));
-
-				// move the beginning index to right after the delimiter
-				if (mStrIndex < mLen) mStrIndexBegin = mStrIndex+1;
 			}
+
+			// move the beginning index to right after the delimiter
+			if (mStrIndex < mLen) mStrIndexBegin = mStrIndex+1;
 		}
 	}
 
@@ -178,58 +168,62 @@ bool String::split(string& splitted) const
 	uint32_t index = 0;
 
 	// skip all the preceding white space
-	while (' ' == mStr[index]) ++index;
+	while (index < mLen && (' ' == mStr[index])) ++index;
 
 	// white space only
 	if (index >= mLen) return false;
 
 	splitted = "";
 
-	// call the recursive api to split based on word set
-	return split(mStr, mLen, splitted);
-}
+	uint32_t len = mLen - index;
 
-bool String::split(const char word[], uint32_t len, string& splitted) const 
-{
-	// if this string is empty
-	if (0 == len) return true;
-
-	uint32_t index = 0;
-
-	// skip all the preceding white space
-	while (' ' == word[index]) ++index;
-
-	// white space only
-	if (index >= len) return true;
-
-	// first check if the whole word is in the wordset
-	if (isWord(word, len) == true) {
+	// first check if the whole mStr is in the wordset
+	if (isWord(&mStr[index], len) == true) {
 		// if yes, add the word to the splitted
-		splitted += string(word, len);
+		splitted += string(&mStr[index], len);
 		return true;
 	}
 	else {
-		// move index2 until a word is found
-		uint32_t index2=1;
-		while (index2 < len && false == isWord(word, index2)) index2++;
+		bool found = false;
+		for (; index < mLen; index++) {
 
-		cout << " index2 " << index2  <<  ", word " << word << ", len " << len << endl;
+			// move index2 until a word is found
+			uint32_t index2 = 1;
 
-		if (index2 < len) {
-			splitted += string(word, index2);
-			splitted += ' ';
+			len = mLen - index;
+			while (index2 < len && false == isWord(&mStr[index], index2)) index2++;
 
-			// call this api again to check the remaining of the input string
-			if (false == split(&word[index2], len-index2, splitted)) {
-				// just put the remaining in the output
-				splitted += string(&word[index2], len-index2);
+			cout << " index2 " << index2  <<  ", index " << index << ", len " << len << endl;
+
+			if (index2 >= len) {
+				// the remaining is not a word, just append it and return
+				if (splitted.length() > 0) splitted += ' ';
+				splitted += string(&mStr[index], index2);
+
+				// if no word has been found
+				if (false == found) return false;
+				else return true;
 			}
 
-			return true;
+			found = true;
+
+			if (splitted.length() > 0) splitted += ' ';
+			splitted += string(&mStr[index], index2);
+
+			// move index to the end of the last word
+			index += (index2-1);
+
+			uint32_t index3 = index+1;
+
+			// skip all the intermediate white space, if any
+			while (index3 < mLen && (' ' == mStr[index3])) ++index3;
+
+			// move index to the end of the last white space, if any
+			index = index3 - 1;
 		}
 	}
 
-	return false;
+	return true;
 }
 
 

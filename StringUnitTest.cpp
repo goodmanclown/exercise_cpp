@@ -173,7 +173,7 @@ TEST(StringUnitTest, lastIndexOf) {
 // Tests member api split
 TEST(StringUnitTest, split) {
 
-	String mep("abcd;efgh;defgh");
+	String mep("abcd;;efgh;defgh");
 	vector<String> output;
 	uint32_t ret = mep.split(';', output);
 
@@ -246,6 +246,21 @@ TEST(StringUnitTest, splitWord) {
 
 	EXPECT_FALSE(ret);
 
+	splitted = "";
+
+	String mep2("   apple    wood   ");
+	ret = mep2.split(splitted);
+
+	EXPECT_TRUE(ret);
+	EXPECT_EQ("apple wood", splitted);
+
+	splitted = "";
+
+	String mep3("   apple    orange");
+	ret = mep3.split(splitted);
+
+	EXPECT_TRUE(ret);
+	EXPECT_EQ("apple orange", splitted);
   // <TechnicalDetails>
   //
   // EXPECT_EQ(expected, actual) is the same as
