@@ -51,7 +51,7 @@ MergeSort& MergeSort::operator+=(const MergeSort& rhs)
 
 	int indexToSortedList1 = sortedListLen - 1;
 	int indexToSortedList2 = rhs.sortedListLen - 1;
-	for (int index = mergedListLen - 1; index >=0; index--) {
+	for (int index = mergedListLen - 1; index >= 0; index--) {
 		
 		if (indexToSortedList1 >= 0 && indexToSortedList2 >= 0) {
 			// both lists are not done

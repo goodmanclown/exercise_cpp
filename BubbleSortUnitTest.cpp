@@ -79,16 +79,6 @@
 // Tests member api sort
 TEST(BubbleSort, sort0) {
 
-	MdnEndpoint mep(4083330001, 4083339999);
-
-	MdnEndpoint meprhs1(4083330000, 4083330000);
-
-	MdnEndpoint meprhs2(4083340000, 4083340000);
-
-	MdnEndpoint meprhs3(4083340001, 4083349999);
-
-	MdnEndpoint meprhs4(4083350000, 4083350000);
-
  	int inputElem[5] = { 10, 1, -1, -10, 100 };
 
 	BubbleSort::sort(inputElem, 5);
@@ -102,6 +92,18 @@ TEST(BubbleSort, sort0) {
 	EXPECT_EQ(10, inputElem[3]);
 
 	EXPECT_EQ(100, inputElem[4]);
+
+	BubbleSort::sort(inputElem, 5, false);
+
+	EXPECT_EQ(-10, inputElem[4]);
+
+	EXPECT_EQ(-1, inputElem[3]);
+
+	EXPECT_EQ(1, inputElem[2]);
+
+	EXPECT_EQ(10, inputElem[1]);
+
+	EXPECT_EQ(100, inputElem[0]);
 
   // <TechnicalDetails>
   //
@@ -122,29 +124,29 @@ TEST(BubbleSort, sort0) {
 // Tests member api sort
 TEST(BubbleSort, sort1) {
 
-	MdnEndpoint mep(4083330001, 4083339999);
+	MdnEndpoint mep(4083330001U, 4083339999U);
 
-	MdnEndpoint meprhs1(4083330000, 4083330000);
+	MdnEndpoint meprhs1(4083330000U, 4083330000U);
 
-	MdnEndpoint meprhs2(4083340000, 4083340000);
+	MdnEndpoint meprhs2(4083340000U, 4083340000U);
 
-	MdnEndpoint meprhs3(4083340001, 4083349999);
+	MdnEndpoint meprhs3(4083340001U, 4083349999U);
 
-	MdnEndpoint meprhs4(4083350000, 4083350000);
+	MdnEndpoint meprhs4(4083350000U, 4083350000U);
 
  	MdnEndpoint inputElem[5] = { mep, meprhs1, meprhs2, meprhs3, meprhs4 };
 
 	BubbleSort::sort(inputElem, 5);
 
-	EXPECT_EQ(4083330000, inputElem[0].mMin);
+	EXPECT_EQ(4083330000U, inputElem[0].mMin);
 
-	EXPECT_EQ(4083330001, inputElem[1].mMin);
+	EXPECT_EQ(4083330001U, inputElem[1].mMin);
 
-	EXPECT_EQ(4083340000, inputElem[2].mMin);
+	EXPECT_EQ(4083340000U, inputElem[2].mMin);
 
-	EXPECT_EQ(4083340001, inputElem[3].mMin);
+	EXPECT_EQ(4083340001U, inputElem[3].mMin);
 
-	EXPECT_EQ(4083350000, inputElem[4].mMin);
+	EXPECT_EQ(4083350000U, inputElem[4].mMin);
 
   // <TechnicalDetails>
   //
@@ -165,29 +167,29 @@ TEST(BubbleSort, sort1) {
 // Tests member api sort
 TEST(BubbleSort, sort2) {
 
-	MdnEndpoint mep(4083330001, 4083339999);
+	MdnEndpoint mep(4083330001U, 4083339999U);
 
-	MdnEndpoint meprhs1(4083330000, 4083330000);
+	MdnEndpoint meprhs1(4083330000U, 4083330000U);
 
-	MdnEndpoint meprhs2(4083340000, 4083340000);
+	MdnEndpoint meprhs2(4083340000U, 4083340000U);
 
-	MdnEndpoint meprhs3(4083340001, 4083349999);
+	MdnEndpoint meprhs3(4083340001U, 4083349999U);
 
-	MdnEndpoint meprhs4(4083350000, 4083350000);
+	MdnEndpoint meprhs4(4083350000U, 4083350000U);
 
  	MdnEndpoint inputElem[5] = { meprhs1, mep, meprhs2, meprhs3, meprhs4 };
 
 	BubbleSort::sort(inputElem, 5);
 
-	EXPECT_EQ(4083330000, inputElem[0].mMin);
+	EXPECT_EQ(4083330000U, inputElem[0].mMin);
 
-	EXPECT_EQ(4083330001, inputElem[1].mMin);
+	EXPECT_EQ(4083330001U, inputElem[1].mMin);
 
-	EXPECT_EQ(4083340000, inputElem[2].mMin);
+	EXPECT_EQ(4083340000U, inputElem[2].mMin);
 
-	EXPECT_EQ(4083340001, inputElem[3].mMin);
+	EXPECT_EQ(4083340001U, inputElem[3].mMin);
 
-	EXPECT_EQ(4083350000, inputElem[4].mMin);
+	EXPECT_EQ(4083350000U, inputElem[4].mMin);
 
   // <TechnicalDetails>
   //
@@ -208,29 +210,29 @@ TEST(BubbleSort, sort2) {
 // Tests member api sort
 TEST(BubbleSort, sort3) {
 
-	MdnEndpoint mep(4083330001, 4083339999);
+	MdnEndpoint mep(4083330001U, 4083339999U);
 
-	MdnEndpoint meprhs1(4083330000, 4083330000);
+	MdnEndpoint meprhs1(4083330000U, 4083330000U);
 
-	MdnEndpoint meprhs2(4083340000, 4083340000);
+	MdnEndpoint meprhs2(4083340000U, 4083340000U);
 
-	MdnEndpoint meprhs3(4083340001, 4083349999);
+	MdnEndpoint meprhs3(4083340001U, 4083349999U);
 
-	MdnEndpoint meprhs4(4083350000, 4083350000);
+	MdnEndpoint meprhs4(4083350000U, 4083350000U);
 
  	MdnEndpoint inputElem[5] = { meprhs4, meprhs3, meprhs2, meprhs1, mep };
 
 	BubbleSort::sort(inputElem, 5);
 
-	EXPECT_EQ(4083330000, inputElem[0].mMin);
+	EXPECT_EQ(4083330000U, inputElem[0].mMin);
 
-	EXPECT_EQ(4083330001, inputElem[1].mMin);
+	EXPECT_EQ(4083330001U, inputElem[1].mMin);
 
-	EXPECT_EQ(4083340000, inputElem[2].mMin);
+	EXPECT_EQ(4083340000U, inputElem[2].mMin);
 
-	EXPECT_EQ(4083340001, inputElem[3].mMin);
+	EXPECT_EQ(4083340001U, inputElem[3].mMin);
 
-	EXPECT_EQ(4083350000, inputElem[4].mMin);
+	EXPECT_EQ(4083350000U, inputElem[4].mMin);
 
   // <TechnicalDetails>
   //

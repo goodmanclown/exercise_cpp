@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 /**
  * class representing a range of mdn and the associated endpoint
  */ 
@@ -6,8 +8,6 @@ class MdnEndpoint {
 
 public:
 
-	typedef unsigned int uInt;
-
 	/**
 	 * Constructor
 	 *
@@ -15,7 +15,7 @@ public:
 	 * @param: max - max of mdn range
 	 *
 	 */
-	MdnEndpoint(uInt min, uInt max):mMin(min),mMax(max),mIndex(-1) { 
+	MdnEndpoint(uint64_t min, uint64_t max):mMin(min),mMax(max),mIndex(-1) { 
 		// just in case min and max are swapped
 		if (min > max) {
 			mMin = max;
@@ -30,7 +30,7 @@ public:
 	 * @param: min - min of mdn range
 	 *
 	 */
-	MdnEndpoint(uInt min):mMin(min),mMax(min),mIndex(-1) { };
+	MdnEndpoint(uint64_t min):mMin(min),mMax(min),mIndex(-1) { };
 
 
 			/**
@@ -110,13 +110,13 @@ public:
 			/**
 			 * min of mdn range
 			 */
-	uInt	mMin;
+	uint64_t	mMin;
 
 
 			/**
 			 * max of mdn range
 			 */
-	uInt	mMax;
+	uint64_t	mMax;
 
 			/**
 			 * index to Endpoint list to retrieve the associated endpoint

@@ -13,7 +13,8 @@ void InsertionSort::sort(uint32_t list[], uint32_t listLen)
 	for (uint32_t indexOuterLoop=1; indexOuterLoop < listLen; indexOuterLoop++) {
 
 		// scan through the sorted list
-		for (uint32_t indexInnerLoop=0; indexInnerLoop < indexOuterLoop; indexInnerLoop++) {
+		bool done = false;
+		for (uint32_t indexInnerLoop=0; indexInnerLoop < indexOuterLoop && false == done; indexInnerLoop++) {
 			// find the element, from the sorted list, that is greater than the current one
 		
 			cout << "indexO " << indexOuterLoop << " " << list[indexOuterLoop] << " indexI " << indexInnerLoop << " " << list[indexInnerLoop] << endl;
@@ -29,7 +30,8 @@ void InsertionSort::sort(uint32_t list[], uint32_t listLen)
 
 				list[indexInnerLoop] = temp;
 				
-				break;
+				// break the for inner loop
+				done = true;
 			}
 		}	
 	}

@@ -27,11 +27,8 @@ int String::indexOf(const char str[]) const
 	uint32_t mStrIndexMax = mLen - len + 1;
 	
 	for (uint32_t mStrIndex=0; mStrIndex < mStrIndexMax; mStrIndex++) {
-		// move mStrIndex match against 1st character of str
-		while (mStrIndex < mStrIndexMax && mStr[mStrIndex] != str[0]) mStrIndex++;
-
-		if (mStrIndex < mStrIndexMax) {
-			// haven't reached the max yet
+		// match against 1st character of str
+		if (mStr[mStrIndex] == str[0]) {
 			// compare the rest of str
 			uint32_t strIndex=1;
 			for (uint32_t mStrIndex2=mStrIndex+1; mStrIndex2 < mLen && strIndex < len && mStr[mStrIndex2] == str[strIndex]; mStrIndex2++, strIndex++) {
@@ -62,11 +59,8 @@ int String::lastIndexOf(const char str[]) const
 	uint32_t mStrIndexMax = mLen - len + 1;
 	
 	for (int mStrIndex=mStrIndexMax; mStrIndex >= 0; mStrIndex--) {
-		// move mStrIndex match against 1st character of delimit
-		while (mStrIndex < mLen && mStr[mStrIndex] != str[0]) mStrIndex--;
-
-		if (mStrIndex >= 0) {
-			// haven't reached the max yet
+		// match against 1st character of input
+		if (mStr[mStrIndex] == str[0]) {
 			// compare the rest of str
 			uint32_t strIndex=1;
 			for (uint32_t mStrIndex2=mStrIndex+1; mStrIndex2 < mLen && strIndex < len && mStr[mStrIndex2] == str[strIndex]; mStrIndex2++, strIndex++) {
@@ -95,34 +89,42 @@ uint32_t String::split(const char delimit[], vector<String>& output) const
 	output.clear();
 
 	uint32_t mStrIndexBegin = 0;
-	for (uint32_t mStrIndex=0; mStrIndex < mLen; mStrIndex++) {
-		// move mStrIndex match against any character of delimit
-		while (mStrIndex < mLen) {
+	uint32_t mStrIndex = 0;
+	for (; mStrIndex < mLen; mStrIndex++) {
 
-			// see if this character is in the list of delimiter
-			uint32_t index=0;
-			for ( ; index < len && mStr[mStrIndex] != delimit[index]; index++) ;
+		// see if this character is in the list of delimiter
+		bool done = false;
+		for (uint32_t index=0; index < len && done != true; index++) {
+			if (mStr[mStrIndex] == delimit[index]) {
+				// found a delimiter
 
-			// if yes, found a delimiter so break
-			if (index < len) break;
-			else mStrIndex++;
-		}
+				uint32_t substrlen = mStrIndex - mStrIndexBegin;
 
-		if (mStrIndex <= mLen) {
-			// either a delimiter is found or reach the end of the mStr
-			uint32_t substrlen = mStrIndex - mStrIndexBegin;
+				cout << " begin " << mStrIndexBegin << ", index " << mStrIndex << ", len " << substrlen << endl;
 
-			cout << " begin " << mStrIndexBegin << ", index " << mStrIndex << ", len " << substrlen << endl;
+				// make sure we don't have consecutive delimiter
+				if (substrlen > 0) {
+					// copy the substring to the output
+					output.push_back(String(&mStr[mStrIndexBegin], substrlen));
+				}
 
-			// make sure we don't have consecutive delimiter
-			if (substrlen > 0) {
-				// copy the substring to the output
-				output.push_back(String(&mStr[mStrIndexBegin], substrlen));
+				// move the beginning index to right after the last found delimiter
+				mStrIndexBegin = mStrIndex+1;
+
+				// break the for loop
+				done = true;
 			}
-
-			// move the beginning index to right after the last found delimiter
-			if (mStrIndex < mLen) mStrIndexBegin = mStrIndex+1;
 		}
+	}
+
+	// see if we have any remaining characters left 
+	uint32_t substrlen = mStrIndex - mStrIndexBegin;
+
+	cout << " begin " << mStrIndexBegin << ", index " << mStrIndex << ", len " << substrlen << endl;
+
+	if (substrlen > 0) {
+		// copy the substring to the output
+		output.push_back(String(&mStr[mStrIndexBegin], substrlen));
 	}
 
 	return output.size();
@@ -137,12 +139,12 @@ uint32_t String::split(char delimit, vector<String>& output) const
 	output.clear();
 
 	uint32_t mStrIndexBegin = 0;
-	for (uint32_t mStrIndex=0; mStrIndex < mLen; mStrIndex++) {
+	uint32_t mStrIndex = 0;
+	for (; mStrIndex < mLen; mStrIndex++) {
 		// move mStrIndex match against 1st character of delimit
-		while (mStrIndex < mLen && mStr[mStrIndex] != delimit) mStrIndex++;
+		if (mStr[mStrIndex] == delimit) {
 
-		if (mStrIndex <= mLen) {
-			// either a delimiter is found or reach the end of the mStr
+			// a delimiter is found
 			uint32_t substrlen = mStrIndex - mStrIndexBegin;
 
 			cout << " begin " << mStrIndexBegin << ", index " << mStrIndex << ", len " << substrlen << endl;
@@ -153,8 +155,18 @@ uint32_t String::split(char delimit, vector<String>& output) const
 			}
 
 			// move the beginning index to right after the delimiter
-			if (mStrIndex < mLen) mStrIndexBegin = mStrIndex+1;
+			mStrIndexBegin = mStrIndex+1;
 		}
+	}
+
+	// see if we have any remaining characters left 
+	uint32_t substrlen = mStrIndex - mStrIndexBegin;
+
+	cout << " begin " << mStrIndexBegin << ", index " << mStrIndex << ", len " << substrlen << endl;
+
+	if (substrlen > 0) {
+		// copy the substring to the output
+		output.push_back(String(&mStr[mStrIndexBegin], substrlen));
 	}
 
 	return output.size();
@@ -173,8 +185,6 @@ bool String::split(string& splitted) const
 	// white space only
 	if (index >= mLen) return false;
 
-	splitted = "";
-
 	uint32_t len = mLen - index;
 
 	// first check if the whole mStr is in the wordset
@@ -184,8 +194,7 @@ bool String::split(string& splitted) const
 		return true;
 	}
 	else {
-		bool found = false;
-		for (; index < mLen; index++) {
+		while (index < mLen) {
 
 			// move index2 until a word is found
 			uint32_t index2 = 1;
@@ -195,31 +204,26 @@ bool String::split(string& splitted) const
 
 			cout << " index2 " << index2  <<  ", index " << index << ", len " << len << endl;
 
+			uint32_t splitted_len = splitted.length();
 			if (index2 >= len) {
 				// the remaining is not a word, just append it and return
-				if (splitted.length() > 0) splitted += ' ';
+
+				if (splitted_len > 0) splitted += ' ';
 				splitted += string(&mStr[index], index2);
 
-				// if no word has been found
-				if (false == found) return false;
+				// if the input has never been splitted
+				if (0 == splitted_len) return false;
 				else return true;
 			}
 
-			found = true;
-
-			if (splitted.length() > 0) splitted += ' ';
+			if (splitted_len > 0) splitted += ' ';
 			splitted += string(&mStr[index], index2);
 
-			// move index to the end of the last word
-			index += (index2-1);
-
-			uint32_t index3 = index+1;
+			// move index to after the end of the last word
+			index += index2;
 
 			// skip all the intermediate white space, if any
-			while (index3 < mLen && (' ' == mStr[index3])) ++index3;
-
-			// move index to the end of the last white space, if any
-			index = index3 - 1;
+			while (index < mLen && (' ' == mStr[index])) ++index;
 		}
 	}
 
@@ -297,6 +301,7 @@ uint32_t String::shuffle(char word[], uint32_t len, vector<string>& output) cons
 			}
 		}
 
+		// restore the input string
 		if (index > 0) {
 			char temp = word[0];
 			word[0] = word[index];

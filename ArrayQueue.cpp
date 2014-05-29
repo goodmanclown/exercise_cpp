@@ -55,7 +55,7 @@ SingLinkedListNodePtr ArrayQueue::dequeue()
 	mLength--;
 
 	if (mLength > 0) {
-		// mHead alwasy point to the 1st element in the queue
+		// mHead always point to the 1st element in the queue
 		// move head to the next element, wrap around if needed
 		mHead = (mHead + 1) % mSize;
 

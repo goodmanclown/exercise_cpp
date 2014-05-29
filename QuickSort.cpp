@@ -15,7 +15,6 @@ bool QuickSort::sort(uint32_t list[], uint32_t listLen)
 	else if (listLen == 2) {
 		// just a simple swap
 		if (list[0] > list[1]) {
-			// swap the pivot with the elements at the end
 			uint32_t temp = list[0];
 			list[1] = list[0];
 			list[0] = temp;
@@ -34,20 +33,21 @@ bool QuickSort::sort(uint32_t list[], uint32_t listLen)
 		int i = 0;				// point to beginning
 		int j = listLen - 2;	// point to element before the hidden pivot
 
-		for (; ;) {
-			// move i if element is less than pivot
+		bool done = false
+		while (false == done) {
+			// move i if element is less than pivot and stop when an element >= pivot is found
 			while (list[i] < pivot) i++;
 
-			// move j if element is greater than pivot
+			// move j if element is greater than pivot and stop when an element <= pivot is found
 			while (list[j] > pivot) j--;
 
-			// if i and j not crossed yet, swap the element
+			// if i and j not crossed yet, swap the elements
 			if (i < j) {
 				uint32_t temp = list[j];
 				list[j] = list[i];
 				list[i] = temp;
 			}
-			else break;
+			else done = true;
 		}
 
 		// if crossed, restore pivot to position of i

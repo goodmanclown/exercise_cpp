@@ -80,8 +80,8 @@ public:
     */
 	T*	pop() {
 
-		// mHead < 0, nothing in the stack
-		if (mHead < 0) return 0;
+		// mLength < 0, nothing in the stack
+		if (mLength < 0) return 0;
 		
 		mLength--;
 

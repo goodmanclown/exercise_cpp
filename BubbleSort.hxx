@@ -12,11 +12,12 @@ public:
 	/**
 	 * @param inputElem - an array of <T> to be sorted
 	 * @param numOfInputElem - number of elements in the input array
+	 * @param asc - true if sort in ascending order
 	 */
 	template <typename T>
-	static void sort(T inputElem[], uint32_t numOfInputElem)
+	static void sort(T inputElem[], uint32_t numOfInputElem, bool asc = true)
 	{
-		// if number is 0, do nothing
+		// if input is empty, do nothing
 		if (!numOfInputElem) return;
 
 		// assume swap is required to start the first pass
@@ -27,7 +28,17 @@ public:
 			for (uint32_t indexInnerLoop=0; indexInnerLoop < numOfInputElem-1; indexInnerLoop++) {
 				// compare adjacent element				
 		
-				if (inputElem[indexInnerLoop+1] < inputElem[indexInnerLoop]) {
+				bool swap = false;
+				if (true == asc) {
+					// ascending order
+					if (inputElem[indexInnerLoop+1] < inputElem[indexInnerLoop]) swap = true;
+				}
+				else {
+					// decending order
+					if (inputElem[indexInnerLoop+1] > inputElem[indexInnerLoop]) swap = true;
+				}
+
+				if (true == swap) {
 					// swap their positions in the array
 					T temp = inputElem[indexInnerLoop];
 					inputElem[indexInnerLoop] = inputElem[indexInnerLoop+1];
@@ -35,7 +46,7 @@ public:
 		
 					// indicates a swap has occurred
 					swapOccurred = true;
-				}	
+				}
 			}
 		}
 	}

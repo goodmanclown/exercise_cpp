@@ -182,6 +182,18 @@ TEST(StringUnitTest, split) {
 	EXPECT_EQ(String("efgh"), output[1]);
 	EXPECT_EQ(String("defgh"), output[2]);
 
+	String mep1("abcd");
+	output.clear();
+	ret = mep1.split(';', output);
+
+	EXPECT_EQ(1, ret);
+	EXPECT_EQ(String("abcd"), output[0]);
+
+	String mep2(";;;;;");
+	output.clear();
+	ret = mep2.split(';', output);
+
+	EXPECT_EQ(0, ret);
   // <TechnicalDetails>
   //
   // EXPECT_EQ(expected, actual) is the same as
@@ -211,6 +223,19 @@ TEST(StringUnitTest, splitArray) {
 	EXPECT_EQ(String("efgh"), output[1]);
 	EXPECT_EQ(String("defgh"), output[2]);
 	EXPECT_EQ(String("12345"), output[3]);
+
+	String mep1("abcd");
+	output.clear();
+	ret = mep1.split(";/", output);
+
+	EXPECT_EQ(1, ret);
+	EXPECT_EQ(String("abcd"), output[0]);
+
+	String mep2(";/;/;/;/;/;/");
+	output.clear();
+	ret = mep2.split(";/", output);
+
+	EXPECT_EQ(0, ret);
 
   // <TechnicalDetails>
   //

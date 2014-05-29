@@ -2,6 +2,9 @@
 
 #include <string.h>
 
+// a temp list which is at least as large as the original list to be sorted and is assigned by the caller
+// as a buffer to be reused in the merge
+// this will eliminate the need to allocate temp list for each merge, assuming the merge is done in a single thread
 uint32_t* MergeSortV2::tempList = 0;
 
 MergeSortV2::MergeSortV2(uint32_t list[], uint32_t listLen)
@@ -51,7 +54,7 @@ MergeSortV2& MergeSortV2::operator+=(const MergeSortV2& rhs)
 
 	int indexToSortedList1 = sortedListLen - 1;
 	int indexToSortedList2 = rhs.sortedListLen - 1;
-	for (int index = mergedListLen - 1; index >=0; index--) {
+	for (int index = mergedListLen - 1; index >= 0; index--) {
 		
 		if (indexToSortedList1 >= 0 && indexToSortedList2 >= 0) {
 			// both lists are not done
