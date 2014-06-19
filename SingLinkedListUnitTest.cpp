@@ -578,6 +578,114 @@ TEST(SingLinkedListUnitTest, middle) {
 }
 
 
+// Tests member api last
+TEST(SingLinkedListUnitTest, last) {
+
+	SingLinkedList tree;
+
+	SingLinkedListNodePtr mid = tree.last(0);
+	EXPECT_TRUE(mid == NULL);
+
+	bool ret =  tree.insert(5, 0);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	mid = tree.last(0);
+	
+	EXPECT_TRUE(mid != NULL);
+	EXPECT_EQ(5, mid->getValue());
+
+	ret = tree.insert(4, 1);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	mid = tree.last(1);
+	
+	EXPECT_TRUE(mid != NULL);
+	EXPECT_EQ(5, mid->getValue());
+
+	mid = tree.last(0);
+	
+	EXPECT_TRUE(mid != NULL);
+	EXPECT_EQ(4, mid->getValue());
+
+	ret = tree.insert(9, 2);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	mid = tree.last(2);
+	
+	EXPECT_TRUE(mid != NULL);
+	EXPECT_EQ(5, mid->getValue());
+
+	mid = tree.last(1);
+	
+	EXPECT_TRUE(mid != NULL);
+	EXPECT_EQ(4, mid->getValue());
+
+	mid = tree.last(0);
+	
+	EXPECT_TRUE(mid != NULL);
+	EXPECT_EQ(9, mid->getValue());
+
+	ret = tree.insert(5, 0);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	mid = tree.last(2);
+	
+	EXPECT_TRUE(mid != NULL);
+	EXPECT_EQ(5, mid->getValue());
+
+	ret = tree.insert(7, 1);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(2, 2);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	mid = tree.last(2);
+	
+	EXPECT_TRUE(mid != NULL);
+	EXPECT_EQ(5, mid->getValue());
+
+	ret = tree.insert(2, 5);
+	EXPECT_EQ(true, ret);
+	cout << "tree " << tree << endl;
+
+	mid = tree.last(3);
+	
+	EXPECT_TRUE(mid != NULL);
+	EXPECT_EQ(5, mid->getValue());
+
+	mid = tree.last(1);
+	
+	EXPECT_TRUE(mid != NULL);
+	EXPECT_EQ(2, mid->getValue());
+
+	mid = tree.last(0);
+	
+	EXPECT_TRUE(mid != NULL);
+	EXPECT_EQ(9, mid->getValue());
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
 // Step 3. Call RUN_ALL_TESTS() in main().
 //
 // We do this by linking in src/gtest_main.cc file, which consists of

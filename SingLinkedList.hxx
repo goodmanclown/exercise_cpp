@@ -102,7 +102,14 @@ public:
 	 *
 	 * @return node at the middle of the list
 	 */
-	SingLinkedListNodePtr middle();
+	SingLinkedListNodePtr middle() const;
+
+
+	/**
+	 *
+	 * @return node at the last nth element of the list
+	 */
+	SingLinkedListNodePtr last(uint32_t nth) const;
 
 
    /** 

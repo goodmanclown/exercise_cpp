@@ -277,7 +277,7 @@ SingLinkedListNodePtr SingLinkedList::find(uint32_t value)
 }
 
 
-SingLinkedListNodePtr SingLinkedList::middle() 
+SingLinkedListNodePtr SingLinkedList::middle() const
 {
 	if (mLength == 0) return NULL;
 
@@ -295,6 +295,27 @@ SingLinkedListNodePtr SingLinkedList::middle()
 	}	
 	
 	return singleStep;
+}
+
+
+SingLinkedListNodePtr SingLinkedList::last(uint32_t nth) const 
+{
+	if (mLength == 0) return NULL;
+
+	SingLinkedListNodePtr currentNode = mHead;
+	SingLinkedListNodePtr trailingNode = mHead;
+	
+	// move currentNode by nth node ahead of trailingNode
+	for (uint32_t trail = 0; trail <= nth && currentNode != NULL; trail++) 
+		currentNode = currentNode->getNextPtr();
+
+	// then move both nodes together if not already at end of list
+	while (currentNode != NULL) {
+		trailingNode = trailingNode->getNextPtr();
+		currentNode = currentNode->getNextPtr();
+	}	
+	
+	return trailingNode;
 }
 
 
