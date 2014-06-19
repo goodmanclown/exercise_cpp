@@ -371,6 +371,51 @@ TEST(StringUnitTest, shuffle) {
   // </TechnicalDetails>
 }
 
+// Tests member api reverse
+TEST(StringUnitTest, reverse) {
+
+	String mep("a");
+	mep.reverse();
+
+	EXPECT_EQ(0, strcmp("a", mep.data()));
+
+	String mep1("ab");
+	mep1.reverse();
+
+	EXPECT_EQ(0, strcmp("ba", mep1.data()));
+
+	String mep2("abc");
+	mep2.reverse();
+
+	EXPECT_EQ(0, strcmp("cba", mep2.data()));
+
+	String mep3("abcd");
+	mep3.reverse();
+
+	EXPECT_EQ(0, strcmp("dcba", mep3.data()));
+
+	String mep4("abcde");
+	mep4.reverse();
+
+	EXPECT_EQ(0, strcmp("edcba", mep4.data()));
+
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
 // Step 3. Call RUN_ALL_TESTS() in main().
 //
 // We do this by linking in src/gtest_main.cc file, which consists of

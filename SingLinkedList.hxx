@@ -19,11 +19,31 @@ public:
 
 	
 	/**
+    * Copy Constructor
+	 */
+	SingLinkedList(SingLinkedList& rhs);
+
+	
+	/**
 	 * Destructor
 	 */
 	virtual ~SingLinkedList();
 
 
+	/**
+    * assignment operator=
+	 */
+	SingLinkedList& operator=(SingLinkedList& rhs);
+
+	
+	/**
+    * assignment operator==
+    *
+    * @return true if these 2 linked lists are the same 
+	 */
+	bool operator==(SingLinkedList& rhs);
+
+	
 	/**
 	 *
 	 * @return SingLinkedListNodePtr at the beginning of the list and remove it from the list
@@ -73,9 +93,16 @@ public:
 
 	/**
 	 *
-	 * @return true if value is found
+	 * @return node if value is found
 	 */
 	SingLinkedListNodePtr find(uint32_t value);
+
+
+	/**
+	 *
+	 * @return node at the middle of the list
+	 */
+	SingLinkedListNodePtr middle();
 
 
    /** 

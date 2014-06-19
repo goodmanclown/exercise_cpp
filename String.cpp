@@ -312,3 +312,21 @@ uint32_t String::shuffle(char word[], uint32_t len, vector<string>& output) cons
 	return output.size();
 }
 
+void String::reverse() 
+{
+	// if this object is empty or has only 1 character
+	// just return, nothing to reverse
+	if (mLen <= 1) return;
+
+	// at most we need to loop until the middle of the string
+	uint32_t strIndexMax = mLen / 2;
+	int strIndexReverse = mLen-1;
+
+	for (int strIndex=0; strIndex < strIndexMax; strIndex++, strIndexReverse--) {
+		// swap the characters at the 2 indices
+		char temp = mStr[strIndexReverse];
+		mStr[strIndexReverse] = mStr[strIndex];
+		mStr[strIndex] = temp;	
+	}
+}
+

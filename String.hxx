@@ -177,6 +177,12 @@ public:
 	 */
 	const char* data() const { return mStr; };
 
+
+	/**
+	 * reverse the content of this string
+	 */
+	void reverse();
+
 private:
 	
 

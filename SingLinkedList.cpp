@@ -2,6 +2,28 @@
 
 using namespace std;
 
+SingLinkedList::SingLinkedList(SingLinkedList& rhs):mHead(NULL),mLength(rhs.mLength)
+{
+	if (0 < rhs.mLength) {
+		// make sure we have something to copy
+		mHead = new SingLinkedListNode(rhs.mHead->getValue());
+		
+		SingLinkedListNodePtr currentNode = mHead;
+		SingLinkedListNodePtr rhsNode = rhs.mHead->getNextPtr();
+
+		for (uint32_t index=1; index < rhs.mLength && rhsNode != NULL; index++) {
+			
+			// make a copy of the rhsNode and append it to the currentNode
+			currentNode->setNextPtr(new SingLinkedListNode(rhsNode->getValue()));
+
+			// move down to copy next node
+			currentNode = currentNode->getNextPtr();
+			rhsNode = rhsNode->getNextPtr();
+		}
+	} 
+}
+
+
 SingLinkedList::~SingLinkedList()
 {
 	// remove all nodes 
@@ -15,6 +37,60 @@ SingLinkedList::~SingLinkedList()
 	}	
 
 	mHead = NULL;
+}
+
+
+SingLinkedList& SingLinkedList::operator=(SingLinkedList& rhs)
+{
+	if (this == &rhs) return *this;
+
+	mHead = NULL;
+	mLength = rhs.mLength;
+
+	if (0 < rhs.mLength) {
+		// make sure we have something to copy
+		mHead = new SingLinkedListNode(rhs.mHead->getValue());
+
+		SingLinkedListNodePtr currentNode = mHead;
+		SingLinkedListNodePtr rhsNode = rhs.mHead->getNextPtr();
+
+		for (uint32_t index=1; index < rhs.mLength && rhsNode != NULL; index++) {
+			
+			// make a copy of the rhsNode and append it to the currentNode
+			currentNode->setNextPtr(new SingLinkedListNode(rhsNode->getValue()));
+
+			// move down to copy next node
+			currentNode = currentNode->getNextPtr();
+			rhsNode = rhsNode->getNextPtr();
+		}
+	} 
+
+	return *this;
+}
+
+
+bool SingLinkedList::operator==(SingLinkedList& rhs)
+{
+	// return false if length is different
+	if (mLength != rhs.mLength) return false;
+
+	if (0 < mLength) {
+		// make sure we have something to compare
+		SingLinkedListNodePtr currentNode = mHead;
+		SingLinkedListNodePtr rhsNode = rhs.mHead;
+
+		for (uint32_t index=0; index < mLength && currentNode != NULL && rhsNode != NULL; index++) {
+			
+			// compare the value of these 2 nodes
+			if (currentNode->getValue() != rhsNode->getValue()) return false;
+
+			// move down to copy next node
+			currentNode = currentNode->getNextPtr();
+			rhsNode = rhsNode->getNextPtr();
+		}
+	} 
+
+	return true;
 }
 
 
@@ -201,6 +277,27 @@ SingLinkedListNodePtr SingLinkedList::find(uint32_t value)
 }
 
 
+SingLinkedListNodePtr SingLinkedList::middle() 
+{
+	if (mLength == 0) return NULL;
+
+	SingLinkedListNodePtr doubleStep = mHead;
+	SingLinkedListNodePtr singleStep = mHead;
+	// move doubleStep 2 nodes at a time
+	// move singleStep 1 nodes at a time
+	// when doubleStep is at the end, singleStep will give the node in the middle
+	while (doubleStep != NULL) {
+		doubleStep = doubleStep->getNextPtr();
+		if (doubleStep != NULL) doubleStep = doubleStep->getNextPtr();
+
+		// move singleStep only if doubleStep can move more than 2 steps
+		if (doubleStep != NULL) singleStep = singleStep->getNextPtr();
+	}	
+	
+	return singleStep;
+}
+
+
 SingLinkedListNodePtr SingLinkedList::find(uint32_t value, SingLinkedListNodePtr start, SingLinkedListNodePtr end, uint32_t distance) 
 {
 	cout << "find " << distance << " start " << start->getValue() << " end " << end->getValue() << endl;
@@ -226,7 +323,7 @@ SingLinkedListNodePtr SingLinkedList::find(uint32_t value, SingLinkedListNodePtr
 		return NULL;
 	}
 
-	// & is a must to poass function as a function pointer argument
+	// & is a must to pass function as a function pointer argument
    // a member function must be qualified with the class name
 	return foreachhalf(value, start,  end, distance, &SingLinkedList::find);
 }

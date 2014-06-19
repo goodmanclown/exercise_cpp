@@ -320,6 +320,263 @@ TEST(SingLinkedListUnitTest, present) {
 }
 
 
+// Tests member api copy
+TEST(SingLinkedListUnitTest, copy) {
+
+	SingLinkedList tree;
+
+	bool ret =  tree.insert(5, 0);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(4, 1);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(9, 2);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(5, 0);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(7, 1);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(2, 2);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(2, 5);
+	EXPECT_EQ(true, ret);
+	cout << "tree " << tree << endl;
+
+	SingLinkedList tree1(tree);
+	cout << "tree1 " << tree1 << endl;
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
+// Tests member api operator=
+TEST(SingLinkedListUnitTest, assign) {
+
+	SingLinkedList tree;
+
+	bool ret =  tree.insert(5, 0);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(4, 1);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(9, 2);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(5, 0);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(7, 1);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(2, 2);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(2, 5);
+	EXPECT_EQ(true, ret);
+	cout << "tree " << tree << endl;
+
+	SingLinkedList tree1;
+	tree1 = tree;
+	cout << "tree1 " << tree1 << endl;
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
+// Tests member api operator==
+TEST(SingLinkedListUnitTest, compare) {
+
+	SingLinkedList tree;
+
+	bool ret =  tree.insert(5, 0);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(4, 1);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(9, 2);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(5, 0);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(7, 1);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(2, 2);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(2, 5);
+	EXPECT_EQ(true, ret);
+	cout << "tree " << tree << endl;
+
+	SingLinkedList tree1;
+	tree1 = tree;
+	cout << "tree1 " << tree1 << endl;
+
+	EXPECT_TRUE(tree == tree1);
+
+	ret = tree1.insert(10, 6);
+	EXPECT_EQ(true, ret);
+	cout << "tree1 " << tree1 << endl;
+
+	EXPECT_FALSE(tree == tree1);
+
+	ret = tree1.remove(7);
+	EXPECT_EQ(true, ret);
+	cout << "tree1 " << tree1 << endl;
+
+	EXPECT_FALSE(tree == tree1);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
+// Tests member api middle
+TEST(SingLinkedListUnitTest, middle) {
+
+	SingLinkedList tree;
+
+	SingLinkedListNodePtr mid = tree.middle();
+	EXPECT_TRUE(mid == NULL);
+
+	bool ret =  tree.insert(5, 0);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	mid = tree.middle();
+	
+	EXPECT_TRUE(mid != NULL);
+	EXPECT_EQ(5, mid->getValue());
+
+	ret = tree.insert(4, 1);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	mid = tree.middle();
+	
+	EXPECT_TRUE(mid != NULL);
+	EXPECT_EQ(5, mid->getValue());
+
+	ret = tree.insert(9, 2);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	mid = tree.middle();
+	
+	EXPECT_TRUE(mid != NULL);
+	EXPECT_EQ(4, mid->getValue());
+
+	ret = tree.insert(5, 0);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	mid = tree.middle();
+	
+	EXPECT_TRUE(mid != NULL);
+	EXPECT_EQ(5, mid->getValue());
+
+	ret = tree.insert(7, 1);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(2, 2);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	mid = tree.middle();
+	
+	EXPECT_TRUE(mid != NULL);
+	EXPECT_EQ(2, mid->getValue());
+
+	ret = tree.insert(2, 5);
+	EXPECT_EQ(true, ret);
+	cout << "tree " << tree << endl;
+
+	mid = tree.middle();
+	
+	EXPECT_TRUE(mid != NULL);
+	EXPECT_EQ(5, mid->getValue());
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
 
 // Step 3. Call RUN_ALL_TESTS() in main().
 //
