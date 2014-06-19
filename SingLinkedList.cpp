@@ -288,6 +288,7 @@ SingLinkedListNodePtr SingLinkedList::middle() const
 	// when doubleStep is at the end, singleStep will give the node in the middle
 	while (doubleStep != NULL) {
 		doubleStep = doubleStep->getNextPtr();
+
 		if (doubleStep != NULL) doubleStep = doubleStep->getNextPtr();
 
 		// move singleStep only if doubleStep can move more than 2 steps
@@ -362,7 +363,7 @@ SingLinkedListNodePtr SingLinkedList::notGreater(uint32_t value)
 		currentNode = nextNode;
 	}	
 	
-	return notGreater(value, mHead,  currentNode, mLength-1);
+	return notGreater(value, mHead, currentNode, mLength-1);
 }
 
 
