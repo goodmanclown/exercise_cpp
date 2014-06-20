@@ -231,7 +231,27 @@ void SingLinkedList::reverse()
 {
 	if (mLength <= 1) return;
 
-	reverse(NULL, mHead);
+	SingLinkedListNodePtr previousNode = NULL;
+	SingLinkedListNodePtr currentNode = mHead;
+
+	// loop until end of list
+	while (currentNode != NULL) {
+		
+		// get the next node
+		SingLinkedListNodePtr nextNode = currentNode->getNextPtr();
+
+		// set previous node as current next node
+		currentNode->setNextPtr(previousNode);
+
+		// move previous to current
+		previousNode = currentNode;
+
+
+		// move current to next
+		currentNode = nextNode;
+	}
+
+	mHead = previousNode;
 
 	return;
 }
