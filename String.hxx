@@ -183,6 +183,13 @@ public:
 	 */
 	void reverse();
 
+
+	/**
+	 * @return true if this string has enough characters (case-insensitive) to construct the input note
+	 */
+	bool isEnough(char note[]);
+
+
 private:
 	
 

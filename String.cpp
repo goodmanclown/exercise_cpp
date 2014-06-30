@@ -330,3 +330,47 @@ void String::reverse()
 	}
 }
 
+
+bool String::isEnough(char note[]) 
+{
+	// if this object is empty, just return 
+	if (mLen == 0) return false;
+
+	uint32_t len = strlen(note);
+	if (len == 0 || len > mLen) return false;
+
+	// count the alphabets (case-insensitive, excludes white space) in this string
+	uint32_t count[26];
+
+	for (uint32_t index=0; index < mLen; index++) {
+		// loop through each character
+		char indexChar = mStr[index];
+		if (indexChar >= 'a' && indexChar <= 'z') {
+			count[indexChar - 'a']++;
+		}
+		else if (indexChar >= 'A' && indexChar <= 'Z') {
+			count[indexChar - 'A']++;
+		}
+	}
+
+	// go through the note and decrement the count for each alphabet
+	// if any alphbet hits a count of zero, this string don't have enough character to
+	// construct this note
+	for (uint32_t index=0; index < len; index++) {
+		// loop through each character
+		char indexChar = note[index];
+		if (indexChar >= 'a' && indexChar <= 'z') {
+			if (count[indexChar - 'a'] <= 0) return false;
+
+			count[indexChar - 'a']--;
+		}
+		else if (indexChar >= 'A' && indexChar <= 'Z') {
+			if (count[indexChar - 'A'] <= 0) return false;
+
+			count[indexChar - 'A']--;
+		}
+	}
+
+	return true;
+}
+

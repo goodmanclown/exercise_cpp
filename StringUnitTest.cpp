@@ -416,6 +416,56 @@ TEST(StringUnitTest, reverse) {
   // </TechnicalDetails>
 }
 
+// Tests member api isEnough
+TEST(StringUnitTest, isenough) {
+
+	String mep("");
+	bool ret = mep.isEnough("note");
+
+	EXPECT_FALSE(ret);
+
+	String mep1("ab");
+	ret = mep1.isEnough("");
+
+	EXPECT_FALSE(ret);
+
+	String mep2("abc");
+	ret = mep2.isEnough("ab");
+
+	EXPECT_TRUE(ret);
+
+	String mep3("abcd");
+	ret = mep3.isEnough("abcde");
+
+	EXPECT_FALSE(ret);
+
+	String mep4("aAbbcCeEddE");
+	ret = mep4.isEnough("aabbccddeee");
+
+	EXPECT_TRUE(ret);
+
+	String mep5("aabbcceedde");
+	ret = mep5.isEnough("aAbBcCddEEE");
+
+	EXPECT_TRUE(ret);
+
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
 // Step 3. Call RUN_ALL_TESTS() in main().
 //
 // We do this by linking in src/gtest_main.cc file, which consists of
