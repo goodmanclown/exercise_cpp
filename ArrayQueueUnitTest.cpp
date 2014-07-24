@@ -44,6 +44,7 @@
 // Don't forget gtest.h, which declares the testing framework.
 
 // #include <limits.h>
+#include "SingLinkedListNode.hxx"
 #include "ArrayQueue.hxx"
 #include "gtest/gtest.h"
 
@@ -80,49 +81,49 @@ using namespace std;
 // Tests member api enqueue
 TEST(ArrayQueueUnitTest, enqueue) {
 
-	ArrayQueue tree(10);
+	ArrayQueue<SingLinkedListNode> tree(10);
 
-	bool ret =  tree.enqueue(5);
+	bool ret =  tree.enqueue(new SingLinkedListNode(5));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(4);
+	ret = tree.enqueue(new SingLinkedListNode(4));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(9);
+	ret = tree.enqueue(new SingLinkedListNode(9));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(5);
+	ret = tree.enqueue(new SingLinkedListNode(5));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(7);
+	ret = tree.enqueue(new SingLinkedListNode(7));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(2);
+	ret = tree.enqueue(new SingLinkedListNode(2));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(2);
+	ret = tree.enqueue(new SingLinkedListNode(2));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(2);
+	ret = tree.enqueue(new SingLinkedListNode(2));
 	EXPECT_TRUE(ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(4);
+	ret = tree.enqueue(new SingLinkedListNode(4));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(10);
+	ret = tree.enqueue(new SingLinkedListNode(10));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(11);
+	ret = tree.enqueue(new SingLinkedListNode(11));
 	EXPECT_FALSE(ret);
 	cout << tree << endl;
 
@@ -147,33 +148,33 @@ TEST(ArrayQueueUnitTest, enqueue) {
 // Tests member api enqueue
 TEST(ArrayQueueUnitTest, dequeue) {
 
-	ArrayQueue tree(10);
+	ArrayQueue<SingLinkedListNode> tree(10);
 
-	bool ret =  tree.enqueue(5);
+	bool ret =  tree.enqueue(new SingLinkedListNode(5));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(4);
+	ret = tree.enqueue(new SingLinkedListNode(4));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(9);
+	ret = tree.enqueue(new SingLinkedListNode(9));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(5);
+	ret = tree.enqueue(new SingLinkedListNode(5));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(7);
+	ret = tree.enqueue(new SingLinkedListNode(7));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(2);
+	ret = tree.enqueue(new SingLinkedListNode(2));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(2);
+	ret = tree.enqueue(new SingLinkedListNode(2));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
@@ -220,41 +221,41 @@ TEST(ArrayQueueUnitTest, dequeue) {
 // Tests member api enqueue
 TEST(ArrayQueueUnitTest, enqueueAnddequeue) {
 
-	ArrayQueue tree(10);
+	ArrayQueue<SingLinkedListNode> tree(10);
 
-	bool ret =  tree.enqueue(5);
+	bool ret =  tree.enqueue(new SingLinkedListNode(5));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(4);
+	ret = tree.enqueue(new SingLinkedListNode(4));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(9);
+	ret = tree.enqueue(new SingLinkedListNode(9));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(5);
+	ret = tree.enqueue(new SingLinkedListNode(5));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(7);
+	ret = tree.enqueue(new SingLinkedListNode(7));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(2);
+	ret = tree.enqueue(new SingLinkedListNode(2));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(2);
+	ret = tree.enqueue(new SingLinkedListNode(2));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(4);
+	ret = tree.enqueue(new SingLinkedListNode(4));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.enqueue(10);
+	ret = tree.enqueue(new SingLinkedListNode(10));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
@@ -264,7 +265,7 @@ TEST(ArrayQueueUnitTest, enqueueAnddequeue) {
 		EXPECT_EQ(5, node->getValue());
 	cout << tree << endl;
 
-	ret = tree.enqueue(11);
+	ret = tree.enqueue(new SingLinkedListNode(11));
 	EXPECT_TRUE(ret);
 	cout << tree << endl;
 
@@ -274,7 +275,7 @@ TEST(ArrayQueueUnitTest, enqueueAnddequeue) {
 		EXPECT_EQ(4, node->getValue());
 	cout << tree << endl;
 
-	ret = tree.enqueue(4);
+	ret = tree.enqueue(new SingLinkedListNode(4));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 

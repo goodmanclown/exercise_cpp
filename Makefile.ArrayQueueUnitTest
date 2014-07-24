@@ -77,12 +77,13 @@ gtest_main.a : gtest-all.o gtest_main.o
 SingLinkedListNode.o : $(USER_DIR)/SingLinkedListNode.cpp $(USER_DIR)/SingLinkedListNode.hxx $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/SingLinkedListNode.cpp
 
-ArrayQueue.o : $(USER_DIR)/ArrayQueue.cpp $(USER_DIR)/ArrayQueue.hxx $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/ArrayQueue.cpp
+#ArrayQueue.o : $(USER_DIR)/ArrayQueue.cpp $(USER_DIR)/ArrayQueue.hxx $(GTEST_HEADERS)
+#	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/ArrayQueue.cpp
 
 ArrayQueueUnitTest.o : $(USER_DIR)/ArrayQueueUnitTest.cpp \
                      $(USER_DIR)/ArrayQueue.hxx $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/ArrayQueueUnitTest.cpp
 
-ArrayQueueUnitTest : ArrayQueueUnitTest.o ArrayQueue.o SingLinkedListNode.o gtest_main.a
+#ArrayQueueUnitTest : ArrayQueueUnitTest.o ArrayQueue.o SingLinkedListNode.o gtest_main.a
+ArrayQueueUnitTest : ArrayQueueUnitTest.o SingLinkedListNode.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
