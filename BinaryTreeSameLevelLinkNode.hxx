@@ -8,25 +8,20 @@ using std::ostream;
 
 
 /**
- * a template class representing the node of a bi-nary tree, with an additional link to the same level node to the right
- * each node has a left and right child node
- * left child node has value less than this node
- * right child node has value greater than or equal to this node (only 1 duplicate is allowed)
- * 
- * the type T should support operator<, operator>=, and operator==, and operator<<
+ * a class representing the node of a bi-nary tree
+ * each node has a left and right child node, with an additional link to the same level node to the right
  */ 
-template<typename T>
 class BinaryTreeSameLevelLinkNode {
 
 public:
 
 	/**
-	 * Constructor (make it explicit to prevent implicity conversion)
+	 * Constructor (make it explicit to prevent implicit conversion)
 	 *
 	 * @param: value - value of this node
 	 *
 	 */
-	explicit BinaryTreeSameLevelLinkNode(T value):mGreaterThanEqualToPtr(NULL),mLessThanPtr(NULL),mSameLevelPtr(NULL),mValue(value) { };
+	explicit BinaryTreeSameLevelLinkNode(uint32_t value):mRightPtr(NULL),mLeftPtr(NULL),mSameLevelPtr(NULL),mValue(value) { };
 
 
 	/**
@@ -36,67 +31,40 @@ public:
 
 
 	/**
-	 * @return mGreaterThanEqualToPtr
+	 * @return mRightPtr
     */
-	BinaryTreeSameLevelLinkNode<T>* getGreaterThanEqualToPtr() const { return mGreaterThanEqualToPtr; };
+	BinaryTreeSameLevelLinkNode* getRightPtr() const { return mRightPtr; };
 
 
 	/**
-	 * @return mLessThanPtr
+	 * @return mLeftPtr
     */
-	BinaryTreeSameLevelLinkNode<T>* getLessThanPtr() const { return mLessThanPtr; };
+	BinaryTreeSameLevelLinkNode* getLeftPtr() const { return mLeftPtr; };
 
 
 	/**
-	 * @param rhs - a reference to a BinaryTreeSameLevelLinkNode to determine which ptr to return
-    * 				 if input has value greater than or equal to this node, return mGreaterThanEqualToPtr
-    * 				 if input has value less than this node, return mLessThanPtr
-	 *
-	 * @return value of mGreaterThanEqualToPtr, or mLessThanPtr
-    */
-	BinaryTreeSameLevelLinkNode<T>* getPtr(const BinaryTreeSameLevelLinkNode<T>& rhs) const { 
-		return getPtr(rhs.mValue);
-	};
-
-
-	/**
-	 * @param rhs - a reference to a type T to determine which ptr to return
-    * 				 if input has value greater than or equal to this node, return mGreaterThanEqualToPtr
-    * 				 if input has value less than this node, return mLessThanPtr
-	 *
-	 * @return value of mGreaterThanEqualToPtr, or mLessThanPtr
-    */
-	BinaryTreeSameLevelLinkNode<T>* getPtr(const T& rhs) const
-	{ 
-		if (rhs >= *this) return mGreaterThanEqualToPtr; 
-		else if (rhs < *this) return mLessThanPtr; 
-
-		return NULL;
-	};
-
-
-	/**
-	 * @param ptr - a pointer to a BinayTreeSameLevelLinkNode object to be set to mGreaterThanEqualToPtr, or mLessThanPtr
-    * 				 if input has value greater than or equal to this node, set to mGreaterThanEqualToPtr
-    * 				 if input has value less than this node, set to mLessThanPtr
+	 * @param ptr - a pointer to a BinayTreeSameLevelLinkNode object to be set to mRightPtr
     *
-    * @return true if set is ok
     */
-	bool setPtr(BinaryTreeSameLevelLinkNode<T>* ptr)
+	void setRightPtr(BinaryTreeSameLevelLinkNode* ptr)
 	{
 		// is input a null pointer
-		if (NULL == ptr) return false;
+		if (NULL == ptr) return;
 
-		if ((*ptr >= *this) && (NULL == mGreaterThanEqualToPtr)) {
-			mGreaterThanEqualToPtr = ptr;
-			return true;
-		}
-		else if ((*ptr < *this) && (NULL == mLessThanPtr)) {
-			mLessThanPtr = ptr;
-			return true;
-		}
+		mRightPtr = ptr;
+	};
 
-		return false;
+
+	/**
+	 * @param ptr - a pointer to a BinayTreeSameLevelLinkNode object to be set to mLeftPtr
+    *
+    */
+	void setLeftPtr(BinaryTreeSameLevelLinkNode* ptr)
+	{
+		// is input a null pointer
+		if (NULL == ptr) return;
+
+		mLeftPtr = ptr;
 	};
 
 
@@ -105,39 +73,12 @@ public:
     *
     * @return true if set is ok
     */
-	bool setSameLevelPtr(BinaryTreeSameLevelLinkNode<T>* ptr)
+	void setSameLevelPtr(BinaryTreeSameLevelLinkNode* ptr)
 	{
 		// is input a null pointer
-		if (NULL == ptr) return false;
+		if (NULL == ptr) return;
 
-		if (NULL == mSameLevelPtr) {
-			mSameLevelPtr = ptr;
-			return true;
-		}
-
-		return false;
-	};
-
-
-	/**
-	 * @param rhs - a reference to a BinaryTreeSameLevelLinkNode to determine which ptr to remove
-    * 				 if input has value same as mGreaterThanEqualToPtr, set mGreaterThanEqualToPtr as NULL
-    * 				 if input has value same as mLessThanPtr, set mLessThanPtr as NULL
-	 *
-	 * @return true if remove ok, false if input value does not match with this node, or this node has no ptr set
-    */
-	bool remove(const BinaryTreeSameLevelLinkNode<T>& rhs)
-	{ 
-		if (NULL != mGreaterThanEqualToPtr && rhs == *mGreaterThanEqualToPtr) {
-			mGreaterThanEqualToPtr = NULL;
-			return true;
-		}
-		else if (NULL != mLessThanPtr && rhs == *mLessThanPtr) {
-			mLessThanPtr = NULL;
-			return true;
-		}
-
-		return false;
+		mSameLevelPtr = ptr;
 	};
 
 
@@ -148,17 +89,17 @@ public:
 	 *
 	 * @return true if mValue is less than rhs.mValue
 	 */
-	bool operator<(const BinaryTreeSameLevelLinkNode<T>& rhs) const { return (mValue < rhs.mValue); };
+	bool operator<(const BinaryTreeSameLevelLinkNode& rhs) const { return (mValue < rhs.mValue); };
 
 
 	/**
-	 * greater than or equal to operator
+	 * greater than operator
 	 *
 	 * @param: rhs - a reference to a BinaryTreeSameLevelLinkNode to compare with
 	 *
 	 * @return true if mValue is greater than or equal to rhs.mValue
 	 */
-	bool operator>=(const BinaryTreeSameLevelLinkNode<T>& rhs) const { return (mValue >= rhs.mValue); };
+	bool operator>=(const BinaryTreeSameLevelLinkNode& rhs) const { return (mValue >= rhs.mValue); };
 
 
 	/**
@@ -168,43 +109,13 @@ public:
 	 *
 	 * @return true if input is same as this one
 	 */
-	bool operator==(const BinaryTreeSameLevelLinkNode<T>& rhs) const { return (mValue == rhs.mValue); };
-
-
-	/**
-	 * less than operator
-	 *
-	 * @param: rhs - a reference to a type T to compare with
-	 *
-	 * @return true if mValue is less than rhs
-	 */
-	bool operator<(const T& rhs) const { return (mValue < rhs); };
-
-
-	/**
-	 * greater than or equal to operator
-	 *
-	 * @param: rhs - a reference to a type T to compare with
-	 *
-	 * @return true if mValue is greater than or equal to rhs
-	 */
-	bool operator>=(const T& rhs) const { return (mValue >= rhs); };
-
-
-	/**
-	 * comparison operator
-	 *
-	 * @param: rhs - a reference to a type T to compare with
-	 *
-	 * @return true if input is same as this one
-	 */
-	bool operator==(const T& rhs) const { return (mValue == rhs); };
+	bool operator==(const BinaryTreeSameLevelLinkNode& rhs) const { return (mValue == rhs.mValue); };
 
 
 	/**
 	 * @return mValue
 	 */
-	const T& getValue() const { return mValue; };
+	uint32_t getValue() const { return mValue; };
 
 
 	/**
@@ -215,7 +126,7 @@ public:
 	 *
 	 * @return a reference to ostream appended with value of this node, i.e, out
 	 */
-	friend ostream& operator<<(ostream& out, const BinaryTreeSameLevelLinkNode<T>& node) { return (out << node.mValue); };
+	friend ostream& operator<<(ostream& out, const BinaryTreeSameLevelLinkNode& node) { return (out << node.mValue); };
 
 
 private:
@@ -226,7 +137,7 @@ private:
 	 * @param: rhs - value to copied from
 	 *
 	 */
-	BinaryTreeSameLevelLinkNode(const BinaryTreeSameLevelLinkNode<T>& rhs) {};
+	BinaryTreeSameLevelLinkNode(const BinaryTreeSameLevelLinkNode& rhs) {};
 
 
 	/**
@@ -235,31 +146,31 @@ private:
 	 * @param: rhs - value to copied from
 	 *
 	 */
-	BinaryTreeSameLevelLinkNode<T>& operator=(const BinaryTreeSameLevelLinkNode<T>& rhs) { };
+	BinaryTreeSameLevelLinkNode& operator=(const BinaryTreeSameLevelLinkNode& rhs) { return *this; };
 
 
 	/**
 	 * pointer to node greater than or equal to value to this node
 	 */
-	BinaryTreeSameLevelLinkNode<T>* 	mGreaterThanEqualToPtr;
+	BinaryTreeSameLevelLinkNode* 	mRightPtr;
 
 
 	/**
 	 * pointer to node greater than value to this node
 	 */
-	BinaryTreeSameLevelLinkNode<T>* 	mLessThanPtr;
+	BinaryTreeSameLevelLinkNode* 	mLeftPtr;
 
 
 	/**
 	 * pointer to node at the same level to the right
 	 */
-	BinaryTreeSameLevelLinkNode<T>* 	mSameLevelPtr;
+	BinaryTreeSameLevelLinkNode* 	mSameLevelPtr;
 
 
 	/**
 	 * value of this node
 	 */
-	T	mValue;
+	uint32_t	mValue;
 
 };
 

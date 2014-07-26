@@ -80,287 +80,33 @@ using namespace std;
 // Tests member api insert
 TEST(BinaryTreeSameLevelLinkUnitTest, insert) {
 
-	BinaryTreeSameLevelLink<uint32_t> tree;
+	BinaryTreeSameLevelLink tree;
 
-	bool ret =  tree.insert(5);
+	bool ret =  tree.insert(new BinaryTreeSameLevelLinkNode(5));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.insert(4);
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(4));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.insert(9);
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(9));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.insert(5);
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(5));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.insert(7);
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(7));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.insert(2);
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(2));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	ret = tree.insert(2);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-  // <TechnicalDetails>
-  //
-  // EXPECT_EQ(expected, actual) is the same as
-  //
-  //   EXPECT_TRUE((expected) == (actual))
-  //
-  // except that it will print both the expected value and the actual
-  // value when the assertion fails.  This is very helpful for
-  // debugging.  Therefore in this case EXPECT_EQ is preferred.
-  //
-  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
-  // and is thus more general.
-  //
-  // </TechnicalDetails>
-}
-
-
-// Tests member api remove
-TEST(BinaryTreeSameLevelLinkUnitTest, remove) {
-
-	BinaryTreeSameLevelLink<uint32_t> tree;
-
-	bool ret =  tree.insert(5);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(4);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(9);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(5);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(7);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(2);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(2);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.remove(2);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.remove(2);
-	EXPECT_FALSE(ret);
-	cout << tree << endl;
-
-	ret = tree.remove(7);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.remove(5);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.remove(9);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.remove(4);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.remove(5);
-	EXPECT_FALSE(ret);
-	cout << tree << endl;
-
-  // <TechnicalDetails>
-  //
-  // EXPECT_EQ(expected, actual) is the same as
-  //
-  //   EXPECT_TRUE((expected) == (actual))
-  //
-  // except that it will print both the expected value and the actual
-  // value when the assertion fails.  This is very helpful for
-  // debugging.  Therefore in this case EXPECT_EQ is preferred.
-  //
-  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
-  // and is thus more general.
-  //
-  // </TechnicalDetails>
-}
-
-// Tests member api remove
-TEST(BinaryTreeSameLevelLinkUnitTest, removeRoot) {
-
-	BinaryTreeSameLevelLink<uint32_t> tree;
-
-	bool ret =  tree.insert(5);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(4);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(9);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(5);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(7);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(2);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(2);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(3);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.remove(5);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.remove(5);
-	EXPECT_FALSE(ret);
-	cout << tree << endl;
-
-	ret = tree.remove(9);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.remove(7);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.remove(4);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.remove(2);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.remove(2);
-	EXPECT_FALSE(ret);
-	cout << tree << endl;
-
-  // <TechnicalDetails>
-  //
-  // EXPECT_EQ(expected, actual) is the same as
-  //
-  //   EXPECT_TRUE((expected) == (actual))
-  //
-  // except that it will print both the expected value and the actual
-  // value when the assertion fails.  This is very helpful for
-  // debugging.  Therefore in this case EXPECT_EQ is preferred.
-  //
-  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
-  // and is thus more general.
-  //
-  // </TechnicalDetails>
-}
-
-// Tests member api remove
-TEST(BinaryTreeSameLevelLinkUnitTest, removeMiddle) {
-
-	BinaryTreeSameLevelLink<uint32_t> tree;
-
-	bool ret =  tree.insert(5);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(3);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(4);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(9);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(5);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(7);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(2);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.insert(2);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	cout << "remove 10" << endl;
-	ret = tree.remove(10);
-	if (!ret) cout << "remove ng" << endl;
-	EXPECT_FALSE(ret);
-
-	ret = tree.remove(3);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.remove(4);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.remove(5);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.remove(9);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.remove(5);
-	EXPECT_FALSE(ret);
-	cout << tree << endl;
-
-	ret = tree.remove(2);
-	EXPECT_EQ(true, ret);
-	cout << tree << endl;
-
-	ret = tree.remove(2);
-	EXPECT_FALSE(ret);
-	cout << tree << endl;
-
-	cout << "remove 2" << endl;
-	ret = tree.remove(2);
-	if (!ret) cout << "remove ng" << endl;
-	EXPECT_FALSE(ret);
-
-	ret = tree.remove(7);
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(2));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
@@ -379,6 +125,59 @@ TEST(BinaryTreeSameLevelLinkUnitTest, removeMiddle) {
   //
   // </TechnicalDetails>
 }
+
+
+// Tests member api same level link
+TEST(BinaryTreeSameLevelLinkUnitTest, sameLevelLink) {
+
+	BinaryTreeSameLevelLink tree;
+
+	bool ret =  tree.insert(new BinaryTreeSameLevelLinkNode(5));
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(4));
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(9));
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(5));
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(7));
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(2));
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(2));
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	tree.linkSameLevelNode();
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
 
 // Step 3. Call RUN_ALL_TESTS() in main().
 //

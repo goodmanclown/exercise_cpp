@@ -202,6 +202,28 @@ TEST(ArrayQueueUnitTest, dequeue) {
 		EXPECT_EQ(5, node->getValue());
 	cout << tree << endl;
 
+	node = tree.dequeue();
+	EXPECT_TRUE(node != NULL);
+	if (node != NULL)
+		EXPECT_EQ(7, node->getValue());
+	cout << tree << endl;
+
+	node = tree.dequeue();
+	EXPECT_TRUE(node != NULL);
+	if (node != NULL)
+		EXPECT_EQ(2, node->getValue());
+	cout << tree << endl;
+
+	node = tree.dequeue();
+	EXPECT_TRUE(node != NULL);
+	if (node != NULL)
+		EXPECT_EQ(2, node->getValue());
+	cout << tree << endl;
+
+	node = tree.dequeue();
+	EXPECT_TRUE(node == NULL);
+	cout << tree << endl;
+
   // <TechnicalDetails>
   //
   // EXPECT_EQ(expected, actual) is the same as
@@ -255,6 +277,10 @@ TEST(ArrayQueueUnitTest, enqueueAnddequeue) {
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
+	ret = tree.enqueue(new SingLinkedListNode(2));
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
 	ret = tree.enqueue(new SingLinkedListNode(10));
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
@@ -267,6 +293,10 @@ TEST(ArrayQueueUnitTest, enqueueAnddequeue) {
 
 	ret = tree.enqueue(new SingLinkedListNode(11));
 	EXPECT_TRUE(ret);
+	cout << tree << endl;
+
+	ret = tree.enqueue(new SingLinkedListNode(4));
+	EXPECT_EQ(false, ret);
 	cout << tree << endl;
 
 	node = tree.dequeue();
