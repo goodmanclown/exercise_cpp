@@ -296,7 +296,7 @@ TEST(ArrayQueueUnitTest, enqueueAnddequeue) {
 	cout << tree << endl;
 
 	ret = tree.enqueue(new SingLinkedListNode(4));
-	EXPECT_EQ(false, ret);
+	EXPECT_FALSE(ret);
 	cout << tree << endl;
 
 	node = tree.dequeue();
