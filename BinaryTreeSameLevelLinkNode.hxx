@@ -47,6 +47,15 @@ public:
 
 
     /**
+     * @return mSameLevelPtr
+    *
+    */
+    BinaryTreeSameLevelLinkNode* getSameLevelPtr() const {
+        return mSameLevelPtr;
+    };
+
+
+    /**
      * @param ptr - a pointer to a BinayTreeSameLevelLinkNode object to be set to mLeftPtr
     *
     */

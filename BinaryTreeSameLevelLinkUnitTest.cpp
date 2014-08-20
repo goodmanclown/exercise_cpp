@@ -179,6 +179,57 @@ TEST(BinaryTreeSameLevelLinkUnitTest, sameLevelLink) {
 }
 
 
+// Tests member api same level link with no queue
+TEST(BinaryTreeSameLevelLinkUnitTest, sameLevelLinkNoQueue) {
+
+	BinaryTreeSameLevelLink tree;
+
+	bool ret =  tree.insert(new BinaryTreeSameLevelLinkNode(5));
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(4));
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(9));
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(5));
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(7));
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(2));
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(new BinaryTreeSameLevelLinkNode(2));
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	tree.linkSameLevelNodeNoQueue();
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
 // Step 3. Call RUN_ALL_TESTS() in main().
 //
 // We do this by linking in src/gtest_main.cc file, which consists of

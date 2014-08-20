@@ -44,6 +44,63 @@ public:
 
     /**
      *
+     * traverse the tree breath first and link nodes at the same level without using queue
+     */
+    void linkSameLevelNodeNoQueue()
+    {
+        // is the tree empty
+        if (NULL == mRoot) return;
+
+        BinaryTreeSameLevelLinkNode* lastNodeFromQueue = NULL;
+
+        BinaryTreeSameLevelLinkNode* firstNodeNextLevel = NULL;
+
+        BinaryTreeSameLevelLinkNode* outNode = mRoot;
+
+        // loop until no more node 
+        while (outNode != NULL) {
+
+            // link left child node, if any
+            if (NULL != outNode->getLeftPtr()) {
+
+					 // if this is first time we had a child, keep track of it 
+					 if (firstNodeNextLevel == NULL) firstNodeNextLevel = outNode->getLeftPtr();
+
+					 // if there is already a link list, link the node
+					 if (lastNodeFromQueue != NULL) lastNodeFromQueue->setSameLevelPtr(outNode->getLeftPtr());
+
+					 lastNodeFromQueue = outNode->getLeftPtr();
+            }
+
+            // link right child node, if any
+            if (NULL != outNode->getRightPtr()) {
+					 // if this is first time we had a child, keep track of it 
+					 if (firstNodeNextLevel == NULL) firstNodeNextLevel = outNode->getRightPtr();
+
+					 // if there is already a link list, link the node
+					 if (lastNodeFromQueue != NULL) lastNodeFromQueue->setSameLevelPtr(outNode->getRightPtr());
+
+					 lastNodeFromQueue = outNode->getRightPtr();
+            }
+
+				// move to the adjacent node
+				outNode = outNode->getSameLevelPtr();
+
+
+				// if we are done with the same level, move down to the next level
+			   if (outNode == NULL) {
+ 					outNode = firstNodeNextLevel;
+					
+					// reset for next level
+ 					firstNodeNextLevel = NULL;
+					lastNodeFromQueue = NULL;
+				}
+        }	// while (outNode != NULL) {
+    };
+
+
+    /**
+     *
      * traverse the tree breath first and link nodes at the same level
      */
     void linkSameLevelNode()
