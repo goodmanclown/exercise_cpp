@@ -81,7 +81,7 @@ using namespace std;
 // Tests member api enqueue
 TEST(ArrayQueueUnitTest, enqueue) {
 
-	ArrayQueue<SingLinkedListNode> tree(10);
+	ArrayQueue<SingLinkedListNode, 10> tree;
 
 	bool ret =  tree.enqueue(new SingLinkedListNode(5));
 	EXPECT_EQ(true, ret);
@@ -148,7 +148,7 @@ TEST(ArrayQueueUnitTest, enqueue) {
 // Tests member api enqueue
 TEST(ArrayQueueUnitTest, dequeue) {
 
-	ArrayQueue<SingLinkedListNode> tree(10);
+	ArrayQueue<SingLinkedListNode, 10> tree;
 
 	bool ret =  tree.enqueue(new SingLinkedListNode(5));
 	EXPECT_EQ(true, ret);
@@ -243,7 +243,7 @@ TEST(ArrayQueueUnitTest, dequeue) {
 // Tests member api enqueue
 TEST(ArrayQueueUnitTest, enqueueAnddequeue) {
 
-	ArrayQueue<SingLinkedListNode> tree(10);
+	ArrayQueue<SingLinkedListNode, 10> tree;
 
 	bool ret =  tree.enqueue(new SingLinkedListNode(5));
 	EXPECT_EQ(true, ret);

@@ -12,7 +12,7 @@
 using std::ostream;
 
 
-template <typename T>
+template <typename T, unsigned int size>
 class ArrayQueue
 {
 public:
@@ -21,10 +21,8 @@ public:
     /**
     * Constructor
     *
-    * @param size - size of array of <T> initialized, default 12
-     */
-    ArrayQueue(uint32_t size=12):mHead(0),mSize(size),mTail(-1) {
-        mArrayT = new T*[size];
+    */
+    ArrayQueue():mHead(0),mSize(size),mTail(-1) {
     };
 
 
@@ -37,7 +35,6 @@ public:
 
         while ((node = dequeue()) != NULL) delete node;
 
-        delete [] mArrayT;
     }
 
 
@@ -108,7 +105,7 @@ public:
      *
      * @return a reference to ostream appended with values of nodes of this tree, i.e, out
      */
-    friend ostream& operator<<(ostream& out, const ArrayQueue<T>& q) {
+    friend ostream& operator<<(ostream& out, const ArrayQueue<T, size>& q) {
         // is tree empty?
         if (-1 == q.mTail) {
             return (out << "empty");
@@ -141,7 +138,7 @@ private:
     /**
     * a array of pointer to type T
     */
-    T**	mArrayT;
+    T*	mArrayT[size];
 
 
     /**
