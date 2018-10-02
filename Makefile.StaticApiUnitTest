@@ -19,7 +19,7 @@ GTEST_DIR = ../gtest
 
 # Where to find user code.
 #USER_DIR = ../samples
-USER_DIR = ./
+USER_DIR = .
 
 # Flags passed to the preprocessor.
 # Set Google Test's header directory as a system directory, such that
@@ -27,12 +27,12 @@ USER_DIR = ./
 CPPFLAGS += -isystem $(GTEST_DIR)/include
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g -Wall -Wextra -pthread
+CXXFLAGS += -g -Wall -Wextra -pthread -std=c++11
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
 #TESTS = sample1_unittest
-TESTS = MdnEndpointUnitTest
+TESTS = StaticApiUnitTest
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -74,12 +74,12 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 
-MdnEndpoint.o : $(USER_DIR)/MdnEndpoint.cpp $(USER_DIR)/MdnEndpoint.hxx $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/MdnEndpoint.cpp
+StaticApi.o : $(USER_DIR)/StaticApi.cpp $(USER_DIR)/StaticApi.hxx $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/StaticApi.cpp
 
-MdnEndpointUnitTest.o : $(USER_DIR)/MdnEndpointUnitTest.cpp \
-                     $(USER_DIR)/MdnEndpoint.hxx $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/MdnEndpointUnitTest.cpp
+StaticApiUnitTest.o : $(USER_DIR)/StaticApiUnitTest.cpp \
+                     $(USER_DIR)/StaticApi.hxx $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/StaticApiUnitTest.cpp
 
-MdnEndpointUnitTest : MdnEndpointUnitTest.o MdnEndpoint.o gtest_main.a
+StaticApiUnitTest : StaticApi.o StaticApiUnitTest.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@

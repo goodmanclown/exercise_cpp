@@ -371,6 +371,45 @@ TEST(StringUnitTest, shuffle) {
   // </TechnicalDetails>
 }
 
+// Tests member api shuffleAndPrint
+TEST(StringUnitTest, shuffleAndPrint) {
+
+	String mep("a");
+
+	mep.shuffleAndPrint();
+
+	String mep1("ab");
+
+	mep1.shuffleAndPrint();
+
+	String mep2("abc");
+
+	mep2.shuffleAndPrint();
+
+	String mep3("abcd");
+
+	mep3.shuffleAndPrint();
+
+	String mep4("eabcd");
+
+	mep4.shuffleAndPrint();
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
 // Tests member api reverse
 TEST(StringUnitTest, reverse) {
 
@@ -417,7 +456,7 @@ TEST(StringUnitTest, reverse) {
 }
 
 // Tests member api isEnough
-TEST(StringUnitTest, isenough) {
+TEST(StringUnitTest, isEnough) {
 
 	String mep("");
 	bool ret = mep.isEnough("note");
@@ -465,6 +504,284 @@ TEST(StringUnitTest, isenough) {
   //
   // </TechnicalDetails>
 }
+
+// Tests member api countWord
+TEST(StringUnitTest, countWord) {
+
+    String mep;
+
+	uint32_t ret = mep.countWord("note");
+
+	EXPECT_EQ(ret, 0);
+
+	ret = mep.countWord("wood");
+
+	EXPECT_EQ(ret, 1);
+
+	ret = mep.countWord("wwwwoodddd");
+
+	EXPECT_EQ(ret, 1);
+
+	ret = mep.countWord("wwoodddwwoodddd");
+
+	EXPECT_EQ(ret, 2);
+
+	ret = mep.countWord("wwoodddoowwoodddd");
+
+	EXPECT_EQ(ret, 3);
+
+	ret = mep.countWord("apple");
+
+	EXPECT_EQ(ret, 1);
+
+	ret = mep.countWord("applewood");
+
+	EXPECT_EQ(ret, 2);
+
+	ret = mep.countWord("doow");
+
+	EXPECT_EQ(ret, 1);
+
+	ret = mep.countWord("elppa");
+
+	EXPECT_EQ(ret, 1);
+
+	ret = mep.countWord("elppadoow");
+
+	EXPECT_EQ(ret, 2);
+
+	ret = mep.countWord("aaappleaappleapplewood");
+
+	EXPECT_EQ(ret, 4);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests member api countWord
+TEST(StringUnitTest, countWordOnGrid) {
+
+    char grid[5][5] = 
+	{
+		{'a', 'p', 'p', 'l', 'e'},
+		{'p', 'p', 'p', 'l', 'e'},
+		{'p', 'w', 'o', 'o', 'd'},
+		{'l', 'w', 'o', 'o', 'd'},
+		{'e', 'o', 'o', 'o', 0}
+    };
+
+	String mep;
+
+	// go through each row
+    uint32_t countWord = 0;
+
+	// go through each row
+    for (uint32_t rowIndex = 0; rowIndex < 5; rowIndex++) {
+        string str;
+
+        for (uint32_t colIndex = 0; colIndex < 5; colIndex++) {
+			str += grid[rowIndex][colIndex];
+		}
+
+  		countWord += mep.countWord(str.c_str());
+    }
+
+	// go through each col
+    for (uint32_t colIndex = 0; colIndex < 5; colIndex++) {
+        string str;
+
+   		for (uint32_t rowIndex = 0; rowIndex < 5; rowIndex++) {
+			str += grid[rowIndex][colIndex];
+		}
+
+  		countWord += mep.countWord(str.c_str());
+    }
+
+    EXPECT_EQ(countWord, 4);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests member api equalAlmost
+TEST(StringUnitTest, equalAlmost) {
+
+    {
+		String mep("");
+    	String mep1("");
+		bool ret = mep.equalAlmost(mep1);
+
+		EXPECT_FALSE(ret);
+	}
+
+    {
+		String mep("a");
+    	String mep1("ab");
+		bool ret = mep.equalAlmost(mep1);
+
+		EXPECT_TRUE(ret);
+	}
+
+    {
+		String mep("esteem");
+    	String mep1("steem");
+		bool ret = mep.equalAlmost(mep1);
+
+		EXPECT_TRUE(ret);
+	}
+
+    {
+		String mep("steeem");
+    	String mep1("steem");
+		bool ret = mep.equalAlmost(mep1);
+
+		EXPECT_TRUE(ret);
+	}
+
+    {
+		String mep("steam");
+    	String mep1("steem");
+		bool ret = mep.equalAlmost(mep1);
+
+		EXPECT_TRUE(ret);
+	}
+
+    {
+		String mep("steae");
+    	String mep1("steem");
+		bool ret = mep.equalAlmost(mep1);
+
+		EXPECT_FALSE(ret);
+	}
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
+// Tests member api isAllUnique
+TEST(StringUnitTest, isAllUnique) {
+
+    {
+		String mep("abcdefgh");
+		bool ret = mep.isAllUnique();
+
+		EXPECT_TRUE(ret);
+	}
+
+
+    {
+		String mep("aacdefgh");
+		bool ret = mep.isAllUnique();
+
+		EXPECT_FALSE(ret);
+	}
+
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
+// Tests member api removeDuplicate
+TEST(StringUnitTest, removeDuplicate) {
+
+    {
+		String mep("abcdefgh");
+		mep.removeDuplicate();
+
+		EXPECT_EQ(strcmp(mep.data(), "abcdefgh"), 0);
+	}
+
+
+    {
+		String mep("aacdefgh");
+		mep.removeDuplicate();
+
+		EXPECT_EQ(strcmp(mep.data(), "ahcdefg"), 0);
+	}
+
+
+    {
+		String mep("abcaefah");
+		mep.removeDuplicate();
+
+		EXPECT_EQ(strcmp(mep.data(), "abchef"), 0);
+	}
+
+    {
+		String mep("aaaaaaaaa");
+		mep.removeDuplicate();
+
+		EXPECT_EQ(strcmp(mep.data(), "a"), 0);
+	}
+
+
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
 
 // Step 3. Call RUN_ALL_TESTS() in main().
 //

@@ -19,7 +19,7 @@ GTEST_DIR = ../gtest
 
 # Where to find user code.
 #USER_DIR = ../samples
-USER_DIR = ./
+USER_DIR = .
 
 # Flags passed to the preprocessor.
 # Set Google Test's header directory as a system directory, such that
@@ -32,7 +32,7 @@ CXXFLAGS += -g -Wall -Wextra -pthread
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
 #TESTS = sample1_unittest
-TESTS = MdnEndpointUnitTest
+TESTS = BinarySearchTreeUnitTest
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -74,12 +74,16 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 
-MdnEndpoint.o : $(USER_DIR)/MdnEndpoint.cpp $(USER_DIR)/MdnEndpoint.hxx $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/MdnEndpoint.cpp
+#BinarySearchTreeNode.o : $(USER_DIR)/BinarySearchTreeNode.cpp $(USER_DIR)/BinaryTreeNode.hxx $(GTEST_HEADERS)
+#	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/BinarySearchTreeNode.cpp
 
-MdnEndpointUnitTest.o : $(USER_DIR)/MdnEndpointUnitTest.cpp \
-                     $(USER_DIR)/MdnEndpoint.hxx $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/MdnEndpointUnitTest.cpp
+#BinarySearchTree.o : $(USER_DIR)/BinarySearchTree.cpp $(USER_DIR)/BinarySearchTree.hxx $(GTEST_HEADERS)
+#	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/BinarySearchTree.cpp
 
-MdnEndpointUnitTest : MdnEndpointUnitTest.o MdnEndpoint.o gtest_main.a
+BinarySearchTreeUnitTest.o : $(USER_DIR)/BinarySearchTreeUnitTest.cpp \
+                     $(USER_DIR)/BinarySearchTree.hxx $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/BinarySearchTreeUnitTest.cpp
+
+#BinarySearchTreeUnitTest : BinarySearchTreeUnitTest.o BinarySearchTree.o BinarySearchTreeNode.o gtest_main.a
+BinarySearchTreeUnitTest : BinarySearchTreeUnitTest.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@

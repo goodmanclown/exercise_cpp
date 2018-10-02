@@ -2,7 +2,58 @@
 
 #include <iostream>
 
+#include <iostream>
 using namespace std;
+
+
+bool String::equalAlmost(const String& rhs) const
+{
+	if (this == &rhs) return false;
+
+    if (mLen > rhs.mLen+1 || rhs.mLen > mLen+1) return false;
+
+    uint32_t uDifferCount = 0;
+
+	uint32_t myIndex = 0;
+	uint32_t rhsIndex = 0; 
+	while (myIndex < mLen && rhsIndex < rhs.mLen) {
+		// match against the characters at the 2 index
+		if (mStr[myIndex] == rhs.mStr[rhsIndex]) {
+            // advance both pointers
+            ++myIndex;
+            ++rhsIndex;
+		}
+		else {
+			++uDifferCount;
+
+			if (uDifferCount > 1) {
+				return false;
+			}
+			else if (mLen > rhs.mLen) {
+				// mine is longer, advance my index
+				++myIndex;
+			} 
+			else if (mLen < rhs.mLen) {
+				// rhs is longer, advance rhs index
+				++rhsIndex;
+			}
+			else {
+				// advance both
+				++myIndex;
+				++rhsIndex;
+			}
+		}
+	}
+
+	if (mLen < rhs.mLen && myIndex == mLen) {
+		uDifferCount = 1;
+	}
+	else if (mLen > rhs.mLen && rhsIndex == rhs.mLen) {
+		uDifferCount = 1;
+	}
+
+    return (uDifferCount == 1);
+}
 
 
 bool String::find(const char str[]) const
@@ -262,54 +313,129 @@ uint32_t String::shuffle(char word[], uint32_t len, vector<string>& output) cons
 		output.push_back(string(word, len));
 		return 1;
 	}
+	else if (len == 2) {
 
-	if (len == 2) {
+		// make a copy of the input
+		char tmpWord[3];
+		tmpWord[0] = word[0];
+		tmpWord[1] = word[1];
+		tmpWord[2] = 0;
+
+        output.emplace_back(word);
 
 		// swap the 2 characters to make the combination
-		char temp = word[0];
-		word[0] = word[1];
-		word[1] = temp;
-		output.push_back(string(word, len));
-
-		// swap again the 2 characters to make the combination, and restore the input
-		temp = word[0];
-		word[0] = word[1];
-		word[1] = temp;
-		output.push_back(string(word, len));
+		char temp = tmpWord[0];
+		tmpWord[0] = tmpWord[1];
+		tmpWord[1] = temp;
+		output.emplace_back(tmpWord);
 
 		return 2;
 	} 
 
+
 	for (uint32_t index=0; index < len; index++) {
+
+        // make a copy of the input
+        string tmpWord = string(&word[1], len-1);
+
+		// remember the first char
+		char temp = word[0];
 		if (index > 0) {
-			char temp = word[0];
-			word[0] = word[index];
-			word[index] = temp;
+			// swap first char with the char at the index
+			temp = tmpWord[index-1];
+			tmpWord[index-1] = word[0];
 		}
 
 		// call this api again with the new string
 		vector<string> output1;
-		output1.clear();
-		uint32_t ret = shuffle(&word[1], len-1, output1);
+
+		uint32_t ret = shuffle(&tmpWord[0], len-1, output1);
 
 		if (ret > 0) {
 			// make a combination using the 1st character with output1 
 			for (uint32_t j=0; j < ret; j++) {
-				string str = string(word, 1);
+				string str;
+                str += temp;
 				str += output1[j];
 				output.push_back(str);
 			}
 		}
-
-		// restore the input string
-		if (index > 0) {
-			char temp = word[0];
-			word[0] = word[index];
-			word[index] = temp;
-		}
 	} 
 
 	return output.size();
+}
+
+void String::shuffleAndPrint()
+{
+	if (mLen == 0) return;
+
+    string output;
+
+	shuffleAndPrint(output, mStr);
+		
+	return;
+}
+
+
+void String::shuffleAndPrint(const string& prefix, char inputStr[])
+{
+    uint32_t inputStrLen = strlen(inputStr);
+
+	if (inputStrLen == 0) 
+    {
+        cout << prefix <<  endl;
+
+        return;
+    }
+	
+    if (inputStrLen == 1)
+    {
+        cout << prefix << inputStr <<  endl;
+
+        return;
+    }
+
+	if (inputStrLen == 2) 
+    {
+		// swap the 2 characters to make the combination
+		char temp = inputStr[0];
+		inputStr[0] = inputStr[1];
+		inputStr[1] = temp;
+
+        cout << prefix << inputStr <<  endl;
+
+        // restore the input
+		temp = inputStr[0];
+		inputStr[0] = inputStr[1];
+		inputStr[1] = temp;
+
+        cout << prefix << inputStr <<  endl;
+
+        return;
+	} 
+
+	for (uint32_t index=0; index < inputStrLen; ++index) 
+    {
+		// remember the first char
+		char temp = inputStr[0];
+		if (index > 0) {
+			// swap first char with the char at the index
+			temp = inputStr[index];
+			inputStr[index] = inputStr[0];
+			inputStr[0] = temp;
+		}
+
+		shuffleAndPrint(prefix + inputStr[0], &inputStr[1]);
+
+		if (index > 0) {
+			// restore the first char with the char at the index
+			temp = inputStr[index];
+			inputStr[index] = inputStr[0];
+			inputStr[0] = temp;
+		}
+	} 
+
+    return;
 }
 
 void String::reverse() 
@@ -372,5 +498,193 @@ bool String::isEnough(char note[])
 	}
 
 	return true;
+}
+
+
+uint32_t String::countWord(const char str[]) 
+{
+	uint32_t wordCount = 0;
+
+	uint32_t len = strlen(str);
+
+	// if input is empty, return 0
+	if (len == 0) return wordCount;
+
+    // scan the input from left to right
+	for (uint32_t beginIndex=0; beginIndex < len-1; beginIndex++) {
+        // kept the 1st char in a string
+		string word;
+
+        word += str[beginIndex];
+
+	    for (uint32_t endIndex=beginIndex+1; endIndex < len; endIndex++) {
+            // append the next char to the string
+            word += str[endIndex];
+
+            if (isWord(word.c_str(), word.length()) == true) wordCount++;
+		}
+	}
+
+    // scan the input from right to left
+	for (int beginIndex=len; beginIndex >= 1; beginIndex--) {
+        // kept the 1st char in a string
+		string word;
+
+        word += str[beginIndex];
+
+	    for (int endIndex=beginIndex-1; endIndex >= 0; endIndex--) {
+            // append the next char to the string
+            word += str[endIndex];
+
+            if (isWord(word.c_str(), word.length()) == true) wordCount++;
+		}
+	}
+
+	return wordCount;
+}
+
+
+uint32_t String::makeWord(vector<string>& output)
+{
+	uint32_t wordCount = 0;
+
+	// if internal empty, return 0
+	if (mLen == 0) return wordCount;
+
+	// count the alphabets (case-insensitive) in this string
+	uint32_t count[26];
+
+	for (uint32_t index=0; index < mLen; index++) {
+		// loop through each character
+		char indexChar = mStr[index];
+		if (indexChar >= 'a' && indexChar <= 'z') {
+			count[indexChar - 'a']++;
+		}
+		else if (indexChar >= 'A' && indexChar <= 'Z') {
+			count[indexChar - 'A']++;
+		}
+	}
+
+	for (uint32_t index = 0; index < 26; ++index) {
+		string word;
+		word += mStr[index];
+		if (isWord(word.c_str(), word.length()) == true) {
+			output.push_back(word);
+		}
+	}
+
+	// count the number of char
+	return wordCount;
+}
+
+
+bool String::isAllUnique()
+{
+    if (mLen == 0) return false;
+
+    // each bit of these 2 integers represents the state of a character
+
+    // 1 - character present
+    // 0 - character not present 
+    uint32_t uniqueBitArrayPresent = 0x0;
+
+    // 1 - character present and not unique
+    // 0 - character not present or unique
+    uint32_t uniqueBitArrayNotUnique = 0x0;
+
+
+    // loop through each character in this string
+    for (uint32_t strIndex = 0; strIndex < mLen; ++strIndex)
+    {
+        uint8_t shiftValue = mStr[strIndex] - 'a';
+        
+        // first check if the character is already present
+        if ( (uniqueBitArrayPresent & (1 << shiftValue)) > 0 )
+        {   // this character already present
+            // remember it
+            uniqueBitArrayNotUnique |= (1 << shiftValue);
+        }
+        else
+        {   // remember this character is present
+            uniqueBitArrayPresent |= (1 << shiftValue);
+        }
+    }
+
+    // return true if the Not Unique bit array is empty
+	return (uniqueBitArrayNotUnique == 0);
+}
+
+
+void String::removeDuplicate()
+{
+    if (mLen == 0) return;
+
+    bool bDone = false;
+
+    uint32_t strIndexStart = 0;
+    uint32_t strIndex = strIndexStart + 1;
+
+    while (bDone == false)
+    { 
+        // assume no duplicate
+        bDone = true;
+
+        for (; strIndex < mLen; ++strIndex)
+        {   // loop through each character and compare with the starting one
+
+            if ( mStr[strIndexStart] == mStr[strIndex] )
+            {   // replace this with the last character, if it's also not the same
+
+                uint32_t strIndexLast = mLen - 1; 
+                for (; strIndexLast > strIndex; --strIndexLast)
+                {
+                    if ( mStr[strIndexStart] != mStr[strIndexLast] )
+                    {   // not the same 
+                        break;
+                    }
+                    else
+                    {   // remove this char
+                        mStr[strIndexLast] = 0;
+                        --mLen;
+                    }
+                }
+
+                // replace this with the last character, if it's also not the same
+                mStr[strIndex] = mStr[strIndexLast];
+
+                // remove this char
+                mStr[strIndexLast] = 0;
+                --mLen;
+
+                // had at least 1 duplicate
+                bDone = false;
+            }
+        } 
+
+        // move the pointer
+        ++strIndexStart;
+        strIndex = strIndexStart + 1;
+    }
+}
+
+
+void String::escapeSpace()
+{
+    if (mLen == 0) return;
+
+    // count the number of space in the internal buffer
+    size_t countOfSpace=0;
+    for (size_t index=0; index < mLen; ++index)
+    {
+        if (mStr[index] == " ") 
+        {
+            ++countOfSpace;
+        }
+    }
+
+    // now know the number of spaces, calculate the extra number of bytes needed to keep the character '2' and '0'
+    size_t extraNumberOfBytes = countOfSpace * 2;
+
+
 }
 

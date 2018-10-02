@@ -19,7 +19,7 @@ GTEST_DIR = ../gtest
 
 # Where to find user code.
 #USER_DIR = ../samples
-USER_DIR = ./
+USER_DIR = .
 
 # Flags passed to the preprocessor.
 # Set Google Test's header directory as a system directory, such that
@@ -27,12 +27,12 @@ USER_DIR = ./
 CPPFLAGS += -isystem $(GTEST_DIR)/include
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g -Wall -Wextra -pthread
+CXXFLAGS += -g -Wall -Wextra -pthread -std=c++11
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
 #TESTS = sample1_unittest
-TESTS = MdnEndpointUnitTest
+TESTS = ArrayCircularUnitTest
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -74,12 +74,16 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 
-MdnEndpoint.o : $(USER_DIR)/MdnEndpoint.cpp $(USER_DIR)/MdnEndpoint.hxx $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/MdnEndpoint.cpp
+SingLinkedListNode.o : $(USER_DIR)/SingLinkedListNode.cpp $(USER_DIR)/SingLinkedListNode.hxx $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/SingLinkedListNode.cpp
 
-MdnEndpointUnitTest.o : $(USER_DIR)/MdnEndpointUnitTest.cpp \
-                     $(USER_DIR)/MdnEndpoint.hxx $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/MdnEndpointUnitTest.cpp
+#ArrayCircular.o : $(USER_DIR)/ArrayCircular.cpp $(USER_DIR)/ArrayCircular.hxx $(GTEST_HEADERS)
+#	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/ArrayCircular.cpp
 
-MdnEndpointUnitTest : MdnEndpointUnitTest.o MdnEndpoint.o gtest_main.a
+ArrayCircularUnitTest.o : $(USER_DIR)/ArrayCircularUnitTest.cpp \
+                     $(USER_DIR)/ArrayCircular.hxx $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/ArrayCircularUnitTest.cpp
+
+#ArrayCircularUnitTest : ArrayCircularUnitTest.o ArrayCircular.o SingLinkedListNode.o gtest_main.a
+ArrayCircularUnitTest : ArrayCircularUnitTest.o SingLinkedListNode.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@

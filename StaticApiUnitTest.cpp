@@ -43,10 +43,10 @@
 //
 // Don't forget gtest.h, which declares the testing framework.
 
-// #include <limits.h>
-#include "MdnEndpoint.hxx"
+#include "StaticApi.hxx"
 #include "gtest/gtest.h"
 
+using namespace std;
 
 // Step 2. Use the TEST macro to define your tests.
 //
@@ -73,30 +73,16 @@
 // </TechnicalDetails>
 
 
-// Tests MdnEndpoint().
+// Tests StaticApi().
 
-// Tests member api operator<
-TEST(MdnEndpointUnitTest, less) {
+TEST(StaticApi, LookAndSayLevelOne) {
 
-	MdnEndpoint mep(4083330001, 4083339999);
+	vector<string> output;
 
-	EXPECT_EQ(false, mep < mep);
+	size_t ret = StaticApi::lookAndSay(1, output);
 
-	MdnEndpoint meprhs1(4083330000, 4083330000);
-
-	EXPECT_EQ(false, mep < meprhs1);
-
-	MdnEndpoint meprhs2(4083340000, 4083340000);
-
-	EXPECT_EQ(true, mep < meprhs2);
-
-	MdnEndpoint meprhs3(4083330000, 4083340000);
-
-	EXPECT_EQ(false, mep < meprhs3);
-
-	MdnEndpoint meprhs4(4083330000, 4083335000);
-
-	EXPECT_EQ(false, mep < meprhs4);
+    EXPECT_EQ(ret, 1);
+    EXPECT_EQ(output[0], "1");
 
   // <TechnicalDetails>
   //
@@ -114,28 +100,17 @@ TEST(MdnEndpointUnitTest, less) {
   // </TechnicalDetails>
 }
 
-// Tests member api operator>
-TEST(MdnEndpointUnitTest, greater) {
+// Tests StaticApi().
 
-	MdnEndpoint mep(4083330001, 4083339999);
+TEST(StaticApi, lookAndSayLevelTwo) {
 
-	EXPECT_EQ(false, mep > mep);
+	vector<string> output;
 
-	MdnEndpoint meprhs1(4083330000, 4083330000);
+	size_t ret = StaticApi::lookAndSay(2, output);
 
-	EXPECT_EQ(true, mep > meprhs1);
-
-	MdnEndpoint meprhs2(4083340000, 4083340000);
-
-	EXPECT_EQ(false, mep > meprhs2);
-
-	MdnEndpoint meprhs3(4083330000, 4083340000);
-
-	EXPECT_EQ(false, mep > meprhs3);
-
-	MdnEndpoint meprhs4(4083330000, 4083335000);
-
-	EXPECT_EQ(false, mep > meprhs4);
+    EXPECT_EQ(ret, 2);
+    EXPECT_EQ(output[0], "1");
+    EXPECT_EQ(output[1], "11");
 
   // <TechnicalDetails>
   //
@@ -153,32 +128,18 @@ TEST(MdnEndpointUnitTest, greater) {
   // </TechnicalDetails>
 }
 
-// Tests member api operator==
-TEST(MdnEndpointUnitTest, equalto) {
+// Tests StaticApi().
 
-	MdnEndpoint mep(4083330000, 4083331111);
+TEST(StaticApi, lookAndSayLevelThree) {
 
-	EXPECT_EQ(true, mep == mep);
+	vector<string> output;
 
-	MdnEndpoint meprhs1(4083330000, 4083330000);
+	size_t ret = StaticApi::lookAndSay(3, output);
 
-	EXPECT_EQ(false, mep == meprhs1);
-
-	MdnEndpoint meprhs2(4083340000, 4083340000);
-
-	EXPECT_EQ(false, mep == meprhs2);
-
-	MdnEndpoint meprhs3(4083330001, 4083340000);
-
-	EXPECT_EQ(false, mep == meprhs3);
-
-	MdnEndpoint meprhs4(4083330000, 4083333999);
-
-	EXPECT_EQ(false, mep == meprhs4);
-
-	MdnEndpoint meprhs5(mep);
-
-	EXPECT_EQ(true, mep == meprhs5);
+    EXPECT_EQ(ret, 3);
+    EXPECT_EQ(output[0], "1");
+    EXPECT_EQ(output[1], "11");
+    EXPECT_EQ(output[2], "21");
 
   // <TechnicalDetails>
   //
@@ -196,49 +157,19 @@ TEST(MdnEndpointUnitTest, equalto) {
   // </TechnicalDetails>
 }
 
+// Tests StaticApi().
 
-// Tests member api operator|=
-TEST(MdnEndpointUnitTest, ored) {
+TEST(StaticApi, lookAndSayLevelFour) {
 
-	{
-	MdnEndpoint mep(4083330001, 4083339999);
+	vector<string> output;
 
-	MdnEndpoint meprhs1(4083330000, 4083330000);
+	size_t ret = StaticApi::lookAndSay(4, output);
 
-	mep |= meprhs1;
-
-	EXPECT_EQ(4083330000, mep.mMin);
-	EXPECT_EQ(4083339999, mep.mMax);
-	}
-
-	{
-	MdnEndpoint mep(4083330001, 4083339999);
-
-	MdnEndpoint meprhs1(4083340000, 4083340000);
-
-	mep |= meprhs1;
-
-	EXPECT_EQ(4083330001, mep.mMin);
-	EXPECT_EQ(4083340000, mep.mMax);
-	}
-
-	{
-	MdnEndpoint mep(4083330001, 4083339999);
-
-	mep |= 4083330000;
-
-	EXPECT_EQ(4083330000, mep.mMin);
-	EXPECT_EQ(4083339999, mep.mMax);
-	}
-
-	{
-	MdnEndpoint mep(4083330001, 4083339999);
-
-	mep |= 4083340000;
-
-	EXPECT_EQ(4083330001, mep.mMin);
-	EXPECT_EQ(4083340000, mep.mMax);
-	}
+    EXPECT_EQ(ret, 4);
+    EXPECT_EQ(output[0], "1");
+    EXPECT_EQ(output[1], "11");
+    EXPECT_EQ(output[2], "21");
+    EXPECT_EQ(output[3], "1211");
 
   // <TechnicalDetails>
   //
@@ -256,84 +187,19 @@ TEST(MdnEndpointUnitTest, ored) {
   // </TechnicalDetails>
 }
 
+// Tests StaticApi().
 
-// Tests member api operator&
-TEST(MdnEndpointUnitTest, anded) {
+TEST(StaticApi, lookAndSayLevelFive) {
 
-	{
-	MdnEndpoint mep(4083330001, 4083339999);
+	vector<string> output;
 
-	EXPECT_EQ(true, mep & mep);
+	size_t ret = StaticApi::lookAndSay(5, output);
 
-	}
-
-	{
-	MdnEndpoint mep(4083330001, 4083339999);
-
-	MdnEndpoint meprhs1(4083330000, 4083330000);
-
-	EXPECT_EQ(false, mep & meprhs1);
-
-	}
-
-	{
-	MdnEndpoint mep(4083330001, 4083339999);
-
-	MdnEndpoint meprhs1(4083340000, 4083340000);
-
-	EXPECT_EQ(false, mep & meprhs1);
-
-	}
-
-	{
-	MdnEndpoint mep(4083330001, 4083339999);
-
-	MdnEndpoint meprhs1(4083330000, 4083340000);
-
-	EXPECT_EQ(true, mep & meprhs1);
-
-	}
-
-	{
-	MdnEndpoint mep(4083330001, 4083339999);
-
-	MdnEndpoint meprhs1(4083331000, 4083332000);
-
-	EXPECT_EQ(true, mep & meprhs1);
-
-	}
-
-	{
-	MdnEndpoint mep(4083330001, 4083339999);
-
-	MdnEndpoint meprhs1(4083330000, 4083332000);
-
-	EXPECT_EQ(true, mep & meprhs1);
-
-	}
-
-	{
-	MdnEndpoint mep(4083330001, 4083339999);
-
-	MdnEndpoint meprhs1(4083332000, 4083340000);
-
-	EXPECT_EQ(true, mep & meprhs1);
-
-	}
-
-	{
-	MdnEndpoint mep(4083330001, 4083339999);
-
-	EXPECT_EQ(false, mep & 4083330000);
-
-	}
-
-	{
-	MdnEndpoint mep(4083330001, 4083339999);
-
-	EXPECT_EQ(false, mep & 4083340000);
-
-	}
+    EXPECT_EQ(ret, 5);
+    EXPECT_EQ(output[0], "1");
+    EXPECT_EQ(output[1], "11");
+    EXPECT_EQ(output[2], "21");
+    EXPECT_EQ(output[3], "1211");
 
   // <TechnicalDetails>
   //
@@ -351,26 +217,167 @@ TEST(MdnEndpointUnitTest, anded) {
   // </TechnicalDetails>
 }
 
-// Tests member api implicit constructor
-TEST(MdnEndpointUnitTest, implicitcon) {
+// Tests StaticApi().
 
-	{
-	MdnEndpoint mep(4083330001, 4083339999);
+TEST(StaticApi, productOfA1) {
 
-	MdnEndpoint meprhs = 4083330000;
+	int a[4] = { 2, 1, 5, 9 };
+    int b[4] = { 0, 0, 0, 0 };
 
-	EXPECT_EQ(false, mep & meprhs);
+	StaticApi::productOfA1(a, 4, b, 4);
 
-	}
+    EXPECT_EQ(b[0], 45);
+    EXPECT_EQ(b[1], 90);
+    EXPECT_EQ(b[2], 18);
+    EXPECT_EQ(b[3], 10);
 
-	{
-	MdnEndpoint mep(4083330001, 4083339999);
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
 
-	MdnEndpoint meprhs = 4083340000;
+// Tests StaticApi().
 
-	EXPECT_EQ(false, mep & meprhs);
+TEST(StaticApi, productOfA2) {
 
-	}
+	int a[4] = { 2, 1, 5, 9 };
+    int b[4] = { 0, 0, 0, 0 };
+
+	StaticApi::productOfA2(a, 4, b, 4);
+
+    EXPECT_EQ(b[0], 45);
+    EXPECT_EQ(b[1], 90);
+    EXPECT_EQ(b[2], 18);
+    EXPECT_EQ(b[3], 10);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests StaticApi().
+
+TEST(StaticApi, searchStringInArrayMatch) {
+
+	string a[] = { "at", "", "", "", "", "ball", "", "", "car", "", "", "dad", "", "" };
+
+	size_t ret = StaticApi::searchStringInArray(a, 14, 0, "ball");
+
+    EXPECT_EQ(ret, 5);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests StaticApi().
+
+TEST(StaticApi, searchStringInArrayUnMatch) {
+
+	string a[] = { "at", "", "", "", "", "ball", "", "", "car", "", "", "dad", "", "" };
+
+	size_t ret = StaticApi::searchStringInArray(a, 14, 0, "ballcat");
+
+    EXPECT_EQ(ret, string::npos);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests StaticApi().
+
+TEST(StaticApi, findElementInMatrixMatch)
+{
+	int matrix[][5] = 
+    { 
+        { 1, 2, 3, 4, 5 },
+        { 2, 4, 6, 8, 10 },
+        { 3, 6, 9, 12, 15 },
+        { 4, 8, 12, 16, 20 }
+    };
+
+    int* pMatrix = &matrix[0][0];
+	bool ret = StaticApi::findElementInMatrix(pMatrix, 4, 5, 9);
+
+    EXPECT_TRUE(ret);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests StaticApi().
+
+TEST(StaticApi, findElementInMatrixNoMatch)
+{
+	int matrix[][5] = 
+    { 
+        { 1, 2, 3, 4, 5 },
+        { 2, 4, 6, 8, 10 },
+        { 3, 6, 9, 12, 15 },
+        { 4, 8, 12, 16, 20 }
+    };
+
+    int* pMatrix = &matrix[0][0];
+	bool ret = StaticApi::findElementInMatrix(pMatrix, 4, 5, 13);
+
+    EXPECT_FALSE(ret);
 
   // <TechnicalDetails>
   //

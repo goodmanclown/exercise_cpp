@@ -130,6 +130,19 @@ public:
 
 
 	/**
+	 * almost equal operator
+     * - inserting one character anywhere in the word (including at the beginning and end)
+     * - removing one character
+     * - replacing exactly one character
+	 *
+	 * @param: rhs 
+	 * @return true if almost equal 
+	 *
+	 */
+	bool equalAlmost(const String& rhs) const;
+
+
+	/**
 	 * @return true if input str is a substring 
 	 */
 	bool find(const char str[]) const;
@@ -153,7 +166,6 @@ public:
 	uint32_t split(const char delimit[], vector<String>& output) const;
 
 
-
 	/**
 	 * @return number of splitted string in output vector.  0 otherwise
 	 */
@@ -170,6 +182,12 @@ public:
 	 * @return number of combination
 	 */
 	uint32_t shuffle(vector<string>& output) const;
+
+
+	/**
+	 * print out all the anagrams of this string
+	 */
+	void shuffleAndPrint();
 
 
 	/**
@@ -190,6 +208,36 @@ public:
 	bool isEnough(char note[]);
 
 
+	/**
+	 * @return number of word in the internal word list is found in this string, from left and from right
+	 */
+	uint32_t countWord(const char str[]);
+
+
+	/**
+	 * @return number of words that can be made up with the characters of this string
+	 */
+	uint32_t makeWord(vector<string>& output);
+
+
+	/**
+	 * @return true if this string has all unique characters
+	 */
+	bool isAllUnique();
+
+
+	/**
+	 *
+	 */
+	void removeDuplicate();
+
+
+	/**
+	 *
+	 */
+	void escapeSpace();
+
+
 private:
 	
 
@@ -204,6 +252,12 @@ private:
 	 * @return number of combination
 	 */
 	uint32_t shuffle(char word[], uint32_t len, vector<string>& output) const;
+
+
+	/**
+	 * 
+	 */
+	void shuffleAndPrint(const string& prefix, char inputStr[]);
 
 
 	/**

@@ -11,6 +11,14 @@ public:
 	/**
 	 * Constructor
 	 *
+	 */
+	MdnEndpoint():mMin(0),mMax(0),mIndex(-1) { 
+	};
+
+
+	/**
+	 * Constructor
+	 *
 	 * @param: min - min of mdn range
 	 * @param: max - max of mdn range
 	 *

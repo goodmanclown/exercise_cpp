@@ -33,13 +33,49 @@ public:
 	/**
 	 * @return mGreaterThanPtr
     */
-	BinaryTreeNode<T>* getGreaterThanPtr() const { return mGreaterThanPtr; };
+	const BinaryTreeNode<T>* getGreaterThanPtr() const { return mGreaterThanPtr; };
 
 
 	/**
 	 * @return mLessThanPtr
     */
-	BinaryTreeNode<T>* getLessThanPtr() const { return mLessThanPtr; };
+	const BinaryTreeNode<T>* getLessThanPtr() const { return mLessThanPtr; };
+
+
+	/**
+	 * @return mGreaterThanPtr
+    */
+	BinaryTreeNode<T>* getGreaterThanPtr() { return mGreaterThanPtr; };
+
+
+	/**
+	 * @return mLessThanPtr
+    */
+	BinaryTreeNode<T>* getLessThanPtr() { return mLessThanPtr; };
+
+
+	/**
+	 * @return right node
+    */
+	BinaryTreeNode<T>*& getRightNode() { return mGreaterThanPtr; };
+
+
+	/**
+	 * @return left node
+    */
+	BinaryTreeNode<T>*& getLeftNode() { return mLessThanPtr; };
+
+
+	/**
+	 * @return right node
+    */
+	const BinaryTreeNode<T>* getRightNode() const { return mGreaterThanPtr; };
+
+
+	/**
+	 * @return left node
+    */
+	const BinaryTreeNode<T>* getLeftNode() const { return mLessThanPtr; };
 
 
 	/**
