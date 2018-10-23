@@ -15,7 +15,7 @@ public:
 	/**
     * Constructor
 	 */
-	SingLinkedList():mHead(NULL),mLength(0) { };
+	SingLinkedList():mHead(nullptr),mLength(0) { };
 
 	
 	/**
@@ -110,6 +110,19 @@ public:
 	 * @return node at the last nth element of the list
 	 */
 	SingLinkedListNodePtr last(uint32_t nth) const;
+
+
+	/**
+	 *
+	 * @return true if the list is a palinodrome
+	 */
+	bool isPalinodrome() const;
+
+
+	/**
+	 * sort 0, 1, 2
+	 */
+	void sortInto012();
 
 
    /** 

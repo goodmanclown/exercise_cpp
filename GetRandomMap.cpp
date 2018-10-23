@@ -1,5 +1,6 @@
 #include "GetRandomMap.hxx"
 
+#include <algorithm>
 #include <iostream>
 #include <utility>
 
@@ -8,12 +9,12 @@ using namespace std;
 bool GetRandomMap::add(uint64_t min, uint64_t max)
 {
     // make a temp 
-    MdnEndpoint me(min, max);
+    const MdnEndpoint me(min, max);
 
     // check if there's any duplicate
-    map<MdnEndpoint, std::size_t>::iterator iter = mMap.find(me);
+    map<MdnEndpoint, std::size_t>::const_iterator iter = mMap.find(me);
 
-    if (iter != mMap.end())
+    if (iter != mMap.cend())
     {   // already in the map
         return false;
     }
@@ -36,24 +37,19 @@ bool GetRandomMap::remove(uint64_t min, uint64_t max)
     }
 
     // make a temp 
-    MdnEndpoint me(min, max);
+    const MdnEndpoint me(min, max);
 
-    cout << "me min " << me.mMin << " me max " << me.mMax << endl;
+    cout << "me min " << me.first << " me max " << me.second << endl;
 
-    // check if there's any duplicate
-    map<MdnEndpoint, size_t>::iterator iter = mMap.begin();
+    // check if the pair is in the map
+    map<MdnEndpoint, size_t>::const_iterator iter = mMap.find(me);
 
-    for (; iter != mMap.end(); ++iter)
-    {   
-        if (iter->first == me) break;
-    }
-
-    if (iter == mMap.end())
+    if (iter == mMap.cend())
     {
         return false;
     }
 
-    cout << "min " << iter->first.mMin << " max " << iter->first.mMax << endl;
+    cout << "min " << iter->first.first << " max " << iter->first.second << endl;
 
     // keep track of the index
     size_t pos = iter->second;
@@ -75,7 +71,52 @@ bool GetRandomMap::remove(uint64_t min, uint64_t max)
 }
 
 
-bool GetRandomMap::getRandom(uint64_t& min, uint64_t& max)
+bool GetRandomMap::find(uint64_t min, uint64_t max) const
+{
+    if (mMap.empty() == true)
+    {
+        return false;
+    }
+
+    // make a temp 
+    const MdnEndpoint me(min, max);
+
+    cout << "me min " << me.first << " me max " << me.second << endl;
+
+    // check if the pair is in the map
+    map<MdnEndpoint, size_t>::const_iterator mCIter = mMap.find(me);
+
+    if (mCIter != mMap.cend())
+    {   // this is an exact match
+        return true;
+    }
+
+    // how about within the range of a pair
+    const vector<MdnEndpoint>::const_iterator vCIter = 
+            find_if(mVector.begin(), mVector.end(),
+                       [&](const MdnEndpoint& value) 
+                       {
+                           if (value.first <= min && value.second >= max)
+                           {
+                               return true;
+                           }
+                           else
+                           {
+                               return false;
+                           }
+                       }
+                   );
+
+    if (vCIter != mVector.cend())
+    {   // this is a match
+        return true;
+    }
+
+    return false;
+}
+
+
+bool GetRandomMap::getRandom(MdnEndpoint& out) const
 {
     if (mMap.empty() == true)
     {
@@ -84,8 +125,8 @@ bool GetRandomMap::getRandom(uint64_t& min, uint64_t& max)
 
     size_t pos = rand() % mMap.size();
 
-    min = mVector[pos].mMin;
-    max = mVector[pos].mMax;
+    out.first = mVector[pos].second;
+    out.second = mVector[pos].second;
 
     return true;
 }

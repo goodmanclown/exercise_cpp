@@ -686,6 +686,254 @@ TEST(SingLinkedListUnitTest, last) {
 }
 
 
+// Tests member api isPalindrome
+TEST(SingLinkedListUnitTest, isPalindrome) {
+
+	SingLinkedList tree;
+
+	bool ret = tree.isPalinodrome();
+	EXPECT_TRUE(ret);
+
+	tree.insert(5, 0);
+	cout << tree << endl;
+
+	ret = tree.isPalinodrome();
+	EXPECT_TRUE(ret);
+
+	tree.insert(1, 0);
+	cout << tree << endl;
+	
+	ret = tree.isPalinodrome();
+	cout << tree << endl;
+	EXPECT_FALSE(ret);
+
+	tree.insert(5, 0);
+	cout << tree << endl;
+	
+	ret = tree.isPalinodrome();
+	cout << tree << endl;
+	EXPECT_TRUE(ret);
+
+	tree.insert(1, 0);
+	cout << tree << endl;
+	
+	tree.insert(5, 0);
+	cout << tree << endl;
+
+	ret = tree.isPalinodrome();
+	cout << tree << endl;
+	EXPECT_TRUE(ret);
+
+    tree.remove(0);
+	cout << tree << endl;
+
+    tree.remove(2);
+	cout << tree << endl;
+
+    tree.insert(1, tree.getLength());
+	cout << tree << endl;
+
+	ret = tree.isPalinodrome();
+	cout << tree << endl;
+	EXPECT_TRUE(ret);
+
+	tree.insert(5, 0);
+	cout << tree << endl;
+
+	ret = tree.isPalinodrome();
+	cout << tree << endl;
+	EXPECT_FALSE(ret);
+
+    tree.remove(4);
+	cout << tree << endl;
+
+	ret = tree.isPalinodrome();
+	cout << tree << endl;
+	EXPECT_FALSE(ret);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
+// Tests member api sortInto012
+TEST(SingLinkedListUnitTest, sortInto012) {
+
+	SingLinkedList expectedTree;
+	expectedTree.insert(2,0);
+	expectedTree.insert(2,0);
+	expectedTree.insert(2,0);
+	expectedTree.insert(1,0);
+	expectedTree.insert(1,0);
+	expectedTree.insert(0,0);
+	expectedTree.insert(0,0);
+	expectedTree.insert(0,0);
+
+	SingLinkedList tree;
+	tree.insert(2,0);
+	tree.insert(0,0);
+	tree.insert(2,0);
+	tree.insert(1,0);
+	tree.insert(0,0);
+	tree.insert(1,0);
+	tree.insert(0,0);
+	tree.insert(2,0);
+
+    tree.sortInto012();
+
+	EXPECT_TRUE(tree == expectedTree);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
+// Tests member api sortInto012
+TEST(SingLinkedListUnitTest, sortInto012No0) {
+
+	SingLinkedList expectedTree;
+	expectedTree.insert(2,0);
+	expectedTree.insert(2,0);
+	expectedTree.insert(2,0);
+	expectedTree.insert(1,0);
+	expectedTree.insert(1,0);
+	expectedTree.insert(0,0);
+	expectedTree.insert(0,0);
+	expectedTree.insert(0,0);
+
+	SingLinkedList tree;
+	tree.insert(2,0);
+	tree.insert(0,0);
+	tree.insert(2,0);
+	tree.insert(1,0);
+	tree.insert(0,0);
+	tree.insert(1,0);
+	tree.insert(0,0);
+	tree.insert(2,0);
+
+    tree.sortInto012();
+
+	EXPECT_TRUE(tree == expectedTree);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
+// Tests member api sortInto012
+TEST(SingLinkedListUnitTest, sortInto012No1) {
+
+	SingLinkedList expectedTree;
+	expectedTree.insert(2,0);
+	expectedTree.insert(2,0);
+	expectedTree.insert(2,0);
+	expectedTree.insert(0,0);
+	expectedTree.insert(0,0);
+	expectedTree.insert(0,0);
+
+	SingLinkedList tree;
+	tree.insert(2,0);
+	tree.insert(0,0);
+	tree.insert(2,0);
+	tree.insert(0,0);
+	tree.insert(0,0);
+	tree.insert(2,0);
+
+    tree.sortInto012();
+
+	EXPECT_TRUE(tree == expectedTree);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
+// Tests member api sortInto012
+TEST(SingLinkedListUnitTest, sortInto012No2) {
+
+	SingLinkedList expectedTree;
+	expectedTree.insert(1,0);
+	expectedTree.insert(1,0);
+	expectedTree.insert(0,0);
+	expectedTree.insert(0,0);
+	expectedTree.insert(0,0);
+
+	SingLinkedList tree;
+	tree.insert(0,0);
+	tree.insert(1,0);
+	tree.insert(0,0);
+	tree.insert(1,0);
+	tree.insert(0,0);
+
+    tree.sortInto012();
+
+	EXPECT_TRUE(tree == expectedTree);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
 // Step 3. Call RUN_ALL_TESTS() in main().
 //
 // We do this by linking in src/gtest_main.cc file, which consists of

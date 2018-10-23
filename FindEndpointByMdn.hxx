@@ -1,7 +1,3 @@
-/**
- * from the input dn, find the associated endpoint
- */ 
-
 #include "MdnEndpoint.hxx"
 
 #include <list>
@@ -11,22 +7,25 @@
 using namespace std;
 
 
+/**
+ * from the input dn, find the associated endpoint
+ */ 
 class FindEndpointByMdn
 {
 public:
 
-	typedef unsigned int uInt;
+	using uInt = unsigned int;
 
 	/**
     * Constructor
 	 */
-	FindEndpointByMdn() { mMdnEndpointList.clear(); mMidpoint = mMdnEndpointList.end(); mEndpointList.clear(); };
+	FindEndpointByMdn():mMidpoint(mMdnEndpointList.end()) { };
 
 	
 	/**
 	 * Destructor
 	 */
-	virtual ~FindEndpointByMdn() { mMdnEndpointList.clear(); mEndpointList.clear(); };
+	virtual ~FindEndpointByMdn()=default;
 
 
 	/**
@@ -63,20 +62,20 @@ public:
 	/**
 	 * a vector of EndPoint
 	 */
-	typedef vector<string>	EndpointList;
+	using EndpointList = vector<string>;
 	EndpointList		mEndpointList;
 
 
 	/**
 	 * a list of MdnEndpoint
 	 */
-	typedef list<MdnEndpoint>	MdnEndpointList;
+	using MdnEndpointList = list<MdnEndpoint>;
 	MdnEndpointList	mMdnEndpointList;
 
    /**
 	 * mid point of the list
     */
-	typedef MdnEndpointList::iterator  MepListIter;
+	using MepListIter = MdnEndpointList::iterator;
 	MepListIter 	mMidpoint;
 
 
@@ -88,7 +87,7 @@ private:
 	 * @param: min - min of mdn range
 	 * @param: max - max of mdn range
 	 * @param: outIter - iterator to the element in the list if find.  otherwise, end()
-    * @return 0 - sucess, -1 - overlapped
+     * @return 0 - sucess, -1 - overlapped
 	 */
 	int find(uInt min, uInt max, MepListIter& outIter);
 
@@ -97,7 +96,7 @@ private:
 	 *
 	 * @param: endpoint - a string of endpoint
 	 * 
-	 * @return index to EndPointList storing the input
+     * @return 0 - sucess, -1 - not found
 	 *
 	 */
 	int find(const char endpoint[]) const;

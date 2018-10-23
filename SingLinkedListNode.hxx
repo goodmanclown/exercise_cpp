@@ -8,7 +8,7 @@ using std::ostream;
 
 class SingLinkedListNode;
 
-typedef SingLinkedListNode* SingLinkedListNodePtr;
+using SingLinkedListNodePtr=SingLinkedListNode*;
 
 
 /**
@@ -24,7 +24,7 @@ public:
 	 * @param: value - value of this node
 	 *
 	 */
-	explicit SingLinkedListNode(uint32_t value):mNextPtr(NULL),mValue(value) { };
+	explicit SingLinkedListNode(uint32_t value):mNextPtr(nullptr),mValue(value) { };
 
 
 	/**
@@ -53,8 +53,14 @@ public:
 
 	/**
 	 * @return mValue
-    */
+     */
 	uint32_t getValue() const { return mValue; };
+
+
+	/**
+	 * @return mValue
+     */
+	void setValue(uint32_t value) { mValue = value; };
 
 
 	/**
@@ -100,7 +106,7 @@ private:
 	/**
 	 * pointer to next node 
 	 */
-	SingLinkedListNode* 	mNextPtr;
+	SingLinkedListNodePtr 	mNextPtr;
 
 
 	/**

@@ -1,15 +1,23 @@
 #include "StaticApi.hxx"
 
 #include <unistd.h>
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <map>
+#include <unordered_map>
 
 using namespace std;
 
-size_t StaticApi::lookAndSay(uint32_t level, vector<string>& output)
+vector<string> StaticApi::lookAndSay(uint32_t level)
 {
+    vector<string> output;
+
     ostringstream buf;
+
+    if (level == 0) {
+        return move(output);
+    }
 
     if (level == 1) {
 
@@ -17,37 +25,46 @@ size_t StaticApi::lookAndSay(uint32_t level, vector<string>& output)
 
         cout << buf.str() << endl;
 
-	    output.push_back(buf.str());
+        output.push_back(buf.str());
 
-        return output.size();
+        return move(output);
 	}
 
-    size_t ret = lookAndSay(level - 1, output);
+    output = lookAndSay(level - 1);
+
+    if (output.empty())
+    {
+        return move(output);
+    }
 
 	// get the last entry in the output
-    string str = output[ret - 1];
+    string& str = output.back();
 
     char curChar = str[0];
     size_t count = 1;
-    for (size_t strIndex = 1; strIndex < str.length(); ++strIndex) {
+    for_each (++str.cbegin(), str.cend(),
+        [&](const char& ch) 
+        {
+            cout << ch << endl;
 
-        cout << str[strIndex] << endl;
+            if (curChar == ch) 
+            {
+                // if same numeral, count it
+                ++count;
+	        }
+            else
+            {
+                buf << count;
+                buf << curChar;
 
-        if (curChar == str[strIndex]) {
-            // if same numeral, count it
-            ++count;
-	    }
-        else {
-            buf << count;
-            buf << curChar;
+                cout << buf.str() << endl;
 
-            cout << buf.str() << endl;
-
-            // update the current char to count
-            curChar = str[strIndex];
-            count = 1;
+                // update the current char to count
+                curChar = ch;
+                count = 1;
+            }
         }
-    }
+    );
 
     // append with the count of last char
     buf << count;
@@ -57,7 +74,7 @@ size_t StaticApi::lookAndSay(uint32_t level, vector<string>& output)
 
     output.push_back(buf.str());
 
-	return output.size();
+	return move(output);
 }
 
 
@@ -192,3 +209,41 @@ bool StaticApi::findElementInMatrix(int matrix[], std::size_t numRow, std::size_
 }
 
 
+int StaticApi::findIntegerWithMostOccurrences(const std::vector<std::pair<int, int>>& input)
+{
+	unordered_map<int, size_t> result;
+
+	for_each (input.cbegin(), input.cend(), 
+        [&](const std::pair<int, int>& value) {
+
+		    // count each value in the range with the map 
+		    for (int i = value.first; i <= value.second; ++i) 
+            {
+			    result[i]++;
+		    }
+        }
+    );
+	
+	// go through each entry in the map and find the max value
+	int ret = 0;
+	uint32_t maxCount = 0;
+
+	for_each ( result.cbegin(), result.cend(),
+        [&](const pair<int, size_t>& value) {
+
+		    // remember the integer if the count is higher
+		    cout << "first " << value.first << ", second " << value.second << endl;
+
+		    if (value.second > maxCount) 
+            {
+			    // remember the int
+			    ret = value.first;
+
+		        // remember the max
+			    maxCount = value.second;
+		    }
+        }
+	);
+
+	return ret;
+}

@@ -77,11 +77,9 @@ using namespace std;
 
 TEST(StaticApi, LookAndSayLevelOne) {
 
-	vector<string> output;
+	vector<string> output = StaticApi::lookAndSay(1);
 
-	size_t ret = StaticApi::lookAndSay(1, output);
-
-    EXPECT_EQ(ret, 1);
+    EXPECT_EQ(output.size(), 1);
     EXPECT_EQ(output[0], "1");
 
   // <TechnicalDetails>
@@ -104,11 +102,9 @@ TEST(StaticApi, LookAndSayLevelOne) {
 
 TEST(StaticApi, lookAndSayLevelTwo) {
 
-	vector<string> output;
+	vector<string> output = StaticApi::lookAndSay(2);
 
-	size_t ret = StaticApi::lookAndSay(2, output);
-
-    EXPECT_EQ(ret, 2);
+    EXPECT_EQ(output.size(), 2);
     EXPECT_EQ(output[0], "1");
     EXPECT_EQ(output[1], "11");
 
@@ -132,11 +128,9 @@ TEST(StaticApi, lookAndSayLevelTwo) {
 
 TEST(StaticApi, lookAndSayLevelThree) {
 
-	vector<string> output;
+	vector<string> output = StaticApi::lookAndSay(3);
 
-	size_t ret = StaticApi::lookAndSay(3, output);
-
-    EXPECT_EQ(ret, 3);
+    EXPECT_EQ(output.size(), 3);
     EXPECT_EQ(output[0], "1");
     EXPECT_EQ(output[1], "11");
     EXPECT_EQ(output[2], "21");
@@ -161,11 +155,9 @@ TEST(StaticApi, lookAndSayLevelThree) {
 
 TEST(StaticApi, lookAndSayLevelFour) {
 
-	vector<string> output;
+	vector<string> output = StaticApi::lookAndSay(4);
 
-	size_t ret = StaticApi::lookAndSay(4, output);
-
-    EXPECT_EQ(ret, 4);
+    EXPECT_EQ(output.size(), 4);
     EXPECT_EQ(output[0], "1");
     EXPECT_EQ(output[1], "11");
     EXPECT_EQ(output[2], "21");
@@ -191,11 +183,9 @@ TEST(StaticApi, lookAndSayLevelFour) {
 
 TEST(StaticApi, lookAndSayLevelFive) {
 
-	vector<string> output;
+	vector<string> output = StaticApi::lookAndSay(5);
 
-	size_t ret = StaticApi::lookAndSay(5, output);
-
-    EXPECT_EQ(ret, 5);
+    EXPECT_EQ(output.size(), 5);
     EXPECT_EQ(output[0], "1");
     EXPECT_EQ(output[1], "11");
     EXPECT_EQ(output[2], "21");
@@ -378,6 +368,113 @@ TEST(StaticApi, findElementInMatrixNoMatch)
 	bool ret = StaticApi::findElementInMatrix(pMatrix, 4, 5, 13);
 
     EXPECT_FALSE(ret);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests StaticApi().
+
+TEST(StaticApi, findIntegerWithMostOccurrences) {
+
+	vector<pair<int, int>> input;
+
+	input.push_back(pair<int, int>(1,2));
+	input.push_back(pair<int, int>(-1,1));
+
+	int ret = StaticApi::findIntegerWithMostOccurrences(input);
+
+    EXPECT_EQ(ret, 1);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests StaticApi().
+
+TEST(StaticApi, findLargestDifference) {
+
+	array<int, 8> input = {1, 2, 3, 0, 4, -10, 5, -11};
+
+	int ret = StaticApi::findLargestDifference<input.size()>(input);
+
+    EXPECT_EQ(ret, 16);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests StaticApi().
+
+TEST(StaticApi, findLargestDifferenceEmpty) {
+
+	array<int, 0> input;
+
+	uint32_t ret = StaticApi::findLargestDifference<input.size()>(input);
+
+    EXPECT_EQ(ret, 0);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests StaticApi().
+
+TEST(StaticApi, findLargestDifferenceOneElement) {
+
+	array<int, 1> input = { 5 };
+
+	uint32_t ret = StaticApi::findLargestDifference<input.size()>(input);
+
+    EXPECT_EQ(ret, 0);
 
   // <TechnicalDetails>
   //

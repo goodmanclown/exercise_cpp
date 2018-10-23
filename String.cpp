@@ -1,8 +1,9 @@
 #include "String.hxx"
 
+#include <algorithm>
+#include <vector>
 #include <iostream>
 
-#include <iostream>
 using namespace std;
 
 
@@ -448,7 +449,7 @@ void String::reverse()
 	uint32_t strIndexMax = mLen / 2;
 	int strIndexReverse = mLen-1;
 
-	for (int strIndex=0; strIndex < strIndexMax; strIndex++, strIndexReverse--) {
+	for (uint32_t strIndex=0; strIndex < strIndexMax; strIndex++, strIndexReverse--) {
 		// swap the characters at the 2 indices
 		char temp = mStr[strIndexReverse];
 		mStr[strIndexReverse] = mStr[strIndex];
@@ -673,10 +674,10 @@ void String::escapeSpace()
     if (mLen == 0) return;
 
     // count the number of space in the internal buffer
-    size_t countOfSpace=0;
+    size_t countOfSpace = 0;
     for (size_t index=0; index < mLen; ++index)
     {
-        if (mStr[index] == " ") 
+        if (mStr[index] == ' ') 
         {
             ++countOfSpace;
         }
@@ -684,7 +685,6 @@ void String::escapeSpace()
 
     // now know the number of spaces, calculate the extra number of bytes needed to keep the character '2' and '0'
     size_t extraNumberOfBytes = countOfSpace * 2;
-
 
 }
 

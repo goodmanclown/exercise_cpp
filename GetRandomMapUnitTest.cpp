@@ -91,8 +91,8 @@ TEST(GetRandomMapUnitTest, add) {
 	EXPECT_FALSE(ret);
 	EXPECT_EQ(mep.mMap.size(), 1);
 	EXPECT_EQ(mep.mVector.size(), 1);
-	EXPECT_EQ(mep.mMap.begin()->first, MdnEndpoint(4083330000, 4083330000));
-	EXPECT_EQ(mep.mVector[0], MdnEndpoint(4083330000, 4083330000));
+	EXPECT_EQ(mep.mMap.begin()->first,GetRandomMap::MdnEndpoint(4083330000, 4083330000));
+	EXPECT_EQ(mep.mVector[0],GetRandomMap::MdnEndpoint(4083330000, 4083330000));
 
   // <TechnicalDetails>
   //
@@ -142,8 +142,8 @@ TEST(GetRandomMapUnitTest, remove) {
 	EXPECT_TRUE(ret);
 	EXPECT_EQ(mep.mMap.size(), 1);
 	EXPECT_EQ(mep.mVector.size(), 1);
-	EXPECT_EQ(mep.mMap.begin()->first, MdnEndpoint(4083332222, 4083333333));
-	EXPECT_EQ(mep.mVector[0], MdnEndpoint(4083332222, 4083333333));
+	EXPECT_EQ(mep.mMap.begin()->first,GetRandomMap::MdnEndpoint(4083332222, 4083333333));
+	EXPECT_EQ(mep.mVector[0],GetRandomMap::MdnEndpoint(4083332222, 4083333333));
 
 	ret = mep.add(4083330000, 4083331111);
 
@@ -162,8 +162,8 @@ TEST(GetRandomMapUnitTest, remove) {
 	EXPECT_TRUE(ret);
 	EXPECT_EQ(mep.mMap.size(), 2);
 	EXPECT_EQ(mep.mVector.size(), 2);
-	EXPECT_EQ(mep.mMap.begin()->first, MdnEndpoint(4083332222, 4083333333));
-	EXPECT_EQ(mep.mVector[1], MdnEndpoint(4083334444, 4083335555));
+	EXPECT_EQ(mep.mMap.begin()->first,GetRandomMap::MdnEndpoint(4083332222, 4083333333));
+	EXPECT_EQ(mep.mVector[1],GetRandomMap::MdnEndpoint(4083334444, 4083335555));
 
   // <TechnicalDetails>
   //
@@ -181,15 +181,14 @@ TEST(GetRandomMapUnitTest, remove) {
   // </TechnicalDetails>
 }
 
-// Tests member api remove
+// Tests member api getRandom
 TEST(GetRandomMapUnitTest, getRandom) {
 
 	GetRandomMap mep;
 
-    uint64_t min;
-    uint64_t max;
+    GetRandomMap::MdnEndpoint out;
 
-	bool ret = mep.getRandom(min, max);
+	bool ret = mep.getRandom(out);
 
 	EXPECT_FALSE(ret);
 
@@ -197,11 +196,66 @@ TEST(GetRandomMapUnitTest, getRandom) {
 
 	ASSERT_TRUE(ret);
 
-	ret = mep.getRandom(min, max);
+	ret = mep.getRandom(out);
 
 	EXPECT_TRUE(ret);
-	EXPECT_EQ(min, 4083330000);
-	EXPECT_EQ(max, 4083330000);
+	EXPECT_EQ(out.first, 4083330000);
+	EXPECT_EQ(out.second, 4083330000);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests member api getRandom
+TEST(GetRandomMapUnitTest, find) {
+
+	GetRandomMap mep;
+
+	bool ret = mep.find(4083330000, 4083330000);
+
+	EXPECT_FALSE(ret);
+
+	ret = mep.add(4083330000, 4083331111);
+
+	ASSERT_TRUE(ret);
+	ASSERT_EQ(mep.mMap.size(), 1);
+	ASSERT_EQ(mep.mVector.size(), 1);
+
+    ret = mep.add(4083332222, 4083333333);
+
+    ASSERT_TRUE(ret);
+    ASSERT_EQ(mep.mMap.size(), 2);
+    ASSERT_EQ(mep.mVector.size(), 2);
+
+	ret = mep.find(4083330000, 4083330000);
+
+	EXPECT_TRUE(ret);
+
+	ret = mep.find(4083330000, 4083331111);
+
+	EXPECT_TRUE(ret);
+
+	ret = mep.add(4083334444, 4083335555);
+
+    ASSERT_TRUE(ret);
+    ASSERT_EQ(mep.mMap.size(), 3);
+    ASSERT_EQ(mep.mVector.size(), 3);
+
+	ret = mep.find(4083330001, 4083331110);
+
+	EXPECT_TRUE(ret);
 
   // <TechnicalDetails>
   //

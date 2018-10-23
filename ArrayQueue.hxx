@@ -22,8 +22,7 @@ public:
     * Constructor
     *
     */
-    ArrayQueue():mHead(0),mSize(size),mTail(-1) {
-    };
+    ArrayQueue():mHead(0),mSize(size),mTail(-1) { };
 
 
     /**
@@ -31,10 +30,9 @@ public:
      */
     virtual ~ArrayQueue() {
         // remove all nodes
-        T* node = NULL;
+        T* node = nullptr;
 
-        while ((node = dequeue()) != NULL) delete node;
-
+        while ((node = dequeue()) != nullptr) delete node;
     }
 
 
@@ -47,7 +45,7 @@ public:
      */
     bool enqueue(T* node) {
         // is input node empty
-        if (NULL == node) return false;
+        if (nullptr == node) return false;
 
         // is queue full
         if (-1 != mTail) {
@@ -70,16 +68,16 @@ public:
 
     /**
      *
-     * @return a pointer to type T if dequeue ok.  NULL if queue is empty
+     * @return a pointer to type T if dequeue ok.  nullptr if queue is empty
      */
     T* dequeue() {
         // is list empty
-        if (-1 == mTail) return NULL;
+        if (-1 == mTail) return nullptr;
 
         T* node = mArrayT[mHead];
 
         // clear the element
-        mArrayT[mHead] = NULL;
+        mArrayT[mHead] = nullptr;
 
         if (mHead == mTail) {
             // if this is the last element in the queue
@@ -111,7 +109,7 @@ public:
             return (out << "empty");
         }
         else {
-            uint32_t index = q.mHead;
+            int index = q.mHead;
             while (index != q.mTail) {
 
                 T* node = q.mArrayT[index];
@@ -144,7 +142,7 @@ private:
     /**
      * index to head of queue
      */
-    uint32_t		mHead;
+    int		        mHead;
 
 
     /**

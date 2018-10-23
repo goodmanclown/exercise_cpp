@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <array>
 
 /**
  * class to output the look and say sequence
@@ -14,7 +15,7 @@ public:
 	 * @param level of look and say sequence
 	 * @@parama vector of string representing the sequence
 	 */
-	static std::size_t lookAndSay(uint32_t level, std::vector<std::string>& output);
+	static std::vector<std::string> lookAndSay(uint32_t level);
 
 
 	/**
@@ -47,6 +48,52 @@ public:
 	 * @param target - target integer to be found in the matrix
 	 */
 	static bool findElementInMatrix(int matrix[], std::size_t numRow, std::size_t numCol, int target);
+
+
+	/**
+	 * @param input - a vector of a pair of integers
+	 * 
+	 * @return integer with the most number of occurrences 
+	 */
+    static int findIntegerWithMostOccurrences(const std::vector<std::pair<int, int>>& input);
+
+	/**
+	 * @param input - a vector of integers
+	 * 
+	 * @return largest difference
+	 */
+    template<size_t SIZE>
+    static uint32_t findLargestDifference(const std::array<int, SIZE>& input)
+    {
+        if (input.empty())
+        {
+            return 0;
+        }
+
+        auto uLargestDiff = 0;
+
+        auto cIter = input.rbegin();
+        auto uLargestElement = *cIter;
+
+        for_each(++cIter, input.rend(),
+            [&](auto& element)
+            {
+                auto uTempDiff = abs(uLargestElement - element);
+
+                if (uTempDiff > uLargestDiff)
+                {
+			        uLargestDiff = uTempDiff;
+		        }
+
+                if (element > uLargestElement)
+                {   // find a new largest element
+                    uLargestElement = element;
+                }
+            }
+        );
+
+    	return uLargestDiff;
+    }
 
 private:
 

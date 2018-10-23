@@ -39,8 +39,7 @@ public:
 	 * Constructor
 	 *
 	 */
-	String():mLen(0),mStr(NULL) { 
-	};
+	String():mLen(0),mStr(nullptr) { };
 
 
 	/**
@@ -62,7 +61,7 @@ public:
 
 
 	/**
-	 * Constructor
+	 * Copy Constructor
 	 *
 	 * @param: rhs 
 	 *
@@ -70,7 +69,7 @@ public:
 	String(const String& rhs) { 
 		mLen = rhs.mLen;
 
-		mStr = NULL;
+		mStr = nullptr;
 		if (mLen) {
 			mStr = new char[mLen+1];
 
@@ -82,13 +81,30 @@ public:
 
 
 	/**
+	 * Move Constructor
+	 *
+	 * @param: rhs 
+	 *
+	 */
+	String(String&& rhs) { 
+		mLen = rhs.mLen;
+
+        // move the pointer member
+		mStr = rhs.mStr;
+
+		// nullify the pointer member
+		rhs.mStr = nullptr;
+	};
+
+
+	/**
 	 * Destructor
 	 */
 	virtual ~String() { delete [] mStr; };
 
 
 	/**
-	 * assignment operator
+	 * copy assignment operator
 	 *
 	 * @param: rhs 
 	 *
@@ -98,7 +114,7 @@ public:
 
 		mLen = rhs.mLen;
 
-		mStr = NULL;
+		mStr = nullptr;
 		if (mLen) {
 			mStr = new char[mLen+1];
 
@@ -106,6 +122,27 @@ public:
 
 			mStr[mLen] = '\0';
 		}
+
+		return *this;
+	};
+
+
+	/**
+	 * move assignment operator
+	 *
+	 * @param: rhs 
+	 *
+	 */
+	String& operator=(String&& rhs) { 
+		if (this == &rhs) return *this;
+
+		mLen = rhs.mLen;
+
+        // move the pointer member 
+		mStr = rhs.mStr;
+		
+		// nullify the pointer member
+		rhs.mStr = nullptr;
 
 		return *this;
 	};

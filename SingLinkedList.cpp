@@ -1,5 +1,8 @@
 #include "SingLinkedList.hxx"
 
+#include <array>
+#include <iostream>
+
 using namespace std;
 
 SingLinkedList::SingLinkedList(SingLinkedList& rhs):mHead(NULL),mLength(rhs.mLength)
@@ -187,7 +190,7 @@ bool SingLinkedList::insert(SingLinkedListNodePtr node)
 bool SingLinkedList::remove(uint32_t pos)
 {
 	// list is empty
-	if (NULL == mHead) return false;
+	if (nullptr == mHead) return false;
 
 	if (0 == pos) {
 		// just remove the head
@@ -199,18 +202,21 @@ bool SingLinkedList::remove(uint32_t pos)
 	}
 	else {
 		SingLinkedListNodePtr currentNode = mHead;
-		SingLinkedListNodePtr nextNode = NULL;
+		SingLinkedListNodePtr nextNode = nullptr;
 		// move to the node just before the pos
-		for (uint32_t count = pos - 1; count > 0 && currentNode != NULL; count--) {
+		for (uint32_t count = pos - 1; count > 0 && currentNode != nullptr; --count) 
+		{
 			nextNode = currentNode->getNextPtr();
 			currentNode = nextNode;
 		}
 
-		if (currentNode != NULL) {
+		if (currentNode != nullptr) 
+		{
 			// next node is the node to be deleted
 			nextNode = currentNode->getNextPtr();
 	
-			if (nextNode != NULL) {
+			if (nextNode != nullptr) 
+			{
 				// just replace the next ptr
 				currentNode->setNextPtr(nextNode->getNextPtr());
 
@@ -231,32 +237,32 @@ void SingLinkedList::reverse()
 {
 	if (mLength <= 1) return;
 
-	SingLinkedListNodePtr previousNode = NULL;
+	SingLinkedListNodePtr tailNode = nullptr;
 	SingLinkedListNodePtr currentNode = mHead;
 
 	// loop until end of list
-	while (currentNode != NULL) {
+	while (currentNode != nullptr) {
 		
 		// get the next node
 		SingLinkedListNodePtr nextNode = currentNode->getNextPtr();
 
 		// set previous node as current next node
-		currentNode->setNextPtr(previousNode);
+		currentNode->setNextPtr(tailNode);
 
 		// move previous to current
-		previousNode = currentNode;
+		tailNode = currentNode;
 
 
 		// move current to next
 		currentNode = nextNode;
 	}
 
-	mHead = previousNode;
+	mHead = tailNode;
 
 	return;
 }
 
-void SingLinkedList::reverse(SingLinkedListNodePtr previousNode, SingLinkedListNodePtr currentNode) 
+void SingLinkedList::reverse(SingLinkedListNodePtr tailNode, SingLinkedListNodePtr currentNode) 
 {
 	if (currentNode->getNextPtr() == NULL) {
 		// at the end of the list
@@ -270,25 +276,26 @@ void SingLinkedList::reverse(SingLinkedListNodePtr previousNode, SingLinkedListN
 	}
 
 	// previous node becomes next node
-	currentNode->setNextPtr(previousNode);
+	currentNode->setNextPtr(tailNode);
 }
 
 
 bool SingLinkedList::present(uint32_t value) 
 {
 	// call the find api
-	return (NULL != find(value));
+	return (nullptr != find(value));
 }
 
 
 SingLinkedListNodePtr SingLinkedList::find(uint32_t value) 
 {
-	if (mLength == 0) return false;
+	if (mLength == 0) return nullptr;
 
 	SingLinkedListNodePtr currentNode = mHead;
-	SingLinkedListNodePtr nextNode = NULL;
+	SingLinkedListNodePtr nextNode = nullptr;
+
 	// move to the node at the end
-	while (currentNode->getNextPtr() != NULL) {
+	while (currentNode->getNextPtr() != nullptr) {
 		nextNode = currentNode->getNextPtr();
 		currentNode = nextNode;
 	}	
@@ -339,6 +346,179 @@ SingLinkedListNodePtr SingLinkedList::last(uint32_t nth) const
 	return trailingNode;
 }
 
+
+bool SingLinkedList::isPalinodrome() const 
+{
+	if (mLength == 0 || mLength == 1) return true;
+
+    if (mLength < 2)
+	{
+		return true;
+	}
+
+    if (mLength == 2) 
+	{
+		if (mHead->getValue() == mHead->getNextPtr()->getValue())
+		{   // only 2 elements and they are the same
+			return true;
+		}
+		else
+		{
+		    return false;	
+		}
+	}
+
+    // find the middle node
+	// divide fhe length by 2 and add 1 if mLength is odd
+    uint32_t middlePoint = (mLength / 2);
+
+	// find the middle node
+	SingLinkedListNodePtr middleNode = mHead;
+	for (uint32_t count = 0; count < middlePoint; ++count)
+	{
+		middleNode = middleNode->getNextPtr();
+	} 
+
+	cout << "reverse 2nd half" << endl;
+
+	SingLinkedListNodePtr tailNode = middleNode;
+    SingLinkedListNodePtr currentNode = middleNode->getNextPtr();
+
+    // loop until end of list
+	// tailNode will be the head of the reversed list
+	// and middle node will be the tail
+    while (currentNode != nullptr) 
+	{
+	    cout << currentNode->getValue() << endl;
+
+        // get the next node
+        SingLinkedListNodePtr nextNode = currentNode->getNextPtr();
+
+        // set previous node as current next node
+        currentNode->setNextPtr(tailNode);
+
+        // move previous to current
+        tailNode = currentNode;
+
+        // move current to next
+        currentNode = nextNode;
+    }   
+
+	SingLinkedListNodePtr backwardNode = tailNode;
+	SingLinkedListNodePtr forwardNode = mHead;
+	
+	// assume true
+	bool bIsPalindrome = true;
+
+	while (forwardNode != middleNode)
+	{
+	    if (forwardNode->getValue() != backwardNode->getValue())
+		{
+	        bIsPalindrome = false;
+            break;
+		} 
+
+		forwardNode = forwardNode->getNextPtr();
+		backwardNode = backwardNode->getNextPtr();
+	}	
+	
+    currentNode = tailNode;
+
+    SingLinkedListNodePtr previousNode = nullptr;
+
+	cout << "reverse 2nd half again" << endl;
+
+	// reverse the 2nd half
+	do
+	{
+	    cout << currentNode->getValue() << endl;
+    
+        // get the next node
+        SingLinkedListNodePtr nextNode = currentNode->getNextPtr();
+
+        // set previous node as current next node
+        currentNode->setNextPtr(previousNode);
+
+        // move previous to current
+        previousNode = currentNode;
+
+        // move current to next
+        currentNode = nextNode;
+    }   
+    while (currentNode != middleNode);
+
+	return bIsPalindrome;
+}
+
+
+void SingLinkedList::sortInto012()
+{
+	if (mLength == 0) return;
+
+    array<size_t, 3> aCount012 = {0, 0, 0};
+
+    SingLinkedListNodePtr currentNode = mHead;
+
+    // loop until end of list
+	// count of number of 0, 1, 2 and remembered in the array
+    while (currentNode != nullptr) 
+	{
+		if (currentNode->getValue() > 2)
+		{
+	        return;
+		}
+
+        ++aCount012[currentNode->getValue()];
+
+		currentNode = currentNode->getNextPtr();
+    }   
+
+
+    // loop until end of list
+    // now re-populate the list again with the number of 0, 1, 2s
+
+    // start with 0
+    size_t aCount012Index = 0;
+    auto count = aCount012[aCount012Index];
+
+    currentNode = mHead;
+    while (currentNode != nullptr) 
+	{
+		if (count > 0)
+		{
+            currentNode->setValue(aCount012Index);
+
+            // move to next node
+          	currentNode = currentNode->getNextPtr();
+
+			--count;
+		}
+        else
+        {
+            auto bContinue = true;
+            while (bContinue)
+	        {
+                if (aCount012Index < aCount012.size())
+		        {
+                    // switch to next index
+	        		++aCount012Index;
+
+        			// get the next count
+        			count = aCount012[aCount012Index];
+
+                    if (count > 0)
+                    {
+                        bContinue = false;
+                    }
+                }
+                else
+                {
+                    bContinue = false;
+                }
+		    }
+        }
+    }
+}
 
 SingLinkedListNodePtr SingLinkedList::find(uint32_t value, SingLinkedListNodePtr start, SingLinkedListNodePtr end, uint32_t distance) 
 {

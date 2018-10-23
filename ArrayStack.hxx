@@ -7,6 +7,7 @@
 #include <algorithm>
 
 using std::copy;
+using std::for_each;
 using std::nothrow;
 
 template <typename T>
@@ -29,7 +30,14 @@ public:
 	 * Destructor
     *
 	 */
-	~ArrayStack() {
+	virtual ~ArrayStack() 
+	{
+		for_each(mArrayT, mArrayT + mLength, 
+		    [] (T* node) {
+			    delete node;
+		    }
+		);
+
 		delete [] mArrayT;
 	};
 
@@ -80,8 +88,8 @@ public:
     */
 	T*	pop() {
 
-		// mLength < 0, nothing in the stack
-		if (mLength < 0) return 0;
+		// mLength == 0, nothing in the stack
+		if (mLength == 0) return 0;
 		
 		mLength--;
 

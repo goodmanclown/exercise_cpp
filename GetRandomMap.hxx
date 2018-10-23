@@ -1,11 +1,10 @@
-#include "MdnEndpoint.hxx"
-
 #include <stdint.h>
 #include <map>
 #include <vector>
 
 using std::map;
 using std::vector;
+using std::pair;
 
 
 /**
@@ -19,6 +18,8 @@ using std::vector;
 class GetRandomMap {
 
 public:
+
+    using MdnEndpoint = std::pair<uint64_t, uint64_t>;
 
 	/**
 	 * Constructor
@@ -36,7 +37,7 @@ public:
     /**
      * add a range with min and max
      *
-     * @return true if add is OK.  fail if duplicate
+     * @return true if add is OK.  false if duplicate
      */
     bool add(uint64_t min, uint64_t max);
 
@@ -45,7 +46,7 @@ public:
     /**
      * delete a range with min and max
      *
-     * @return true if remove is OK.  fail if not found
+     * @return true if remove is OK.  false if not found
      */
     bool remove(uint64_t min, uint64_t max);
 
@@ -56,8 +57,16 @@ public:
      *
      * @return true if output is valid.  false if empty
      */
-    bool getRandom(uint64_t& min, uint64_t& max);
+    bool getRandom(MdnEndpoint& out) const;
 
+
+
+    /**
+     * find if the input range is in this map
+     *
+     * @return true if found.  false if not
+     */
+    bool find(uint64_t min, uint64_t max) const;
 
 
 	/**
