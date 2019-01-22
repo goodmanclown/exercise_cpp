@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <array>
+#include <algorithm>
 
 /**
  * class to output the look and say sequence
@@ -95,6 +96,108 @@ public:
     	return uLargestDiff;
     }
 
+	/**
+	 * @param input - a vector of integers
+	 * @param uTargetSum - sum to be matched
+	 * 
+	 * @return true if uTargetSum is found
+	 */
+    template<size_t SIZE>
+    static bool findTargetSum(const std::array<uint32_t, SIZE>& input, uint32_t uTargetSum)
+    {
+        if (input.empty() || input.size() < 2)
+        {
+            return false;
+        }
+
+        for (auto uIndexToArray = 0u; uIndexToArray < SIZE-1; ++uIndexToArray)
+        {
+            std::vector<uint32_t> tmpVector;
+            tmpVector.push_back(input[uIndexToArray]);
+
+            for (auto uInnerIndex = uIndexToArray+1; uInnerIndex < SIZE; ++uInnerIndex)
+            {
+                tmpVector.push_back(input[uInnerIndex]);
+
+                auto tmpSum = std::accumulate(tmpVector.cbegin(), tmpVector.cend(), 0u);
+
+                if (tmpSum == uTargetSum)
+                {
+                    return true;
+                }
+            }
+        }
+    	return false;
+    }
+
+	/**
+	 * @param input - an array of integers
+     * @param total - total number to be distributed
+	 * 
+	 * @return 
+	 */
+    template<size_t SIZE>
+    static void distributeTotal(std::array<size_t, SIZE>& output, uint32_t uTotal)
+    {
+        if (!uTotal)
+        {
+            return;
+        }
+
+        auto uNthRoud = 0u;
+        auto uIndexToArray = 0u;
+        do 
+        {
+            auto uGiveToEachIndex = uNthRoud*SIZE + uIndexToArray + 1;
+
+            if (uTotal >= uGiveToEachIndex)
+            {
+                output[uIndexToArray] += uGiveToEachIndex;
+
+                uTotal -= uGiveToEachIndex;
+
+                ++uIndexToArray;
+                if (uIndexToArray >= SIZE)
+                {
+                    uIndexToArray = 0;
+                    ++uNthRoud;
+                }
+            }
+            else
+            {
+                output[uIndexToArray] += uTotal;
+
+                uTotal -= uTotal;
+            }
+        } 
+        while (uTotal > 0);
+
+    	return;
+    }
+
+	/**
+	 * @param input - a vector of integers
+	 * 
+	 * @return a set of combinations
+	 */
+    static std::vector<std::vector<uint32_t>> findTargetSumCombination(uint32_t input[], 
+        uint32_t uLength, uint32_t uTargetSum);
+
+	/**
+	 * @param input - an integer value
+	 * 
+	 * @return true if input is a palindrome
+	 */
+    static bool IsPalindrome(const int input);
+
+	/**
+	 * @param target - target vallue to search for 
+	 * @param input - array of integer 
+	 * 
+	 * @return closest value to target
+	 */
+    static int findClosestNumber(int target, const int input[], size_t sizeOfInput);
+
 private:
 
 	/** 
@@ -120,6 +223,15 @@ private:
      * assignment operator
 	 */
 	StaticApi& operator=(const StaticApi& rhs)=delete;
+
+
+	/**
+	 * @param input - a vector of integers, sorted
+	 * 
+	 * @return a set of combinations
+	 */
+    static std::vector<std::vector<uint32_t>> findTargetSumCombinationTemp(uint32_t input[], 
+        uint32_t uLength, uint32_t uTargetSum);
 
 };
 

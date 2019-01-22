@@ -48,6 +48,8 @@
 #include "gtest/gtest.h"
 
 #include <iostream>
+#include <map>
+#include <memory>
 using namespace std;
 
 // Step 2. Use the TEST macro to define your tests.

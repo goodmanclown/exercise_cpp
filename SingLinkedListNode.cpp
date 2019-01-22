@@ -1,5 +1,11 @@
 #include "SingLinkedListNode.hxx"
 
+
+SingLinkedListNode::~ SingLinkedListNode()
+{
+   int i = mValue;
+}
+
 void SingLinkedListNode::insert(SingLinkedListNodePtr ptr)
 {
 	if (NULL == ptr) return;

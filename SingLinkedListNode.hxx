@@ -39,7 +39,7 @@ public:
 	/**
 	 * Destructor
 	 */
-	virtual ~SingLinkedListNode() {};
+	virtual ~SingLinkedListNode();
 
 
 	/**

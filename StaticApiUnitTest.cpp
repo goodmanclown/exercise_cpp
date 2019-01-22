@@ -492,6 +492,261 @@ TEST(StaticApi, findLargestDifferenceOneElement) {
   // </TechnicalDetails>
 }
 
+// Tests StaticApi().
+
+TEST(StaticApi, findTargetSumCombination) {
+
+    uint32_t input[] = { 1, 2, 1, 3 };
+
+	auto ret = StaticApi::findTargetSumCombination(input, 4, 4);
+
+    EXPECT_EQ(ret.size(), 3);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests StaticApi().
+
+TEST(StaticApi, distributeTotal) {
+
+    array<size_t, 4> expectOutput = { 8, 8, 10, 12 };
+
+    array<size_t, 4> output = { 0, 0, 0, 0 };
+
+	StaticApi::distributeTotal<output.size()>(output, 38);
+
+    EXPECT_EQ(output, expectOutput);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests StaticApi().
+
+TEST(StaticApi, findTargetSum) {
+
+    array<uint32_t, 4> input { 1, 0, 1, 2 };
+
+	auto result = StaticApi::findTargetSum<input.size()>(input, 5);
+
+    EXPECT_TRUE(result);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests StaticApi().
+
+TEST(StaticApi, IsPalindromeaZero) {
+
+	auto result = StaticApi::IsPalindrome(0);
+
+    EXPECT_FALSE(result);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests StaticApi().
+
+TEST(StaticApi, IsPalindromeIntMax) {
+
+	auto result = StaticApi::IsPalindrome(2147483647);
+
+    EXPECT_FALSE(result);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+TEST(StaticApi, IsPalindromeIntMin) {
+
+	auto result = StaticApi::IsPalindrome(-2147483648);
+
+    EXPECT_FALSE(result);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+TEST(StaticApi, IsPalindromeEvenDigits) {
+
+	auto result = StaticApi::IsPalindrome(1221);
+
+    EXPECT_TRUE(result);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+TEST(StaticApi, IsPalindromeOddDigits) {
+
+	auto result = StaticApi::IsPalindrome(-1234321);
+
+    EXPECT_TRUE(result);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests TimedHashMap()
+class FindClosestTargetTestFixture : public ::testing::Test {
+    public:
+
+        FindClosestTargetTestFixture() = default;
+
+        ~FindClosestTargetTestFixture() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 3u;
+
+        std::array<int, TEST_SIZE> result = { };
+
+        std::array<int, TEST_SIZE> expectResult = { 5, 9, 5 };
+
+        std::array<int, TEST_SIZE> inputTarget = { 5, 11, 4 };
+
+        const int input[7] = { 2, 5, 6, 7, 8, 8, 9 };
+
+        void GetExpect(const std::array<int, TEST_SIZE>& expect)
+        {
+            for (size_t indexToResult = 0; indexToResult < TEST_SIZE; ++indexToResult)
+            {
+                EXPECT_EQ(result[indexToResult], expect[indexToResult]);
+            }
+        }
+};
+
+// Tests member api insert
+TEST_F(FindClosestTargetTestFixture, findClosestTarget) {
+
+    auto index = 0u;
+    for ( auto& entry : inputTarget )
+    {
+        result[index++] = StaticApi::findClosestNumber(entry, input, sizeof(input));
+    }
+
+    GetExpect(expectResult);
+
+  // <TechnicalDetails>
+  //
+  //   EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expect12ed value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case expect12_EQ is preferred.
+  //
+  // On the other hand, expect12_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
 // Step 3. Call RUN_ALL_TESTS() in main().
 //
 // We do this by linking in src/gtest_main.cc file, which consists of

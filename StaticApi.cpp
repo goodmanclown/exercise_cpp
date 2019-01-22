@@ -2,6 +2,7 @@
 
 #include <unistd.h>
 #include <algorithm>
+#include <iterator>
 #include <iostream>
 #include <sstream>
 #include <map>
@@ -246,4 +247,139 @@ int StaticApi::findIntegerWithMostOccurrences(const std::vector<std::pair<int, i
 	);
 
 	return ret;
+}
+
+
+vector<vector<uint32_t>> StaticApi::findTargetSumCombination(uint32_t input[], uint32_t uLength, uint32_t uTargetSum)
+{
+    map<uint32_t, size_t> sortMap;
+    
+    // populate the set with the input entry 
+    for (size_t index = 0; index < uLength; ++index)
+    {
+        ++sortMap[input[index]];
+    }
+
+    // populate the input with the entries sorted
+    size_t index = 0;
+    for_each(sortMap.cbegin(), sortMap.cend(), 
+        [&](auto& entry) 
+        {
+            size_t occurrences = entry.second;
+            while (occurrences > 0)
+            {
+                input[index++] = entry.first;
+                --occurrences;
+            }
+        }
+    );
+
+    return findTargetSumCombinationTemp(input, uLength, uTargetSum);
+}
+
+
+vector<vector<uint32_t>> StaticApi::findTargetSumCombinationTemp(uint32_t input[], uint32_t uLength, uint32_t uTargetSum)
+{
+    vector<vector<uint32_t>> vResult;
+
+    if (uLength == 0)
+    {
+        return vResult;
+    }
+    
+    // accumulate the input
+    uint32_t sum = 0;
+    for (size_t index=0; index < uLength; ++index)
+    {
+        cout << input[index] << ",";
+        sum += input[index];
+    }
+
+    cout << endl;
+
+    if (sum == uTargetSum)
+    {   // copy the input to the result
+        for (size_t index=0; index < uLength; ++index)
+        {
+            vector<uint32_t> vResultTmp(input, input+uLength);
+            vResult.push_back(move(vResultTmp));
+
+            return vResult;
+        }
+    }
+
+    if (uLength > 2 && sum > uTargetSum)
+    {
+        // if greater, get the result from the sub-array
+        for (uint32_t index=0; index < uLength; ++index) 
+        {
+        	if (index != 0) 
+            {
+        		// swap first integer with the integer at the index
+			    auto temp = input[index];
+			    input[index] = input[0];
+			    input[0] = temp;
+            }
+
+    		auto vResultTmp = findTargetSumCombinationTemp(&input[1], uLength-1, uTargetSum);
+
+            if (!vResultTmp.empty())
+            {
+                vResult.insert(vResult.end(), vResultTmp.begin(), vResultTmp.end());
+            }
+
+		    if (index != 0) 
+            {
+			    // restore the first integer with the integer at the index
+			    auto temp = input[index];
+			    input[index] = input[0];
+			    input[0] = temp;
+            }
+        }
+	} 
+
+    return vResult;
+}
+
+bool StaticApi::IsPalindrome(const int input)
+{
+    if (!input) return false;
+
+    array<char, 10> aSplitDigit = { };
+
+    size_t index = 0;
+    int tmpInput = input;
+    while (tmpInput)
+    {
+        aSplitDigit[index] = tmpInput % 10;
+
+        tmpInput = tmpInput / 10;
+        ++index;
+    }
+
+    for (size_t fIndex = 0, bIndex = index-1; fIndex < bIndex; ++fIndex, --bIndex)
+    {
+        if (aSplitDigit[fIndex] != aSplitDigit[bIndex]) return false;
+    }
+
+    return true;
+}
+
+
+int StaticApi::findClosestNumber(int target, const int input[], size_t sizeOfInput)
+{
+    auto lastSmallestDiff = abs( abs(target) - abs(input[0]) );
+    int result = input[0];
+
+    for (size_t indexToInput = 1; indexToInput < sizeOfInput; ++indexToInput)
+    {
+        auto tmpDiff = abs( abs(target) - abs(input[indexToInput]) );
+        if (tmpDiff <= lastSmallestDiff)
+        {
+            lastSmallestDiff = tmpDiff;
+            result = input[indexToInput];
+        }
+    }
+
+    return result;
 }

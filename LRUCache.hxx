@@ -11,12 +11,14 @@
 #include <iostream>
 #include <map>
 #include <list>
+#include <memory>
 
 using std::ostream;
 using std::map;
 using std::list;
 using std::pair;
 using std::make_pair;
+using std::move;
 
 
 template <typename K, typename V, size_t size>
@@ -49,7 +51,7 @@ public:
     bool insert(K key, V value) 
     {
         // check if the key is already there
-        typename map<K, typename list<pair<K,V>>::iterator>::iterator mapIter =  mKVPMap.find(key);
+        KVPMapIterator mapIter =  mKVPMap.find(key);
         
         if (mapIter != mKVPMap.end()) return false;
 
@@ -66,10 +68,10 @@ public:
         }
 
         // insert the kvp to the end of the list 
-        typename list<pair<K,V>>::iterator listIter = mKVPList.insert(mKVPList.end(), make_pair(key, value));
+        KVPListIterator listIter = mKVPList.insert(mKVPList.end(), move(make_pair(key, value)));
 
         // insert the kvp to the map
-        mKVPMap.insert(make_pair(key, listIter));
+        mKVPMap.insert(move(make_pair(key, listIter)));
 
         return true;
     }
@@ -82,11 +84,11 @@ public:
     bool remove(K key)
     {
         // check if the key is already there
-        typename map<K, typename list<pair<K,V>>::iterator>::iterator mapIter = mKVPMap.find(key);
+        KVPMapIterator mapIter = mKVPMap.find(key);
         
         if (mapIter == mKVPMap.end()) return false;
 
-        typename list<pair<K,V>>::iterator listIter = mapIter->second;
+        KVPListIterator listIter = mapIter->second;
 
         // remove it from the list
         mKVPList.erase(listIter);
@@ -102,22 +104,25 @@ public:
      *
      * @return true if get is ok
      */
-    bool get(K key, V& value) const
+    bool get(K key, V& value) 
     {
         // check if the key is there
-        typename map<K, typename list<pair<K,V>>::iterator>::iterator mapIter =  mKVPMap.find(key);
+        KVPMapIterator mapIter =  mKVPMap.find(key);
         
         if (mapIter == mKVPMap.end()) return false;
 
-        typename list<pair<K,V>>::iterator listIter = mapIter->second;
+        KVPListIterator listIter = mapIter->second;
 
-        value = listIter.second;
+        // return the value
+        value = listIter->second;
 
         // move this kvp to the end of the list
-        pair<K,V> kvp = listIter;
+        auto kvp = *listIter;
 
+        // remove this pair from the list
         mKVPList.erase(listIter);
 
+        // reinsert to the end
         listIter = mKVPList.insert(mKVPList.end(), kvp);
 
         // update the map
@@ -130,14 +135,18 @@ public:
     /**
      * a list of kvp
      */
-    list<pair<K,V>> mKVPList;
+    using KVPList = list<pair<K,V>>;
+    using KVPListIterator = typename KVPList::iterator;
 
+    KVPList     mKVPList;
+
+    using KVPMap = map<K, KVPListIterator>;
+    using KVPMapIterator = typename KVPMap::iterator;
 
     /**
      * a map of K and pointer to list
      */
-    map<K, typename list<pair<K,V>>::iterator>  mKVPMap;
-
+    KVPMap mKVPMap;
 
 
     /**

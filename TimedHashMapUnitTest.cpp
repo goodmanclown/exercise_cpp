@@ -43,8 +43,7 @@
 //
 // Don't forget gtest.h, which declares the testing framework.
 
-// #include <limits.h>
-#include "LRUCache.hxx"
+#include "TimedHashMap.hxx"
 #include "gtest/gtest.h"
 
 #include <array>
@@ -77,13 +76,13 @@ using namespace std;
 // </TechnicalDetails>
 
 
-// Tests LRUCache()
-class LRUCacheUnitTestFixture : public ::testing::Test {
+// Tests TimedHashMap()
+class TimedHashMapUnitTestFixture : public ::testing::Test {
     public:
 
-        LRUCacheUnitTestFixture() = default;
+        TimedHashMapUnitTestFixture() = default;
 
-        ~LRUCacheUnitTestFixture() = default;
+        ~TimedHashMapUnitTestFixture() = default;
 
         void SetUp() override {};
 
@@ -91,67 +90,47 @@ class LRUCacheUnitTestFixture : public ::testing::Test {
 
     protected:
 
-        static const size_t CACHE_SIZE = 3u;
+        static const size_t TEST_SIZE = 4u;
 
-    	LRUCache<int, int, CACHE_SIZE> cache;
+    	TimedHashMap<int, int> cache;
 
-        const pair<int, int> expect12[CACHE_SIZE] = 
-        { 
-            {1, 10}, 
-            {2, 20} 
-            {4, 40} 
+        unordered_map<int, time_t> expectResult;
+
+        const pair<int, int> inputKVP[TEST_SIZE] = 
+        {
+            { 1, 10 },
+            { 10, -10 },
+            { -200, 77 },
+            { 1, 15 }
         };
 
-        void InsertExpect(const pair<int, int> expect[])
+        void GetExpect(const unordered_map<int, time_t>& expect)
         {
-            for (auto index = 0u; index < CACHE_SIZE; ++index)
+            for (auto& entry : expect)
             {
-                auto& entry = expect[index];
+                int key = 0;
 
-                LRUCache<int, int, CACHE_SIZE>::KVPMapIterator mapIter = cache.mKVPMap.find(entry.first);
-
-                EXPECT_TRUE(mapIter != cache.mKVPMap.end());
-
-                LRUCache<int, int, CACHE_SIZE>::KVPListIterator listIter = mapIter->second;
-                EXPECT_EQ(listIter->first, entry.first);
-                EXPECT_EQ(listIter->second, entry.second);
-            }
-
-            // now make sure the order is correct
-            auto index = 0u;
-            for (auto& entry : cache.mKVPList)
-            {
-                EXPECT_EQ(entry, expect[index]);
-                ++index;
+                EXPECT_TRUE(cache.get(key, entry.second));
+                EXPECT_EQ(key, entry.first);
             }
         }
 };
 
 // Tests member api insert
-TEST_F(LRUCacheUnitTestFixture, insert) {
+TEST_F(TimedHashMapUnitTestFixture, put) {
 
-    bool ret = cache.insert(1,10);
-    EXPECT_TRUE(ret);
-    EXPECT_EQ(cache.mSize, 2);
-    EXPECT_EQ(cache.mKVPMap.size(), 1);
-    EXPECT_EQ(cache.mKVPList.size(), 1);
-    
-    ret = cache.insert(2,20);
-    EXPECT_TRUE(ret);
-    EXPECT_EQ(cache.mSize, 2);
-    EXPECT_EQ(cache.mKVPMap.size(), 2);
-    EXPECT_EQ(cache.mKVPList.size(), 2);
-  
-    InsertExpect(expect12);
+    auto index = 0u;
+    for ( auto& entry : inputKVP )
+    {
+        auto t = cache.put(entry.first, entry.second);
+        expectResult.erase(entry.first);
+        expectResult.emplace(entry.first, t);
+        sleep(++index);
+    }
 
-    ret = cache.insert(3,30);
-    EXPECT_TRUE(ret);
-    EXPECT_EQ(cache.mSize, 2);
-    EXPECT_EQ(cache.mKVPList.size(), 2);
-    EXPECT_EQ(cache.mKVPMap.size(), 2);
-  
-    const pair<int, int> expect23[CACHE_SIZE] = { {2, 20}, {3, 30} };
-    InsertExpect(expect23);
+    ASSERT_EQ(cache.mKVPMap.size(), 3);
+    ASSERT_EQ(cache.mTimeKeyMap.size(), 3);
+    GetExpect(expectResult);
 
   // <TechnicalDetails>
   //
@@ -168,65 +147,6 @@ TEST_F(LRUCacheUnitTestFixture, insert) {
   //
   // </TechnicalDetails>
 }
-
-
-// Tests member api get
-TEST_F(LRUCacheUnitTestFixture, get) {
-
-    bool ret = cache.insert(1,10);
-    EXPECT_TRUE(ret);
-    EXPECT_EQ(cache.mSize, 2);
-    EXPECT_EQ(cache.mKVPMap.size(), 1);
-    EXPECT_EQ(cache.mKVPList.size(), 1);
-    
-    ret = cache.insert(2,20);
-    EXPECT_TRUE(ret);
-    EXPECT_EQ(cache.mSize, 2);
-    EXPECT_EQ(cache.mKVPMap.size(), 2);
-    EXPECT_EQ(cache.mKVPList.size(), 2);
-  
-    InsertExpect(expect12);
-
-    auto value = 0;
-    ret = cache.get(3, value);
-    EXPECT_FALSE(ret);
-    EXPECT_EQ(value, 0);
-
-    InsertExpect(expect12);
-
-    value = 0;
-    ret = cache.get(1, value);
-    EXPECT_TRUE(ret);
-    EXPECT_EQ(value, 10);
-
-    const pair<int, int> expect21[CACHE_SIZE] = { {2, 20}, {1, 10} };
-    InsertExpect(expect21);
-
-
-    value = 0;
-    ret = cache.get(2, value);
-    EXPECT_TRUE(ret);
-    EXPECT_EQ(value, 20);
-
-    InsertExpect(expect12);
-
-
-  // <TechnicalDetails>
-  //
-  // expect12_EQ(expect12ed, actual) is the same as
-  //
-  //   expect12_TRUE((expect12ed) == (actual))
-  //
-  // except that it will print both the expect12ed value and the actual
-  // value when the assertion fails.  This is very helpful for
-  // debugging.  Therefore in this case expect12_EQ is preferred.
-  //
-  // On the other hand, expect12_TRUE accepts any Boolean expression,
-  // and is thus more general.
-  //
-  // </TechnicalDetails>
-}
-
 
 
 // Step 3. Call RUN_ALL_TESTS() in main().
