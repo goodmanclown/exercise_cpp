@@ -275,6 +275,18 @@ public:
 	void escapeSpace();
 
 
+	/**
+	 *
+	 */
+	size_t countMaxBracketDepth();
+
+
+	/**
+	 *
+	 */
+	std::vector<std::string> getKMostNGram(size_t k, size_t n);
+
+
 private:
 	
 

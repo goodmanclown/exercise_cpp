@@ -47,6 +47,10 @@
 #include "String.hxx"
 #include "gtest/gtest.h"
 
+#include <string>
+#include <vector>
+#include <array>
+
 using namespace std;
 
 // Step 2. Use the TEST macro to define your tests.
@@ -782,6 +786,149 @@ TEST(StringUnitTest, removeDuplicate) {
   // </TechnicalDetails>
 }
 
+
+// Tests member api removeDuplicate
+TEST(StringUnitTest, countMaxBracketDepth) {
+
+    {
+		String mep("abcdefgh");
+		auto ret = mep.countMaxBracketDepth();
+
+		EXPECT_EQ(ret, 0);
+	}
+
+
+    {
+		String mep("aac(defgh");
+		auto ret = mep.countMaxBracketDepth();
+
+		EXPECT_EQ(ret, 0);
+	}
+
+
+    {
+		String mep("aac)defgh");
+		auto ret = mep.countMaxBracketDepth();
+
+		EXPECT_EQ(ret, 0);
+	}
+
+    {
+		String mep("aac()defgh");
+		auto ret = mep.countMaxBracketDepth();
+
+		EXPECT_EQ(ret, 1);
+	}
+
+
+    {
+		String mep("aac(de))fgh");
+		auto ret = mep.countMaxBracketDepth();
+
+		EXPECT_EQ(ret, 1);
+	}
+
+    {
+		String mep("a(ac((de))f(g)h");
+		auto ret = mep.countMaxBracketDepth();
+
+		EXPECT_EQ(ret, 3);
+	}
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests getKMostNGram()
+class StringGetKMostNGram  : public ::testing::Test {
+    public:
+
+        StringGetKMostNGram() = default;
+
+        ~StringGetKMostNGram() = default;
+
+        void SetUp() override {
+
+          vector<string> tmp;
+          tmp.emplace_back("to match");
+          expectResult[0] = tmp;
+
+          tmp.clear();
+          tmp.emplace_back("string to match");
+          tmp.emplace_back("a string to");
+          expectResult[1] = tmp;
+
+          tmp.clear();
+          tmp.emplace_back("to match for n");
+          tmp.emplace_back("gram a string to");
+          tmp.emplace_back("a string to match");
+           expectResult[2] = tmp;
+        };
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 3u;
+
+        array<vector<string>, TEST_SIZE> expectResult = {};
+
+        array<pair<size_t, size_t>, TEST_SIZE> inputTarget{ 
+            { pair<size_t, size_t>(1, 2), 
+              pair<size_t, size_t>(2, 3), 
+              pair<size_t, size_t>(3, 4) 
+            } 
+        };
+
+        const char* input = "This is a string to match for n gram a string to match";
+
+        void GetExpect(const array<vector<string>, TEST_SIZE>& result)
+        {
+            EXPECT_EQ(result, expectResult);
+        }
+};
+
+// Tests member api getKMostNGram
+TEST_F(StringGetKMostNGram, getKMostNGram) {
+
+    String str(input);
+
+    auto index = 0u;
+    array<vector<string>, TEST_SIZE> result = { };
+
+    for ( auto& entry : inputTarget )
+    {
+        result[index++] = str.getKMostNGram(entry.first, entry.second);
+    }
+
+    GetExpect(result);
+
+  // <TechnicalDetails>
+  //
+  //   EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expect12ed value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case expect12_EQ is preferred.
+  //
+  // On the other hand, expect12_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
 
 // Step 3. Call RUN_ALL_TESTS() in main().
 //

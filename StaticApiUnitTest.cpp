@@ -546,31 +546,63 @@ TEST(StaticApi, distributeTotal) {
   // </TechnicalDetails>
 }
 
-// Tests StaticApi().
+// Tests FindTargetSum()
+class FindTargetSumTestFixture : public ::testing::Test {
+    public:
 
-TEST(StaticApi, findTargetSum) {
+        FindTargetSumTestFixture() = default;
 
-    array<uint32_t, 4> input { 1, 0, 1, 2 };
+        ~FindTargetSumTestFixture() = default;
 
-	auto result = StaticApi::findTargetSum<input.size()>(input, 5);
+        void SetUp() override {};
 
-    EXPECT_TRUE(result);
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 3u;
+
+        std::array<bool, TEST_SIZE> expectResult{ { false, true, true } };
+
+        std::array<uint32_t, TEST_SIZE> inputTarget{ {10, 4, 5 } };
+
+        const uint32_t input[7] = { 1, 0, 1, 2, 1 };
+
+        void GetExpect(const std::array<bool, TEST_SIZE>& result)
+        {
+            EXPECT_EQ(result, expectResult);
+        }
+};
+
+// Tests member api insert
+TEST_F(FindTargetSumTestFixture, FindTargetSumTestFixture) {
+
+    auto index = 0u;
+    std::array<bool, TEST_SIZE> result = { };
+
+    for ( auto& entry : inputTarget )
+    {
+        result[index++] = StaticApi::findTargetSum(input, sizeof(input), entry);
+    }
+
+    GetExpect(result);
 
   // <TechnicalDetails>
   //
-  // EXPECT_EQ(expected, actual) is the same as
+  //   EXPECT_EQ(expected, actual) is the same as
   //
   //   EXPECT_TRUE((expected) == (actual))
   //
-  // except that it will print both the expected value and the actual
+  // except that it will print both the expect12ed value and the actual
   // value when the assertion fails.  This is very helpful for
-  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  // debugging.  Therefore in this case expect12_EQ is preferred.
   //
-  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // On the other hand, expect12_TRUE accepts any Boolean expression,
   // and is thus more general.
   //
   // </TechnicalDetails>
 }
+
 
 // Tests StaticApi().
 
@@ -704,18 +736,15 @@ class FindClosestTargetTestFixture : public ::testing::Test {
 
         std::array<int, TEST_SIZE> result = { };
 
-        std::array<int, TEST_SIZE> expectResult = { 5, 9, 5 };
+        std::array<int, TEST_SIZE> expectResult{ { 5, 9, 5 } };
 
-        std::array<int, TEST_SIZE> inputTarget = { 5, 11, 4 };
+        std::array<int, TEST_SIZE> inputTarget{ {5, 11, 4 } };
 
         const int input[7] = { 2, 5, 6, 7, 8, 8, 9 };
 
         void GetExpect(const std::array<int, TEST_SIZE>& expect)
         {
-            for (size_t indexToResult = 0; indexToResult < TEST_SIZE; ++indexToResult)
-            {
-                EXPECT_EQ(result[indexToResult], expect[indexToResult]);
-            }
+            EXPECT_EQ(result, expect);
         }
 };
 

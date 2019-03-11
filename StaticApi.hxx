@@ -102,31 +102,27 @@ public:
 	 * 
 	 * @return true if uTargetSum is found
 	 */
-    template<size_t SIZE>
-    static bool findTargetSum(const std::array<uint32_t, SIZE>& input, uint32_t uTargetSum)
+    static bool findTargetSum(const uint32_t input[], size_t inputSize, uint32_t uTargetSum)
     {
-        if (input.empty() || input.size() < 2)
+        if (inputSize < 2)
         {
             return false;
         }
 
-        for (auto uIndexToArray = 0u; uIndexToArray < SIZE-1; ++uIndexToArray)
+        for (auto uIndexToArray = 0u; uIndexToArray < inputSize; ++uIndexToArray)
         {
-            std::vector<uint32_t> tmpVector;
-            tmpVector.push_back(input[uIndexToArray]);
+            auto tmpSum = input[uIndexToArray];
 
-            for (auto uInnerIndex = uIndexToArray+1; uInnerIndex < SIZE; ++uInnerIndex)
+            for (auto uInnerIndex = uIndexToArray+1; uInnerIndex < inputSize; ++uInnerIndex)
             {
-                tmpVector.push_back(input[uInnerIndex]);
-
-                auto tmpSum = std::accumulate(tmpVector.cbegin(), tmpVector.cend(), 0u);
-
+                tmpSum += input[uInnerIndex];
                 if (tmpSum == uTargetSum)
                 {
                     return true;
                 }
             }
         }
+
     	return false;
     }
 

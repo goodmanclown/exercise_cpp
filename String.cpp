@@ -2,7 +2,12 @@
 
 #include <algorithm>
 #include <vector>
+#include <array>
+#include <map>
+#include <unordered_map>
 #include <iostream>
+#include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -688,3 +693,105 @@ void String::escapeSpace()
 
 }
 
+
+size_t String::countMaxBracketDepth()
+{
+    if (mLen == 0) return 0;
+
+    // count the maximum depth of bracket in the internal buffer
+    size_t numLefBracket = 0;
+    size_t numRightBracket = 0;
+    for (size_t index=0; index < mLen; ++index)
+    {
+        if (mStr[index] == '(') 
+        {
+            ++numLefBracket;
+        }
+        else if (mStr[index] == ')') 
+        {
+            ++numRightBracket;
+        }
+    }
+
+    if (numLefBracket == 0 || numRightBracket == 0)
+    {
+        return 0;
+    }
+    else if (numLefBracket == numRightBracket)
+    {
+        return numLefBracket;
+    }
+    else if (numLefBracket < numRightBracket)
+    {
+        return numLefBracket;
+    }
+    else 
+    {
+        return numRightBracket;
+    }
+}
+
+
+vector<string> String::getKMostNGram(size_t k, size_t n)
+{ 
+    vector<string> result;
+
+    if (!mLen || !k || !n )
+    {
+        return result;
+    }
+
+    // break the sentences into words
+    vector<string> vWord;
+    stringstream ss(mStr);
+    string tok;
+
+    while (getline(ss, tok, ' '))
+    {
+        vWord.push_back(tok);
+    }
+
+    if (vWord.size() < n)
+    {
+        return result;
+    }
+
+    // combine the words into NGram and count them
+    unordered_map<string, size_t> mNGramCount;
+    for (size_t index = 0; index <= (vWord.size() - n); ++index)
+    {
+        string nGram = vWord[index];
+        for (size_t index1 = index+1; index1 < (index + n); ++index1)
+        {
+            nGram += " ";
+            nGram += vWord[index1];
+        }
+
+        ++(mNGramCount[nGram]);
+    }
+
+    // use a sorted map to sort the size of the NGram
+    // and only keep at most k pairs
+    result.resize(k);
+    size_t aMaxSize[k] = {};
+
+    for (auto& kvpNGramCount : mNGramCount)
+    { 
+        size_t tmpMaxIndex = k;
+        for (size_t indexToResult = 0; indexToResult < k; ++indexToResult)
+        {
+            if (aMaxSize[indexToResult] < kvpNGramCount.second)
+            {
+                tmpMaxIndex = indexToResult;
+            }
+        }
+        
+        if (tmpMaxIndex < k)
+        {
+            result[tmpMaxIndex] = kvpNGramCount.first;
+            aMaxSize[tmpMaxIndex] = kvpNGramCount.second;
+        }
+    }
+    
+    return result;
+}
