@@ -67,6 +67,11 @@ bool GetRandomMap::remove(uint64_t min, uint64_t max)
     // reduce the vector by 1 element
     mVector.resize(mVector.size()-1);
 
+    // update the index of the moved value in the map
+    const MdnEndpoint& elem = mVector[pos];
+
+    mMap[elem] = pos;
+
     return true;
 }
 
@@ -125,7 +130,7 @@ bool GetRandomMap::getRandom(MdnEndpoint& out) const
 
     size_t pos = rand() % mMap.size();
 
-    out.first = mVector[pos].second;
+    out.first = mVector[pos].first;
     out.second = mVector[pos].second;
 
     return true;
