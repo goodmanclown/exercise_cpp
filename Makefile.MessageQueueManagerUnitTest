@@ -27,12 +27,12 @@ USER_DIR = .
 CPPFLAGS += -isystem $(GTEST_DIR)/include
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g -Wall -Wextra -pthread -std=c++14 -fpermissive
+CXXFLAGS += -g -Wall -Wextra -pthread -std=c++14
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
 #TESTS = sample1_unittest
-TESTS = StaticApiUnitTest
+TESTS = MessageQueueManagerUnitTest
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -74,12 +74,12 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 
-StaticApi.o : $(USER_DIR)/StaticApi.cpp $(USER_DIR)/StaticApi.hxx $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/StaticApi.cpp
+MessageQueueManager.o : $(USER_DIR)/MessageQueueManager.cpp $(USER_DIR)/MessageQueueManager.hxx $(USER_DIR)/IMessageQueueManager.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/MessageQueueManager.cpp
 
-StaticApiUnitTest.o : $(USER_DIR)/StaticApiUnitTest.cpp \
-                     $(USER_DIR)/StaticApi.hxx $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/StaticApiUnitTest.cpp
+MessageQueueManagerUnitTest.o : $(USER_DIR)/MessageQueueManagerUnitTest.cpp \
+                     $(USER_DIR)/MessageQueueManager.hxx $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/MessageQueueManagerUnitTest.cpp
 
-StaticApiUnitTest : StaticApi.o StaticApiUnitTest.o gtest_main.a
+MessageQueueManagerUnitTest : MessageQueueManagerUnitTest.o MessageQueueManager.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@

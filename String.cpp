@@ -1,6 +1,7 @@
 #include "String.hxx"
 
 #include <algorithm>
+#include <iterator>
 #include <vector>
 #include <array>
 #include <map>
@@ -87,13 +88,19 @@ int String::indexOf(const char str[]) const
 		// match against 1st character of str
 		if (mStr[mStrIndex] == str[0]) {
 			// compare the rest of str
-			uint32_t strIndex=1;
-			for (uint32_t mStrIndex2=mStrIndex+1; mStrIndex2 < mLen && strIndex < len && mStr[mStrIndex2] == str[strIndex]; mStrIndex2++, strIndex++) {
+            if (strlen(str) > mLen - mStrIndex) {
+                // no enough characters left
+                return -1;
+            }
+            else {
+				uint32_t strIndex=1;
+				for (uint32_t mStrIndex2=mStrIndex+1; mStrIndex2 < mLen && strIndex < len && mStr[mStrIndex2] == str[strIndex]; mStrIndex2++, strIndex++) {
 				/* nothing to do */
-			}
+                }
 
-			// if we reach here matching up to the last character of str, we have a match
-			if (strIndex == len) return mStrIndex;
+				// if we reach here matching up to the last character of str, we have a match
+				if (strIndex == len) return mStrIndex;
+			}
 		}
 	}
 
@@ -132,19 +139,19 @@ int String::lastIndexOf(const char str[]) const
 	return -1;
 }
 
-uint32_t String::split(const char delimit[], vector<String>& output) const
+vector<String> String::split(const char delimit[]) const
 {
+	// clear the output
+    vector<String> output;
+
 	//if this object is emtpy
-	if (0 == mLen) return 0;
+	if (0 == mLen) return output;
 
 	uint32_t len = strlen(delimit);
 
 	// if input is empty
-	if (0 == len) return 0;
+	if (0 == len) return output;
 	
-	// clear the output
-	output.clear();
-
 	uint32_t mStrIndexBegin = 0;
 	uint32_t mStrIndex = 0;
 	for (; mStrIndex < mLen; mStrIndex++) {
@@ -162,7 +169,7 @@ uint32_t String::split(const char delimit[], vector<String>& output) const
 				// make sure we don't have consecutive delimiter
 				if (substrlen > 0) {
 					// copy the substring to the output
-					output.push_back(String(&mStr[mStrIndexBegin], substrlen));
+					output.emplace_back(&mStr[mStrIndexBegin], substrlen);
 				}
 
 				// move the beginning index to right after the last found delimiter
@@ -184,16 +191,16 @@ uint32_t String::split(const char delimit[], vector<String>& output) const
 		output.push_back(String(&mStr[mStrIndexBegin], substrlen));
 	}
 
-	return output.size();
+	return output;
 }
 
-uint32_t String::split(char delimit, vector<String>& output) const
+vector<String> String::split(char delimit) const
 {
-	//if this object is emtpy
-	if (0 == mLen) return 0;
-
 	// clear the output
-	output.clear();
+    vector<String> output;
+
+	//if this object is emtpy
+	if (0 == mLen) return output;
 
 	uint32_t mStrIndexBegin = 0;
 	uint32_t mStrIndex = 0;
@@ -208,7 +215,7 @@ uint32_t String::split(char delimit, vector<String>& output) const
 
 			if (substrlen > 0) {
 				// copy the substring to the output
-				output.push_back(String(&mStr[mStrIndexBegin], substrlen));
+				output.emplace_back(&mStr[mStrIndexBegin], substrlen);
 			}
 
 			// move the beginning index to right after the delimiter
@@ -226,7 +233,7 @@ uint32_t String::split(char delimit, vector<String>& output) const
 		output.push_back(String(&mStr[mStrIndexBegin], substrlen));
 	}
 
-	return output.size();
+	return output;
 }
 
 bool String::split(string& splitted) const
@@ -688,9 +695,32 @@ void String::escapeSpace()
         }
     }
 
-    // now know the number of spaces, calculate the extra number of bytes needed to keep the character '2' and '0'
-    size_t extraNumberOfBytes = countOfSpace * 2;
+    // allow a temp buffer with the extra spaces
+    char* tmpStr = new char[mLen+countOfSpace+1];
 
+    // go through the string again and replace the space with '20'
+    size_t indexToTmpStr = 0;
+    for (size_t index=0; index < mLen; ++index)
+    {
+        if (mStr[index] == ' ') 
+        {   // escape it
+            tmpStr[indexToTmpStr++] = '2';
+            tmpStr[indexToTmpStr++] = '0';
+        }  
+        else
+        {   // copy character over
+            tmpStr[indexToTmpStr++] = mStr[index];
+        }
+    }
+
+    tmpStr[indexToTmpStr] = '\0';
+
+    // delete the old string
+    delete [] mStr;
+
+    // replace it with the escaped version
+    mStr = tmpStr;
+    mLen = mLen + countOfSpace + 1;
 }
 
 
@@ -732,66 +762,150 @@ size_t String::countMaxBracketDepth()
 }
 
 
-vector<string> String::getKMostNGram(size_t k, size_t n)
+vector<string> String::getKMostNGram(size_t k, size_t n) const
 { 
     vector<string> result;
 
-    if (!mLen || !k || !n )
+    if ( mStr == nullptr || !mLen || !k || !n ) 
     {
         return result;
     }
 
-    // break the sentences into words
-    vector<string> vWord;
-    stringstream ss(mStr);
-    string tok;
+    vector<string> word;
 
-    while (getline(ss, tok, ' '))
+    // break the sentences into words
+    char* tmp = nullptr;
+    char* tok = strtok_r(mStr, " ", &tmp);
+    while (tok != nullptr)
     {
-        vWord.push_back(tok);
+        word.push_back(tok);
+        tok = strtok_r(nullptr, " ", &tmp);
     }
 
-    if (vWord.size() < n)
+    if (word.size() < n)
     {
         return result;
     }
 
     // combine the words into NGram and count them
-    unordered_map<string, size_t> mNGramCount;
-    for (size_t index = 0; index <= (vWord.size() - n); ++index)
+    unordered_map<string, size_t> nGramCount;
+
+    for (size_t index = 0; index <= word.size() - n; ++index)
     {
-        string nGram = vWord[index];
-        for (size_t index1 = index+1; index1 < (index + n); ++index1)
+        string nGram;
+        size_t wordCount = 0;
+        for (size_t index1 = index; index1 < index + n; ++index1)
         {
-            nGram += " ";
-            nGram += vWord[index1];
+        	nGram += word[index1];
+        	if (++wordCount < n)
+        	{
+            	nGram += " ";
+        	}
         }
 
-        ++(mNGramCount[nGram]);
+        if (wordCount == n)
+        {
+            // count this nGram
+            ++(nGramCount[nGram]);
+        }
     }
 
-    // use a sorted map to sort the size of the NGram
-    // and only keep at most k pairs
-    result.resize(k);
-    size_t aMaxSize[k] = {};
 
-    for (auto& kvpNGramCount : mNGramCount)
-    { 
-        size_t tmpMaxIndex = k;
-        for (size_t indexToResult = 0; indexToResult < k; ++indexToResult)
-        {
-            if (aMaxSize[indexToResult] < kvpNGramCount.second)
-            {
-                tmpMaxIndex = indexToResult;
+    // only keep at most k n-gram
+    result.reserve(k);
+
+    while (k > 0)
+    {
+        // loop through the count map 
+        pair<string, size_t> tmpHighestCountKvp;
+
+        for (auto& kvpNGramCount : nGramCount)
+        { 
+            if (tmpHighestCountKvp.second < kvpNGramCount.second)
+            {  // keep the kvp with the highest count
+               tmpHighestCountKvp = kvpNGramCount;
             }
         }
-        
-        if (tmpMaxIndex < k)
-        {
-            result[tmpMaxIndex] = kvpNGramCount.first;
-            aMaxSize[tmpMaxIndex] = kvpNGramCount.second;
-        }
+
+        // keep the result
+        result.push_back(tmpHighestCountKvp.first);
+
+        // remove it from the map so that we don't count it again
+        nGramCount.erase(tmpHighestCountKvp.first);
+
+        k -= 1;
     }
     
+    return result;
+}
+
+
+size_t String::strongPasswordChecker() const {
+
+    const static size_t MIN_PASSWORD_LENGTH = 6;
+    const static size_t MAX_PASSWORD_LENGTH = 20;
+    const static size_t MIN_LOWER_CASE_COUNT = 1;
+    const static size_t MIN_UPPER_CASE_COUNT = 1;
+    const static size_t MIN_DIGIT_COUNT = 1;
+    const static size_t MAX_CONSECUTIVE_REPEAT = 2;
+
+    size_t result = 0;
+
+    if (mLen < MIN_PASSWORD_LENGTH) {
+        result += (MIN_PASSWORD_LENGTH - mLen);
+    }
+
+    if (mLen > MAX_PASSWORD_LENGTH) {
+        result += (mLen - MAX_PASSWORD_LENGTH);
+    }
+
+    size_t lowerCaseCount = 0;
+    size_t upperCaseCount = 0;
+    size_t digitCount = 0;
+    size_t consecutiveRepeatCount = 1;
+    size_t consecutiveRepeatCountToCorrect = 0;
+    char lastCharacter = '\0';
+
+    // loop through each character in the string and check against the criteria
+    for (size_t index = 0; index < mLen; ++index) {
+        char c = mStr[index];
+
+        if ('a' <= c && c <= 'z') {
+            ++lowerCaseCount;
+        }
+        else if ('A' <= c && c <= 'Z') {
+            ++upperCaseCount;
+        }
+        else if ('0' <= c && c <= '9') {
+            ++digitCount;
+        }
+
+        
+        if (c == lastCharacter) {
+            ++consecutiveRepeatCount;
+        }
+        else {
+            if (consecutiveRepeatCount > MAX_CONSECUTIVE_REPEAT) {
+                consecutiveRepeatCountToCorrect += (consecutiveRepeatCount - MAX_CONSECUTIVE_REPEAT); 
+            }
+            consecutiveRepeatCount = 1;
+            lastCharacter = c;
+        }
+    }
+
+    if (lowerCaseCount < MIN_LOWER_CASE_COUNT) {
+        result += (MIN_LOWER_CASE_COUNT - lowerCaseCount);
+    }
+
+    if (upperCaseCount < MIN_UPPER_CASE_COUNT) {
+        result += (MIN_UPPER_CASE_COUNT - upperCaseCount);
+    }
+
+    if (digitCount < MIN_DIGIT_COUNT) {
+        result += (MIN_DIGIT_COUNT - digitCount);
+    }
+
+    result += consecutiveRepeatCountToCorrect;
+
     return result;
 }

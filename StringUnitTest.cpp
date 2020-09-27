@@ -178,8 +178,8 @@ TEST(StringUnitTest, lastIndexOf) {
 TEST(StringUnitTest, split) {
 
 	String mep("abcd;;efgh;defgh");
-	vector<String> output;
-	uint32_t ret = mep.split(';', output);
+	vector<String> output = mep.split(';');
+    size_t ret = output.size();
 
 	EXPECT_EQ(3, ret);
 	EXPECT_EQ(String("abcd"), output[0]);
@@ -187,15 +187,15 @@ TEST(StringUnitTest, split) {
 	EXPECT_EQ(String("defgh"), output[2]);
 
 	String mep1("abcd");
-	output.clear();
-	ret = mep1.split(';', output);
+	output = mep1.split(';');
+    ret = output.size();
 
 	EXPECT_EQ(1, ret);
 	EXPECT_EQ(String("abcd"), output[0]);
 
 	String mep2(";;;;;");
-	output.clear();
-	ret = mep2.split(';', output);
+	output = mep2.split(';');
+    ret = output.size();
 
 	EXPECT_EQ(0, ret);
   // <TechnicalDetails>
@@ -219,8 +219,8 @@ TEST(StringUnitTest, split) {
 TEST(StringUnitTest, splitArray) {
 
 	String mep("/abcd/;efgh;/defgh;12345");
-	vector<String> output;
-	uint32_t ret = mep.split(";/", output);
+	vector<String> output = mep.split(";/");
+    size_t ret = output.size();
 
 	EXPECT_EQ(4, ret);
 	EXPECT_EQ(String("abcd"), output[0]);
@@ -229,15 +229,15 @@ TEST(StringUnitTest, splitArray) {
 	EXPECT_EQ(String("12345"), output[3]);
 
 	String mep1("abcd");
-	output.clear();
-	ret = mep1.split(";/", output);
+	output = mep1.split(";/");
+    ret = output.size();
 
 	EXPECT_EQ(1, ret);
 	EXPECT_EQ(String("abcd"), output[0]);
 
 	String mep2(";/;/;/;/;/;/");
-	output.clear();
-	ret = mep2.split(";/", output);
+	output = mep2.split(";/");
+	ret = output.size();
 
 	EXPECT_EQ(0, ret);
 
@@ -870,9 +870,9 @@ class StringGetKMostNGram  : public ::testing::Test {
           expectResult[1] = tmp;
 
           tmp.clear();
-          tmp.emplace_back("to match for n");
-          tmp.emplace_back("gram a string to");
           tmp.emplace_back("a string to match");
+          tmp.emplace_back("n gram a string");
+          tmp.emplace_back("for n gram a");
            expectResult[2] = tmp;
         };
 
@@ -893,26 +893,157 @@ class StringGetKMostNGram  : public ::testing::Test {
 
         const char* input = "This is a string to match for n gram a string to match";
 
-        void GetExpect(const array<vector<string>, TEST_SIZE>& result)
-        {
-            EXPECT_EQ(result, expectResult);
-        }
 };
 
 // Tests member api getKMostNGram
 TEST_F(StringGetKMostNGram, getKMostNGram) {
 
-    String str(input);
 
     auto index = 0u;
     array<vector<string>, TEST_SIZE> result = { };
 
     for ( auto& entry : inputTarget )
     {
+    	String str(input);
         result[index++] = str.getKMostNGram(entry.first, entry.second);
     }
 
-    GetExpect(result);
+    EXPECT_EQ(expectResult, result);
+
+  // <TechnicalDetails>
+  //
+  //   EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expect12ed value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case expect12_EQ is preferred.
+  //
+  // On the other hand, expect12_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests escapeSpace()
+class StringEscapeSpace  : public ::testing::Test {
+    public:
+
+        StringEscapeSpace() = default;
+
+        ~StringEscapeSpace() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 3u;
+
+        array<string, TEST_SIZE> expectResult = { { 
+                "20", 
+                "1",
+                "gram20a20string20to"
+            } 
+        };
+
+        array<string, TEST_SIZE> inputTarget = { { 
+                " ", 
+                "1",
+                "gram a string to"
+            } 
+        };
+};
+
+// Tests member api escapeSpace
+TEST_F(StringEscapeSpace, escapeSpace) {
+
+    auto index = 0u;
+    array<string, TEST_SIZE> result = { };
+
+    for ( auto& entry : inputTarget )
+    {
+        String str(entry.c_str());
+        str.escapeSpace();
+        result[index++] = str.data();
+    }
+
+    EXPECT_EQ(result, expectResult);
+
+  // <TechnicalDetails>
+  //
+  //   EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expect12ed value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case expect12_EQ is preferred.
+  //
+  // On the other hand, expect12_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests strongPasswordChecker()
+class StringPasswordChecker  : public ::testing::Test {
+    public:
+
+        StringPasswordChecker() = default;
+
+        ~StringPasswordChecker() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 8u;
+
+        array<string, TEST_SIZE> inputTarget = { { 
+                "dfad", 
+                "dfadfdsfsdfAfdfsreqrdxfda", 
+                "1",
+                "gram a string to",
+                "dfadfdsfsdfAfdfsdxf1", 
+                "dfadfssfsdfAfdfsdxf1", 
+                "dfadfsssfdfAfdfsdxf1", 
+                "dfadfssssdfAfdfsdxf1", 
+            } 
+        };
+
+        array<size_t, TEST_SIZE> expectResult = { { 
+                4, 
+                6,
+                7,
+                2,
+                0,
+                0,
+                1,
+                2
+            } 
+        };
+
+};
+
+// Tests member api escapeSpace
+TEST_F(StringPasswordChecker, strongPassChecker) {
+
+    array<size_t, TEST_SIZE> result = { };
+
+    transform(inputTarget.cbegin(), inputTarget.cend(),
+        result.begin(),
+        [] (const auto& entry) {
+            String str(entry.c_str());
+            return str.strongPasswordChecker();
+        }
+    );
+
+    EXPECT_EQ(result, expectResult);
 
   // <TechnicalDetails>
   //

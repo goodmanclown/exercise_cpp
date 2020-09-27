@@ -759,6 +759,75 @@ TEST_F(FindClosestTargetTestFixture, findClosestTarget) {
 
     GetExpect(expectResult);
 
+    char cmsg[] = { '1', '2', 0 };
+
+    short s = reinterpret_cast<short>(cmsg);
+
+    printf("\n\n0x%x, short 0x%x\n\n", cmsg, s);
+
+
+  // <TechnicalDetails>
+  //
+  //   EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expect12ed value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case expect12_EQ is preferred.
+  //
+  // On the other hand, expect12_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
+// Tests maxNumPointsOnLine()
+class FindMaxNumOfPointsOnLineTestFixture : public ::testing::Test {
+    public:
+
+        FindMaxNumOfPointsOnLineTestFixture() = default;
+
+        ~FindMaxNumOfPointsOnLineTestFixture() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 2u;
+
+        array<vector<pair<int, int>>, TEST_SIZE> inputTarget {
+            { 
+                { pair<int, int>(1, 1), pair<int, int>(2, 2), pair<int, int>(3, 3) },
+                { pair<int, int>(1, 1), pair<int, int>(3, 2), pair<int, int>(5, 3), pair<int, int>(4, 1), pair<int, int>(2, 3), pair<int, int>(1, 4) }
+            } 
+        };
+
+        std::array<int, TEST_SIZE> expectResult { 
+            { 
+                3,
+                4 
+            } 
+        };
+};
+
+// Tests member api insert
+TEST_F(FindMaxNumOfPointsOnLineTestFixture, findMaxPointsOnLine) {
+
+    std::array<int, TEST_SIZE> result = { };
+
+    transform(inputTarget.cbegin(), inputTarget.cend(), 
+        result.begin(),
+        [] (const auto& entry) {
+            return StaticApi::findMaxPointsOnLine(entry);
+        }
+    );
+
+    EXPECT_EQ(expectResult, result);
+
   // <TechnicalDetails>
   //
   //   EXPECT_EQ(expected, actual) is the same as

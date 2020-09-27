@@ -7,6 +7,7 @@
 #include <sstream>
 #include <map>
 #include <unordered_map>
+#include <utility>
 
 using namespace std;
 
@@ -382,4 +383,79 @@ int StaticApi::findClosestNumber(int target, const int input[], size_t sizeOfInp
     }
 
     return result;
+}
+
+int StaticApi::findMaxPointsOnLine(const vector<pair<int, int>>& points) {
+
+    int maxNumOfPoints = 1;
+
+    // going up to the right diagonal
+    for (size_t index = 0; index < points.size(); ++index) {
+
+        const auto& startCoord = points[index];
+        int numOfPoints = 1;
+        
+        pair<int, int> nextDiagCoord = make_pair<int, int>(startCoord.first + 1, startCoord.second + 1);
+
+        bool bDone = false;
+        while (bDone == false) {
+
+            // going horizontal and find the next point
+            size_t index1 = 0;
+            for (; index1 < points.size(); ++index1) {
+
+                const auto& entry = points[index1];
+                if (nextDiagCoord == entry) {
+                    ++numOfPoints;
+
+                    nextDiagCoord = make_pair<int, int>(entry.first + 1, entry.second + 1);
+                    break;
+                }
+            }
+
+            if (index1 >= points.size()) {
+                bDone = true;
+            }
+        }
+
+        if (maxNumOfPoints < numOfPoints) {
+            maxNumOfPoints = numOfPoints;
+        }
+    }
+
+    // going down to the left diagonal
+    for (size_t index = 0; index < points.size(); ++index) {
+
+        const auto& startCoord = points[index];
+        int numOfPoints = 1;
+        
+        pair<int, int> nextDiagCoord = make_pair<int, int>(startCoord.first + 1, startCoord.second - 1);
+
+        bool bDone = false;
+        while (bDone == false) {
+
+            // going horizontal and find the next point
+            size_t index1 = 0;
+            for (; index1 < points.size(); ++index1) {
+
+                const auto& entry = points[index1];
+                if (nextDiagCoord == entry) {
+                    ++numOfPoints;
+
+                    nextDiagCoord = make_pair<int, int>(entry.first + 1, entry.second - 1);
+                    break;
+                }
+            }
+
+            if (index1 >= points.size()) {
+                bDone = true;
+            }
+        }
+
+        if (maxNumOfPoints < numOfPoints) {
+            maxNumOfPoints = numOfPoints;
+        }
+    }
+
+    return maxNumOfPoints;
 }

@@ -198,15 +198,15 @@ public:
 
 
 	/**
-	 * @return number of splitted string in output vector.  0 otherwise
+	 * @return vector of splitted string.  empty if error
 	 */
-	uint32_t split(const char delimit[], vector<String>& output) const;
+	vector<String> split(const char delimit[]) const;
 
 
 	/**
-	 * @return number of splitted string in output vector.  0 otherwise
+	 * @return vector of splitted string.  empty if error
 	 */
-	uint32_t split(char delimit, vector<String>& output) const;
+	vector<String> split(char delimit) const;
 
 
 	/**
@@ -282,10 +282,33 @@ public:
 
 
 	/**
-	 *
+	 * get the k most n-grams
+     *
+     * e.g., input text “The cow jumps over the moon”.“The cow jumps over the moon”
+     * n=2 5 2-grams
+     * The cow, cow jumps, jumps over, over the, the moon
+     * n=3 4 3-grams
+     * The cow jumps, cow jumps over, jumps over the, over the moon
 	 */
-	std::vector<std::string> getKMostNGram(size_t k, size_t n);
+	std::vector<std::string> getKMostNGram(size_t k, size_t n) const;
 
+	/**
+	 * strong password checker
+     *
+     * 
+     * password is considered strong if below conditions are all met:
+     *
+     * It has at least 6 characters and at most 20 characters.
+     * It must contain at least one lowercase letter, at least one uppercase letter, and at least one digit.
+     * It must NOT contain three repeating characters in a row ("...aaa..." is weak, but "...aa...a..." is strong, 
+     * assuming other conditions are met).
+     *
+     * Write a function strongPasswordChecker(s), that takes a string s as input, and return the MINIMUM change 
+     * required to make s a strong password. If s is already strong, return 0.
+     *
+     * Insertion, deletion or replace of any one character are all considered as one change
+	 */
+	size_t strongPasswordChecker() const;
 
 private:
 	
