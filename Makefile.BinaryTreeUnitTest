@@ -27,7 +27,7 @@ USER_DIR = .
 CPPFLAGS += -isystem $(GTEST_DIR)/include
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g -Wall -Wextra -pthread
+CXXFLAGS += -g -Wall -Wextra -pthread -std=c++14
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
@@ -81,7 +81,7 @@ gtest_main.a : gtest-all.o gtest_main.o
 #	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/BinaryTree.cpp
 
 BinaryTreeUnitTest.o : $(USER_DIR)/BinaryTreeUnitTest.cpp \
-                     $(USER_DIR)/BinaryTree.hxx $(GTEST_HEADERS)
+                     $(USER_DIR)/BinaryTree.hxx $(USER_DIR)/BinaryTreeNode.hxx $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/BinaryTreeUnitTest.cpp
 
 #BinaryTreeUnitTest : BinaryTreeUnitTest.o BinaryTree.o BinaryTreeNode.o gtest_main.a

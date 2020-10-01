@@ -1,6 +1,9 @@
+#pragma once
+
 #include "BinaryTreeNode.hxx"
 
 #include <stdint.h>
+#include <functional>
 #include <iostream>
 #include <vector>
 
@@ -22,15 +25,15 @@ public:
    /**
     * Constructor
     */
-   BinarySearchTree():mRoot(nullptr) { };
+   BinarySearchTree() = default;
 
 
    /**
     * Constructor
     */
-   BinarySearchTree(const T sortedArray[], std::size_t len):mRoot(nullptr) 
+   BinarySearchTree(const T sortedArray[], std::size_t len)
    {
-      populate(mRoot, sortedArray, len);
+      mRoot = populate(sortedArray, len);
    };
 
 
@@ -38,14 +41,7 @@ public:
    /**
     * Destructor
     */
-   virtual ~BinarySearchTree()
-   {
-      // remove all nodes
-      remove(mRoot);
-
-      mRoot = NULL;
-   };
-
+   virtual ~BinarySearchTree() = default;
 
 
    /**
@@ -57,7 +53,7 @@ public:
     */
    bool insert(T value)
    {
-      BinaryTreeNode<T>* node = new (std::nothrow) BinaryTreeNode<T>(value);
+      BinaryTreeNodePtr<T> node = std::make_shared<BinaryTreeNode<T>>(value);
 
       return insert(node);
    };
@@ -69,15 +65,15 @@ public:
     * @param: node - to be inserted to the tree
     *
     */
-   bool insert(BinaryTreeNode<T>* node)
+   bool insert(BinaryTreeNodePtr<T> node)
    {
       // is new ok?
-      if (NULL == node) return false;
+      if (nullptr == node) return false;
 
-      if (NULL == mRoot) {
+      if (nullptr == mRoot) {
          // no node yet
          // just add it to the root
-         mRoot = node;
+         mRoot.swap(node);
          return true;
       }
       else {
@@ -101,52 +97,48 @@ public:
    bool remove(T value)
    {
       // is tree empty?
-      if (NULL == mRoot) return false;
+      if (nullptr == mRoot) return false;
 
-      if (*mRoot > value && NULL != mRoot->getLessThanPtr()) {
+      if (*mRoot > value && nullptr != mRoot->getLessThanPtr()) {
          // move down the less than path
          return remove(value, mRoot->getLessThanPtr(), *mRoot);
       }
-      else if (*mRoot < value && NULL != mRoot->getGreaterThanPtr()) {
+      else if (*mRoot < value && nullptr != mRoot->getGreaterThanEqualToPtr()) {
          // move down the greater than path
-         return remove(value, mRoot->getGreaterThanPtr(), *mRoot);
+         return remove(value, mRoot->getGreaterThanEqualToPtr(), *mRoot);
       }
       else if (*mRoot == value) {
          // to remove the mRoot
 
-         BinaryTreeNode<T>* gtnode = mRoot->getGreaterThanPtr();
-         BinaryTreeNode<T>* ltnode = mRoot->getLessThanPtr();
+         BinaryTreeNodePtr<T> gtnode = mRoot->getGreaterThanEqualToPtr();
+         BinaryTreeNodePtr<T> ltnode = mRoot->getLessThanPtr();
 
-         if (NULL != gtnode) {
-            if (NULL != ltnode) {
+         if (nullptr != gtnode) {
+            if (nullptr != ltnode) {
                // first insert the less than node to the greater than node
                insert(ltnode, *gtnode);
 
                // set greater than node as root
-               delete mRoot;
-               mRoot = gtnode;
+               mRoot.swap(gtnode);
                return true;
             }
             else {
                // no less than node
                // set greater than as root
-               delete mRoot;
-               mRoot = gtnode;
+               mRoot.swap(gtnode);
                return true;
             }
          }
-         else if (NULL != ltnode) {
+         else if (nullptr != ltnode) {
             // no greater than node
             // set less than as root
-            delete mRoot;
-            mRoot = ltnode;
+            mRoot.swap(ltnode);
             return true;
          }
          else {
             // a single node
             // just delete it
-            delete mRoot;
-            mRoot = NULL;
+            mRoot.reset();
             return true;
          }
       } 	// else if (*mRoot == value) {
@@ -162,15 +154,38 @@ public:
     * @return BinaryTreeNodePtr if found ok.  NULL if value is not found in the tree
     *
     */
-   BinaryTreeNode<T>* find(T value)
+   BinaryTreeNodePtr<T> find(T value) const
    {
-      if (NULL == mRoot) {
+      if (nullptr == mRoot) {
          // no node yet
-         return NULL;
+         return nullptr;
       }
 
       // move down the root to find a node that matches the input value
-      return find(value, *mRoot);
+      return find(std::bind(mDefaultCompFunc, std::placeholders::_1, value), 
+            mRoot, 
+            std::bind(mPreOrderTraversalFunc, std::placeholders::_1, value));
+   };
+
+
+   /**
+    *
+    * @param: value - to be found from the tree.  if there're more than 1 occurrences of value in the tree, the last occurrence is returned
+    * @param: compFunc - comparison functoin to be used in finding value
+    *
+    * @return BinaryTreeNodePtr if found ok.  NULL if value is not found in the tree
+    *
+    */
+   BinaryTreeNodePtr<T> find(std::function<bool(const T&)> compFunc, 
+                           std::function<bool(const T&)> preOrderTraversalFunc) const
+   {
+      if (nullptr == mRoot) {
+         // no node yet
+         return nullptr;
+      }
+
+      // move down the root to find a node that matches the input value
+      return find(compFunc, mRoot, preOrderTraversalFunc);
    };
 
 
@@ -185,7 +200,7 @@ public:
    friend ostream& operator<<(ostream& out, const BinarySearchTree<T>& tree)
    {
       // is tree empty?
-      if (NULL == tree.mRoot) {
+      if (nullptr == tree.mRoot) {
          return (out << "empty");
       }
       else {
@@ -264,21 +279,36 @@ private:
     * @param: node - to be exmained against the input value
     *
     */
-   void insert(BinaryTreeNode<T>* value, BinaryTreeNode<T>& node)
+   void insert(BinaryTreeNodePtr<T> value, BinaryTreeNode<T>& node)
    {
       // if the value to be inserted is same as the node, just return
-      if (value->getValue() == node.getValue()) return;
+      if (*value == node) return;
 
-      // get pointer to the next node
-      BinaryTreeNode<T>* nextNode = node.getPtr(*value);
-
-      if (NULL == nextNode) {
-         // no next node, simply set it
-         node.setPtr(value);
+      if (*value < node) 
+      {
+         auto nextNode = node.getLessThanPtr();
+         if (nextNode == nullptr)
+         {
+            node.setLessThanPtr(value);
+         }
+         else
+         {
+            // move down the node to find another node to insert the input value
+            insert(value, *nextNode);
+         }
       }
-      else {
-         // move down the node to find another node to insert the input value
-         insert(value, *nextNode);
+      else
+      {
+         auto nextNode = node.getGreaterThanEqualToPtr();
+         if (nextNode == nullptr)
+         {
+            node.setGreaterThanEqualToPtr(value);
+         }
+         else
+         {
+            // move down the node to find another node to insert the input value
+            insert(value, *nextNode);
+         }
       }
    };
 
@@ -292,90 +322,60 @@ private:
     * @return true if remove ok. false if value is not found in the input node and all linked nodes
     *
     */
-   bool remove(T value, BinaryTreeNode<T>* node, BinaryTreeNode<T>& parent)
+   bool remove(T value, BinaryTreeNodePtr<T> node, BinaryTreeNode<T>& parent)
    {
-      // get pointer to the next node
-      BinaryTreeNode<T>* nextNode = node->getPtr(value);
+      if (*node == value) {
+         // so we are at the first ocurrence of the value
 
-      if (NULL == nextNode) {
-         // no next node
-         if (*node == value) {
-            // so we are at the last ocurrence of the value
+         // remove this node from parent first
+         parent.remove(*node);
 
-            // remove this node from parent first
-            parent.remove(*node);
+         BinaryTreeNodePtr<T> gtnode = node->getGreaterThanEqualToPtr();
+         BinaryTreeNodePtr<T> ltnode = node->getLessThanPtr();
 
-            BinaryTreeNode<T>* gtnode = node->getGreaterThanPtr();
-            BinaryTreeNode<T>* ltnode = node->getLessThanPtr();
+         if (nullptr != gtnode) {
+            if (nullptr != ltnode) {
+               // first insert the less than node to the greater than node
+               insert(ltnode, *gtnode);
 
-            if (NULL != gtnode) {
-               if (NULL != ltnode) {
-                  // first insert the less than node to the greater than node
-                  insert(ltnode, *gtnode);
-
-                  // set the greater than node to parent
-                  delete node;
-                  parent.setPtr(gtnode);
-                  return true;
-               }
-               else {
-                  // no less than node
-                  // set greater than node to parent
-                  delete node;
-                  parent.setPtr(gtnode);
-                  return true;
-               }
-            }
-            else if (NULL != ltnode) {
-               // no greater than node
-               // set less than node to parent
-               delete node;
-               parent.setPtr(ltnode);
+               // set the greater than node to parent
+               node.reset();
+               parent.setPtr(gtnode);
                return true;
             }
             else {
-               // a single node
-               // just delete it
-               delete node;
+               // no less than node
+               // set greater than node to parent
+               node.reset();
+               parent.setPtr(gtnode);
                return true;
             }
-         }	// if (value == *node) {
-         else {
-            // no more node to examine and we can't find a node matching the input value
-            return false;
          }
-      }
+         else if (nullptr != ltnode) {
+            // no greater than node
+            // set less than node to parent
+            node.reset();
+            parent.setPtr(ltnode);
+            return true;
+         }
+         else {
+            // a single node
+            // just delete it
+            node.reset();
+            return true;
+         }
+      }	// if (value == *node) {
       else {
-         // move down the next node
-         return remove(value, nextNode, *node);
+         // get pointer to the next node
+         BinaryTreeNodePtr<T> nextNode = node->getPtr(value);
+
+         if (nullptr != nextNode) {
+            // move down the next node
+            return remove(value, nextNode, *node);
+         }
       }
 
       return false;
-   };
-
-
-   /**
-    *
-    * @param: node - to be removed, and all linked nodes
-    *
-    */
-   void remove(BinaryTreeNode<T>* node)
-   {
-      // is input null?
-      if (NULL == node) return;
-
-      // remove less than nodes
-      if (NULL != node->getLessThanPtr()) {
-         remove(node->getLessThanPtr());
-      }
-
-      // remove greater than nodes
-      if (NULL != node->getGreaterThanPtr()) {
-         remove(node->getGreaterThanPtr());
-      }
-
-      // remove the input node
-      delete node;
    };
 
 
@@ -385,24 +385,30 @@ private:
     * @param: node - to be exmained against the input value
     *
     */
-   BinaryTreeNode<T>* find(T value, BinaryTreeNode<T>& node)
+   BinaryTreeNodePtr<T> find(std::function<bool(const T&)> compFunc, 
+                              BinaryTreeNodePtr<T> node, 
+                              std::function<bool(const T&)> preOrderTraversalFunc) const
    {
-		std::cout << "find " << value << ", " << node.getValue() << std::endl;
+		std::cout << "find " << node->getValue() << std::endl;
 
       // if the input node has the same value
-      if (node.getValue() == value) return &node;
+      if (compFunc(node->getValue()) == true) return node;
       else {
-         // get pointer to the next node
-         BinaryTreeNode<T>* nextNode = node.getPtr(value);
+         const auto nextNode = node->getLessThanPtr();
 
-         if (NULL != nextNode) {
+         if (nullptr != nextNode && preOrderTraversalFunc(node->getLessThanPtr()->getValue()) == true) {
             // move down the node to find another node that matches the input value
-            return find(value, *nextNode);
+            return find(compFunc, nextNode, preOrderTraversalFunc);
          }
-
-         // no next node, the input value is not in the tree
-         return NULL;
+         else {
+            const auto nextNode = node->getGreaterThanEqualToPtr();
+            if (nullptr != nextNode) {
+               // move down the node to find another node that matches the input value
+               return find(compFunc, nextNode, preOrderTraversalFunc);
+            }
+         }
       }
+      return nullptr;
    };
 
 
@@ -425,11 +431,11 @@ private:
       }
 
       // go down the right node
-      if (nullptr != node.getGreaterThanPtr()) 
+      if (nullptr != node.getGreaterThanEqualToPtr()) 
       {
-         if (*node.getGreaterThanPtr() < node) return false;
+         if (*node.getGreaterThanEqualToPtr() < node) return false;
 
-         bool ret = isInOrder(*node.getGreaterThanPtr());
+         bool ret = isInOrder(*node.getGreaterThanEqualToPtr());
 
          if (ret == false) return false;
       }
@@ -452,13 +458,13 @@ private:
       out << node << " ";
 
       // print out less than nodes
-      if (NULL != node.getLessThanPtr()) {
+      if (nullptr != node.getLessThanPtr()) {
          traverse(out, *node.getLessThanPtr());
       }
 
       // print out greater than nodes
-      if (NULL != node.getGreaterThanPtr()) {
-         traverse(out, *node.getGreaterThanPtr());
+      if (nullptr != node.getGreaterThanEqualToPtr()) {
+         traverse(out, *node.getGreaterThanEqualToPtr());
       }
 
       return out;
@@ -486,9 +492,9 @@ private:
       out << node << " ";
 
       // print out greater than nodes
-      if (nullptr != node.getGreaterThanPtr()) 
+      if (nullptr != node.getGreaterThanEqualToPtr()) 
       {
-         traverseInOrder(out, *node.getGreaterThanPtr());
+         traverseInOrder(out, *node.getGreaterThanEqualToPtr());
       }
 
       return out;
@@ -513,9 +519,9 @@ private:
       }
 
       // print out greater than nodes
-      if (nullptr != node.getGreaterThanPtr()) 
+      if (nullptr != node.getGreaterThanEqualToPtr()) 
       {
-         traversePostOrder(out, *node.getGreaterThanPtr());
+         traversePostOrder(out, *node.getGreaterThanEqualToPtr());
       }
 
       // append value of the current node to the output stream
@@ -526,45 +532,55 @@ private:
 
 
    /**
-    * Constructor
+    * populate - recursive
     */
-   void populate(BinaryTreeNode<T>*& node, const T pArray[], std::size_t pArraySize)
+   BinaryTreeNodePtr<T> populate(const T pArray[], std::size_t pArraySize)
    {
-      if (pArraySize == 0) return;
+       if (pArraySize == 0) return nullptr;
 
-      if (pArraySize == 1)
-      {  // just 1 element
-         node = new (std::nothrow) BinaryTreeNode<T>(pArray[0]);
+       if (pArraySize == 1)
+       {  // just 1 element
+          std::cout << "populate: " << pArray[0] << std::endl;
+          return std::make_shared<BinaryTreeNode<T>>(pArray[0]);
+       }
 
-         return;
-      }
-
-      // divide the array into 2 half
-      std::size_t midIndex = pArraySize / 2;
+       // divide the array into 2 half
+       std::size_t midIndex = pArraySize / 2;
+     
+       std::cout << "populate: " << pArray[midIndex] << std::endl;
+       auto node = std::make_shared<BinaryTreeNode<T>>(pArray[midIndex]);
       
-      node = new (std::nothrow) BinaryTreeNode<T>(pArray[midIndex]);
-      
-      // populate the 1st half to the left of root
-      if (midIndex-1 > 0)
-      {
-         populate(node->getLeftNode(), pArray, midIndex-1);
-      }
+       // populate the 1st half to the left of root
+       if (midIndex >= 1)
+       {
+          node->setPtr(populate(pArray, midIndex));
+       }
 
-      // populate the 2nd half to the right of root
-      if (pArraySize-midIndex-1 > 0)
-      {
-         populate(node->getRightNode(), &pArray[midIndex+1], pArraySize-midIndex-1);
-      }
+       // populate the 2nd half to the right of root
+       if (pArraySize-midIndex-1 > 0)
+       {
+          node->setPtr(populate(&pArray[midIndex+1], pArraySize-midIndex-1));
+       }
+
+       return node;
    };
-
 
 
    /**
     * ptr to a BinaryTreeNode object
     */
-   BinaryTreeNode<T>*		mRoot;
+   BinaryTreeNodePtr<T>		mRoot;
 
 
+   /**
+    * default comparison function for the find API
+    */
+   std::function<bool(const T&, const T&)> mDefaultCompFunc = std::equal_to<T>();
+
+   /**
+    * default preorder traversal function for the find API
+    */
+   std::function<bool(const T&, const T&)> mPreOrderTraversalFunc = std::less<T>();
 
 };
 

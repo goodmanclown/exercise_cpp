@@ -1,11 +1,17 @@
-#ifndef __BINARY_TREE_NODE_HXX_
-#define __BINARY_TREE_NODE_HXX_
+#pragma once
 
 #include <stdint.h>
 
 #include <iostream>
+#include <memory>
+
 using std::ostream;
 
+template<typename T>
+class BinaryTreeNode;
+
+template<typename T>
+using BinaryTreeNodePtr = std::shared_ptr<BinaryTreeNode<T>>;
 
 /**
  * a template class representing the node of a bi-nary tree
@@ -21,125 +27,103 @@ public:
 	 * @param: value - value of this node
 	 *
 	 */
-	explicit BinaryTreeNode(T value):mGreaterThanPtr(NULL),mLessThanPtr(NULL),mValue(value) { };
+	explicit BinaryTreeNode(T value):mValue(value) { };
+
+
+	/**
+	 * Constructor
+	 */
+	BinaryTreeNode() = delete;
 
 
 	/**
 	 * Destructor
 	 */
-	virtual ~BinaryTreeNode() {};
+	virtual ~BinaryTreeNode() = default;
 
 
 	/**
-	 * @return mGreaterThanPtr
-    */
-	const BinaryTreeNode<T>* getGreaterThanPtr() const { return mGreaterThanPtr; };
-
-
-	/**
-	 * @return mLessThanPtr
-    */
-	const BinaryTreeNode<T>* getLessThanPtr() const { return mLessThanPtr; };
-
-
-	/**
-	 * @return mGreaterThanPtr
-    */
-	BinaryTreeNode<T>* getGreaterThanPtr() { return mGreaterThanPtr; };
+	 * @return mGreaterThanEqualToPtr
+     */
+	BinaryTreeNodePtr<T> getGreaterThanEqualToPtr() const { return mGreaterThanEqualToPtr; };
 
 
 	/**
 	 * @return mLessThanPtr
-    */
-	BinaryTreeNode<T>* getLessThanPtr() { return mLessThanPtr; };
+     */
+	BinaryTreeNodePtr<T> getLessThanPtr() const { return mLessThanPtr; };
 
 
 	/**
-	 * @return right node
-    */
-	BinaryTreeNode<T>*& getRightNode() { return mGreaterThanPtr; };
+	 * @return mGreaterThanEqualToPtr
+     */
+	void setGreaterThanEqualToPtr(BinaryTreeNodePtr<T> node) { mGreaterThanEqualToPtr.swap(node); };
 
 
 	/**
-	 * @return left node
-    */
-	BinaryTreeNode<T>*& getLeftNode() { return mLessThanPtr; };
-
-
-	/**
-	 * @return right node
-    */
-	const BinaryTreeNode<T>* getRightNode() const { return mGreaterThanPtr; };
-
-
-	/**
-	 * @return left node
-    */
-	const BinaryTreeNode<T>* getLeftNode() const { return mLessThanPtr; };
+	 * @return mLessThanPtr
+     */
+	void setLessThanPtr(BinaryTreeNodePtr<T> node) { mLessThanPtr.swap(node); };
 
 
 	/**
 	 * @param rhs - a reference to a BinaryTreeNode to determine which ptr to return
-    * 				 if input has value greater than this node, return mGreaterThanPtr
-    * 				 if input has value less than this node, return mLessThanPtr
+     * 				 if input has value greater than this node, return mGreaterThanEqualToPtr
+     * 				 if input has value less than this node, return mLessThanPtr
 	 *
-	 * @return value of mGreaterThanPtr, or mLessThanPtr
-    */
-	BinaryTreeNode<T>* getPtr(const BinaryTreeNode<T>& rhs) const { 
-		if (rhs > *this) return mGreaterThanPtr; 
-		else if (rhs < *this) return mLessThanPtr; 
-
-		return NULL;
+	 * @return value of mGreaterThanEqualToPtr, or mLessThanPtr
+     */
+	BinaryTreeNodePtr<T> getPtr(const BinaryTreeNode<T>& rhs) const { 
+		if (rhs < *this) return mLessThanPtr; 
+        else return mGreaterThanEqualToPtr; 
 	};
 
 
 	/**
 	 * @param rhs - a reference to a BinaryTreeNode to determine which ptr to return
-    * 				 if input has value greater than this node, return mGreaterThanPtr
+    * 				 if input has value greater than this node, return mGreaterThanEqualToPtr
     * 				 if input has value less than this node, return mLessThanPtr
 	 *
-	 * @return value of mGreaterThanPtr, or mLessThanPtr
+	 * @return value of mGreaterThanEqualToPtr, or mLessThanPtr
     */
-	BinaryTreeNode<T>* getPtr(T rhs) const
+	BinaryTreeNodePtr<T> getPtr(T rhs) const
 	{ 
-		if (*this < rhs) return mGreaterThanPtr; 
-		else if (*this > rhs) return mLessThanPtr; 
-
-		return NULL;
+		if (*this > rhs) return mLessThanPtr; 
+        else return mGreaterThanEqualToPtr; 
 	};
 
 
 
 	/**
-	 * @param ptr - a pointer to a BinayTreeNode object to be set to mGreaterThanPtr, or mLessThanPtr
-    * 				 if input has value greater than this node, set to mGreaterThanPtr
+	 * @param ptr - a pointer to a BinayTreeNode object to be set to mGreaterThanEqualToPtr, or mLessThanPtr
+    * 				 if input has value greater than this node, set to mGreaterThanEqualToPtr
     * 				 if input has value less than this node, set to mLessThanPtr
     */
-	void setPtr(BinaryTreeNode<T>* ptr)
+	void setPtr(BinaryTreeNodePtr<T> ptr)
 	{
 		// is input a null pointer
-		if (NULL == ptr) return;
+		if (nullptr == ptr) return;
 
-		if (*ptr > *this) mGreaterThanPtr = ptr;
-		else if (*ptr < *this) mLessThanPtr = ptr;
+		if (*ptr < *this) mLessThanPtr.swap(ptr);
+        else mGreaterThanEqualToPtr.swap(ptr);
 	};
 
 
 	/**
 	 * @param rhs - a reference to a BinaryTreeNode to determine which ptr to remove
-    * 				 if input has value same as mGreaterThanPtr, set mGreaterThanPtr as NULL
+    * 				 if input has value same as mGreaterThanEqualToPtr, set mGreaterThanEqualToPtr as NULL
     * 				 if input has value same as mLessThanPtr, set mLessThanPtr as NULL
 	 *
 	 * @return true if remove ok, false if input value does not match with this node, or this node has no ptr set
     */
 	bool remove(const BinaryTreeNode<T>& rhs)
 	{ 
-		if (NULL != mGreaterThanPtr && rhs == *mGreaterThanPtr) {
-			mGreaterThanPtr = NULL;
+		if (nullptr != mGreaterThanEqualToPtr && rhs == *mGreaterThanEqualToPtr) {
+			mGreaterThanEqualToPtr.reset();
 			return true;
 		}
-		else if (NULL != mLessThanPtr && rhs == *mLessThanPtr) {
-			mLessThanPtr = NULL;
+		else if (nullptr != mLessThanPtr && rhs == *mLessThanPtr) {
+			mLessThanPtr.reset();
 			return true;
 		}
 
@@ -210,7 +194,7 @@ public:
 	/**
 	 * @return mValue
 	 */
-	T getValue() const { return mValue; };
+	const T getValue() const { return mValue; };
 
 
 	/**
@@ -231,7 +215,7 @@ private:
 	 * @param: rhs - value to copied from
 	 *
 	 */
-	BinaryTreeNode(const BinaryTreeNode<T>& rhs):mGreaterThanPtr(rhs.mGreaterThanPtr),mLessThanPtr(rhs.mLessThanPtr),mValue(rhs.mValue) { };
+	BinaryTreeNode(const BinaryTreeNode<T>& rhs) = delete;
 
 
 	/**
@@ -240,19 +224,19 @@ private:
 	 * @param: rhs - value to copied from
 	 *
 	 */
-	BinaryTreeNode<T>& operator=(const BinaryTreeNode<T>& rhs) { };
+	BinaryTreeNode<T>& operator=(const BinaryTreeNode<T>& rhs) = delete;
 
 
 	/**
 	 * pointer to node greater than value to this node
 	 */
-	BinaryTreeNode<T>* 	mGreaterThanPtr;
+	BinaryTreeNodePtr<T> 	mGreaterThanEqualToPtr;
 
 
 	/**
 	 * pointer to node greater than value to this node
 	 */
-	BinaryTreeNode<T>* 	mLessThanPtr;
+	BinaryTreeNodePtr<T> 	mLessThanPtr;
 
 
 	/**
@@ -262,5 +246,3 @@ private:
 
 };
 
-
-#endif // __BINARY_TREE_NODE_HXX_

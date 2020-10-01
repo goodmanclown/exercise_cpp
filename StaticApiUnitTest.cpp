@@ -845,6 +845,69 @@ TEST_F(FindMaxNumOfPointsOnLineTestFixture, findMaxPointsOnLine) {
 }
 
 
+// Tests findImportantReversePairs()
+class FindImportantReversePairsTestFixture : public ::testing::Test {
+    public:
+
+        FindImportantReversePairsTestFixture() = default;
+
+        ~FindImportantReversePairsTestFixture() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 2u;
+
+        array<vector<int>, TEST_SIZE> inputTarget {
+            { 
+                { 1, 3, 2, 3, 1 },
+                { 2, 4, 3, 5, 1 }
+            } 
+        };
+
+        std::array<int, TEST_SIZE> expectResult { 
+            { 
+                2,
+                3 
+            } 
+        };
+};
+
+// Tests member api insert
+TEST_F(FindImportantReversePairsTestFixture, find) {
+
+    std::array<int, TEST_SIZE> result = { };
+
+    transform(inputTarget.cbegin(), inputTarget.cend(), 
+        result.begin(),
+        [] (const auto& entry) {
+            cout << "test case" << endl;
+            return StaticApi::findImportantReversePairs(entry);
+        }
+    );
+
+    EXPECT_EQ(expectResult, result);
+
+  // <TechnicalDetails>
+  //
+  //   EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expect12ed value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case expect12_EQ is preferred.
+  //
+  // On the other hand, expect12_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
 // Step 3. Call RUN_ALL_TESTS() in main().
 //
 // We do this by linking in src/gtest_main.cc file, which consists of

@@ -1,4 +1,5 @@
 #include "StaticApi.hxx"
+#include "BinarySearchTree.hxx"
 
 #include <unistd.h>
 #include <algorithm>
@@ -458,4 +459,48 @@ int StaticApi::findMaxPointsOnLine(const vector<pair<int, int>>& points) {
     }
 
     return maxNumOfPoints;
+}
+
+int StaticApi::findImportantReversePairs(const std::vector<int>& nums)
+{ 
+    if (nums.empty()) return 0;
+
+    int count = 0;
+    for (auto iterI = nums.cbegin(); iterI != nums.cend(); ++iterI)
+    {
+        const auto& valueI = *iterI;
+        
+        cout << "valueI= " << valueI << endl;
+
+        // populate the rest of list into a bst
+        auto iterJ = iterI;
+        if (++iterJ == nums.cend()) break;
+
+        vector<int> sortedV(iterJ, nums.end());
+        sort(sortedV.begin(), sortedV.end());
+
+        cout << "sortedV= ";
+        for (const auto& entry: sortedV)
+        {
+            cout << entry << " ";
+        }
+        cout << endl;
+
+        const BinarySearchTree<int> bst(sortedV.data(), sortedV.size());
+
+        cout << "bst= "; 
+        bst.traverse(cout);
+        cout << endl;
+
+        const auto ret = bst.find(
+          [&valueI](const int& first) { return (valueI > 2*first); },
+          [&valueI](const int& first) { return (valueI > 2*first); });
+
+        if (ret != nullptr)
+        {
+            ++count;
+        }
+    }
+
+    return count;
 }

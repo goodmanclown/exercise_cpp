@@ -78,7 +78,7 @@ StaticApi.o : $(USER_DIR)/StaticApi.cpp $(USER_DIR)/StaticApi.hxx $(GTEST_HEADER
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/StaticApi.cpp
 
 StaticApiUnitTest.o : $(USER_DIR)/StaticApiUnitTest.cpp \
-                     $(USER_DIR)/StaticApi.hxx $(GTEST_HEADERS)
+                     $(USER_DIR)/StaticApi.hxx $(USER_DIR)/BinarySearchTree.hxx $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/StaticApiUnitTest.cpp
 
 StaticApiUnitTest : StaticApi.o StaticApiUnitTest.o gtest_main.a
