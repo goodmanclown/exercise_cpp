@@ -44,7 +44,9 @@
 // Don't forget gtest.h, which declares the testing framework.
 
 #include "StaticApi.hxx"
+
 #include "gtest/gtest.h"
+
 
 using namespace std;
 
@@ -845,6 +847,7 @@ TEST_F(FindMaxNumOfPointsOnLineTestFixture, findMaxPointsOnLine) {
 }
 
 
+/**
 // Tests findImportantReversePairs()
 class FindImportantReversePairsTestFixture : public ::testing::Test {
     public:
@@ -886,6 +889,148 @@ TEST_F(FindImportantReversePairsTestFixture, find) {
         [] (const auto& entry) {
             cout << "test case" << endl;
             return StaticApi::findImportantReversePairs(entry);
+        }
+    );
+
+    EXPECT_EQ(expectResult, result);
+
+  // <TechnicalDetails>
+  //
+  //   EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expect12ed value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case expect12_EQ is preferred.
+  //
+  // On the other hand, expect12_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+*/
+
+
+
+// Tests SortByNumberLength()
+class SortByNumberLengthTestFixture : public ::testing::Test {
+    public:
+
+        SortByNumberLengthTestFixture() = default;
+
+        ~SortByNumberLengthTestFixture() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 3u;
+
+        array<vector<int>, TEST_SIZE> inputTarget {
+            { 
+                { 1, 54, 1, 2, 463, 2 },
+                { 999, 421, 22, 990, 32 },
+                { 9, 8, 7, 6, 5, 4, 31, 2, 1, 3 }
+            } 
+        };
+
+        std::array<vector<int>, TEST_SIZE> expectResult { 
+            { 
+                { 1, 1, 2, 2, 54, 463 },
+                { 22, 32, 999, 421, 990 },
+                { 9, 8, 7, 6, 5, 4, 2, 1, 3, 31 }
+            } 
+        };
+};
+
+// Tests member api insert
+TEST_F(SortByNumberLengthTestFixture, find) {
+
+    std::array<vector<int>, TEST_SIZE> result = { };
+
+    transform(inputTarget.cbegin(), inputTarget.cend(), 
+        result.begin(),
+        [] (const auto& entry) {
+            return StaticApi::sortByNumberLengthMap(entry);
+        }
+    );
+
+    EXPECT_EQ(expectResult, result);
+
+    std::array<vector<int>, TEST_SIZE> result1 = { };
+    transform(inputTarget.cbegin(), inputTarget.cend(), 
+        result1.begin(),
+        [] (const auto& entry) {
+            return StaticApi::sortByNumberLengthList(entry);
+        }
+    );
+
+    EXPECT_EQ(expectResult, result1);
+
+  // <TechnicalDetails>
+  //
+  //   EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expect12ed value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case expect12_EQ is preferred.
+  //
+  // On the other hand, expect12_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
+// Tests SortByNumberLength()
+class MaxAreaTestFixture : public ::testing::Test {
+    public:
+
+        MaxAreaTestFixture() = default;
+
+        ~MaxAreaTestFixture() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 4u;
+
+        array<vector<uint>, TEST_SIZE> inputTarget {
+            { 
+                { 1, 8, 6, 2, 5, 4, 8, 3, 7 },
+                { 1, 1 },
+                { 4, 3, 2, 1, 4 },
+                { 1, 2, 1 }
+            } 
+        };
+
+        std::array<uint, TEST_SIZE> expectResult { 
+            {
+                49,
+                1,
+                16,
+                2
+            }
+        };
+};
+
+// Tests member api insert
+TEST_F(MaxAreaTestFixture, maxArea) {
+
+    std::array<uint, TEST_SIZE> result = { };
+
+    transform(inputTarget.cbegin(), inputTarget.cend(), 
+        result.begin(),
+        [] (const auto& entry) {
+            return StaticApi::maxArea(entry);
         }
     );
 

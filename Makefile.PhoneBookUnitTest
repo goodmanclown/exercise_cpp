@@ -27,7 +27,7 @@ USER_DIR = .
 CPPFLAGS += -isystem $(GTEST_DIR)/include
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g -Wall -Wextra -pthread
+CXXFLAGS += -g -Wall -Wextra -pthread -std=c++14
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
@@ -73,12 +73,6 @@ gtest_main.a : gtest-all.o gtest_main.o
 # Builds a sample test.  A test should link with either gtest.a or
 # gtest_main.a, depending on whether it defines its own main()
 # function.
-
-SingLinkedListNode.o : $(USER_DIR)/SingLinkedListNode.cpp $(USER_DIR)/SingLinkedListNode.hxx $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/SingLinkedListNode.cpp
-
-SingLinkedList.o : $(USER_DIR)/SingLinkedList.cpp $(USER_DIR)/SingLinkedList.hxx $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/SingLinkedList.cpp
 
 PhoneBook.o : $(USER_DIR)/PhoneBook.cpp $(USER_DIR)/PhoneBook.hxx $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/PhoneBook.cpp

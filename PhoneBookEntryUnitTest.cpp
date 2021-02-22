@@ -81,17 +81,15 @@ TEST(PhoneBookEntryUnitTest, constructor) {
 	{
 	PhoneBookEntry mep("joe", 4083339999, "san jose");
 
-	char* name;
-	uint32_t len = mep.getName(name);
-	EXPECT_EQ(3, len);
-	EXPECT_EQ(0, strcmp(name, "joe"));
+	const auto& name = mep.getName();
+	EXPECT_EQ(3, name.length());
+	EXPECT_EQ("joe", name);
 
 	EXPECT_EQ(4083339999, mep.getPhone());
 
-	char* addr;
-	len = mep.getAddress(addr);
-	EXPECT_EQ(8, len);
-	EXPECT_EQ(0, strcmp(addr, "san jose"));
+	const auto& addr = mep.getAddress();
+	EXPECT_EQ(8, addr.length());
+	EXPECT_EQ("san jose", addr);
 	}
 
   // <TechnicalDetails>
@@ -117,17 +115,15 @@ TEST(PhoneBookEntryUnitTest, copyconstructor) {
 	PhoneBookEntry mep1("joe", 4083339999, "san jose");
 	PhoneBookEntry mep(mep1);
 
-	char* name;
-	uint32_t len = mep.getName(name);
-	EXPECT_EQ(3, len);
-	EXPECT_EQ(0, strcmp(name, "joe"));
+	const auto& name = mep.getName();
+	EXPECT_EQ(3, name.length());
+	EXPECT_EQ("joe", name);
 
 	EXPECT_EQ(4083339999, mep.getPhone());
 
-	char* addr;
-	len = mep.getAddress(addr);
-	EXPECT_EQ(8, len);
-	EXPECT_EQ(0, strcmp(addr, "san jose"));
+	const auto& addr = mep.getAddress();
+	EXPECT_EQ(8, addr.length());
+	EXPECT_EQ("san jose", addr);
 	}
 
   // <TechnicalDetails>
@@ -153,17 +149,15 @@ TEST(PhoneBookEntryUnitTest, assignment) {
 	PhoneBookEntry mep1("joe", 4083339999, "san jose");
 	PhoneBookEntry mep = mep1;
 
-	char* name;
-	uint32_t len = mep.getName(name);
-	EXPECT_EQ(3, len);
-	EXPECT_EQ(0, strcmp(name, "joe"));
+	const auto& name = mep.getName();
+	EXPECT_EQ(3, name.length());
+	EXPECT_EQ("joe", name);
 
 	EXPECT_EQ(4083339999, mep.getPhone());
 
-	char* addr;
-	len = mep.getAddress(addr);
-	EXPECT_EQ(8, len);
-	EXPECT_EQ(0, strcmp(addr, "san jose"));
+	const auto& addr = mep.getAddress();
+	EXPECT_EQ(8, addr.length());
+	EXPECT_EQ("san jose", addr);
 	}
 
   // <TechnicalDetails>

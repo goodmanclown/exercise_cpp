@@ -49,6 +49,8 @@
 #include "gtest/gtest.h"
 
 
+using namespace std;
+
 // Step 2. Use the TEST macro to define your tests.
 //
 // TEST has two parameters: the test case name and the test name.
@@ -77,7 +79,112 @@
 // Tests BinarySearch().
 
 // Tests member api search
-TEST(BinarySearch, search0) {
+TEST(BinarySearch, search) {
+
+ 	int inputElem[7] = { -10, -3, -2, 1, 1, 10, 100 };
+
+	cout << "search 1" << endl;
+	int ret = BinarySearch::search(inputElem, 0, 6, 1);
+	EXPECT_EQ(4, ret);
+
+	cout << "search 100" << endl;
+	ret = BinarySearch::search(inputElem, 0, 6, 100);
+	EXPECT_EQ(6, ret);
+
+	cout << "search 2" << endl;
+	ret = BinarySearch::search(inputElem, 0, 6, 2);
+	EXPECT_EQ(-1, ret);
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests search()
+class SearchRangeFixture : public ::testing::Test {
+    public:
+
+        SearchRangeFixture() = default;
+
+        ~SearchRangeFixture() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 6u;
+
+        vector<int> inputV = { 5, 7, 7, 8, 8, 8, 10, 11, 11, 11, 11, 11 };
+
+        array<int, TEST_SIZE> inputTarget {
+            { 
+                8,
+                7,
+                6,
+                10,
+                5,
+                11
+            } 
+        };
+
+        std::array<pair<int, int>, TEST_SIZE> expectResult { 
+            {
+                { 3, 5 },
+                { 1, 2 },
+                {-1, -1 },
+                { 6, 6 },
+                { 0, 0 },
+                { 7, 11 }
+            }
+        };
+};
+
+// Tests member api searchRange
+TEST_F(SearchRangeFixture, search) {
+
+    std::array<pair<int, int>, TEST_SIZE> result = { };
+
+    transform(inputTarget.cbegin(), inputTarget.cend(), 
+        result.begin(),
+        [&] (const auto& entry) {
+            return BinarySearch::searchRange(this->inputV, entry);
+        }
+    );
+
+    EXPECT_EQ(expectResult, result);
+
+  // <TechnicalDetails>
+  //
+  //   EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expect12ed value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case expect12_EQ is preferred.
+  //
+  // On the other hand, expect12_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
+// Tests member api search
+TEST(BinarySearch, searchRange) {
 
  	int inputElem[7] = { -10, -3, -2, 1, 1, 10, 100 };
 

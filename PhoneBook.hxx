@@ -1,20 +1,29 @@
+#pragma once
+
 /**
  * a class representing the phone book
  */
 
-#include "SingLinkedList.hxx"
+#include "PhoneBookEntry.hxx"
 
-#include <stdint.h>
-
-class PhoneBookEntry;
+#include <ostream>
+#include <list>
 
 
 /**
- * this is a class representing a phone book, implemented as a SingLinkedList
+ * this is a class representing a phone book, implemented as a forward_list
  */
-class PhoneBook : public SingLinkedList {
+class PhoneBook : public std::list<PhoneBookEntryPtr> {
 
 public:
+
+    PhoneBook() = default;
+
+    ~PhoneBook() = default;
+
+    PhoneBook(const PhoneBook& rhs) = delete;
+
+    PhoneBook& operator=(const PhoneBook& rhs) = delete;
 
 	/**
     * @param: name - a string 
@@ -27,7 +36,7 @@ public:
 	/**
     * @param: entry - a pointer to a PhoneBookEntry object
     */
-	bool add(PhoneBookEntry* entry);
+	bool add(PhoneBookEntryPtr entry);
 
 
    /**
@@ -44,7 +53,7 @@ public:
     *   
     * @return a reference to ostream appended with values of nodes of this tree, i.e, out
     */  
-	friend ostream& operator<<(ostream& out, const PhoneBook& tree);
+	friend std::ostream& operator<<(std::ostream& out, const PhoneBook& tree);
 
 
 private:

@@ -5,9 +5,13 @@
 
 #include <stdint.h>
 #include <iostream>
+#include <vector>
+#include <utility>
 
 using std::cout;
 using std::endl;
+using std::vector;
+using std::pair;
 
 class BinarySearch {
 
@@ -17,11 +21,11 @@ public:
 	 * @param inputElem - an array of <T> to be searched
 	 * @param numOfInputElem - number of elements in the input array
 	 * @param value - value to be searched in the array
-    *
-	 * @return true if value is found in the array
+     *
+	 * @return index of value in the array if the value is found. -1 if not.
 	 */
 	template <typename T>
-	static int search(T inputElem[], uint32_t startIndex, uint32_t endIndex, T value)
+	static int search(const T inputElem[], uint32_t startIndex, uint32_t endIndex, T value)
 	{
 		cout << " start " << startIndex << " end " << endIndex << endl;
 
@@ -55,6 +59,76 @@ public:
 			return search(inputElem, startIndex+indexToHalf, endIndex, value);
 		}
 	}
+
+/**
+Given an array of integers nums sorted in ascending order, find the starting and ending position 
+of a given target value.
+
+If target is not found in the array, return [-1, -1].
+
+Example 1:
+
+Input: nums = [5,7,7,8,8,10], target = 8
+Output: [3,4]
+Example 2:
+
+Input: nums = [5,7,7,8,8,10], target = 6
+Output: [-1,-1]
+Example 3:
+
+Input: nums = [], target = 0
+Output: [-1,-1]
+ 
+
+Constraints:
+
+0 <= nums.length <= 10**5
+-10**9 <= nums[i] <= 10**9    
+nums is a non-decreasing array.
+-10**9 <= target <= 10**9
+
+*/
+
+    static pair<int, int> searchRange(const std::vector<int>& nums, int target) 
+    {
+        if (nums.empty()) return { -1, -1 };
+
+        uint32_t endIndex = nums.size() - 1;
+        int targetStartIndex = search<int>(nums.data(), 0, endIndex, target);
+        
+        // target does not appear
+        if (targetStartIndex < 0) return { -1, -1 };
+        
+        // assume no duplicate
+        int targetEndIndex = targetStartIndex;
+
+        if (targetStartIndex != 0)
+        {
+            // search backward until the target is not found
+            for (int sIndex = targetStartIndex - 1; sIndex > 0; --sIndex)
+            {
+                if (nums[sIndex] != target) break;
+                
+                targetStartIndex = sIndex;
+            } 
+        }
+
+        if (targetEndIndex != endIndex)
+        {
+            // search forward until the target is not found
+            for (int eIndex = targetEndIndex + 1; eIndex <= endIndex; ++eIndex)
+            {
+                if (nums[eIndex] != target) break;
+                
+                targetEndIndex = eIndex;
+            } 
+        }
+
+        cout << " targetStartIndex " << targetStartIndex << ", " << targetEndIndex << endl;
+
+        return { targetStartIndex, targetEndIndex };
+    }
+
 };
 
 

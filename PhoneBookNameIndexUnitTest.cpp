@@ -83,31 +83,31 @@ TEST(PhoneBookNameIndexUnitTest, add) {
 
 	PhoneBookNameIndex tree;
 
-	PhoneBookEntry* entry = new PhoneBookEntry("joe", 4083339999, "san jose");
+    PhoneBookEntryPtr entry = make_shared<PhoneBookEntry>("joe", 4083339999, "san jose");
 
-	bool ret =  tree.add("joe", entry);
+    bool ret =  tree.add("joe", entry);
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	entry = new PhoneBookEntry("jane", 4083329999, "san bruno");
+	entry = make_shared<PhoneBookEntry>("jane", 4083329999, "san bruno");
 
 	ret =  tree.add("jane", entry);
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	entry = new PhoneBookEntry("dave", 4083334999, "santa clara");
+	entry = make_shared<PhoneBookEntry>("dave", 4083334999, "santa clara");
 
 	ret =  tree.add("dave", entry);
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	entry = new PhoneBookEntry("mary", 4083359999, "sunnyvale");
+	entry = make_shared<PhoneBookEntry>("mary", 4083359999, "sunnyvale");
 
 	ret =  tree.add("mary", entry);
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	entry = new PhoneBookEntry("tim", 4083350000, "sunnyvale");
+	entry = make_shared<PhoneBookEntry>("tim", 4083350000, "sunnyvale");
 
 	ret =  tree.add("tim", entry);
 	EXPECT_EQ(true, ret);
@@ -139,38 +139,38 @@ TEST(PhoneBookNameIndexUnitTest, remove) {
 
 	PhoneBookNameIndex tree;
 
-	PhoneBookEntry* entry = new PhoneBookEntry("joe", 4083339999, "san jose");
+	PhoneBookEntryPtr entry = make_shared<PhoneBookEntry>("joe", 4083339999, "san jose");
 
 	bool ret =  tree.add("joe", entry);
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	entry = new PhoneBookEntry("jane", 4083329999, "san bruno");
+	entry = make_shared<PhoneBookEntry>("jane", 4083329999, "san bruno");
 
 	ret =  tree.add("jane", entry);
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	entry = new PhoneBookEntry("dave", 4083334999, "santa clara");
+	entry = make_shared<PhoneBookEntry>("dave", 4083334999, "santa clara");
 
 	ret =  tree.add("dave", entry);
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	entry = new PhoneBookEntry("mary", 4083359999, "sunnyvale");
+	entry = make_shared<PhoneBookEntry>("mary", 4083359999, "sunnyvale");
 
 	ret =  tree.add("mary", entry);
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
-	entry = new PhoneBookEntry("tim", 4083350000, "sunnyvale");
+	entry = make_shared<PhoneBookEntry>("tim", 4083350000, "sunnyvale");
 
 	ret =  tree.add("tim", entry);
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
 
 	ret =  tree.remove("mary");
-	EXPECT_EQ(true, ret);
+	EXPECT_EQ(false, ret);
 	cout << tree << endl;
 
   // <TechnicalDetails>

@@ -165,7 +165,7 @@ TEST(BinaryTreeUnitTest, remove) {
 	cout << tree << endl;
 
 	ret = tree.remove(2);
-	EXPECT_FALSE(ret);
+	EXPECT_TRUE(ret);
 	cout << tree << endl;
 
 	ret = tree.remove(7);
@@ -185,7 +185,7 @@ TEST(BinaryTreeUnitTest, remove) {
 	cout << tree << endl;
 
 	ret = tree.remove(5);
-	EXPECT_FALSE(ret);
+	EXPECT_TRUE(ret);
 	cout << tree << endl;
 
   // <TechnicalDetails>
@@ -246,7 +246,7 @@ TEST(BinaryTreeUnitTest, removeRoot) {
 	cout << tree << endl;
 
 	ret = tree.remove(5);
-	EXPECT_FALSE(ret);
+	EXPECT_TRUE(ret);
 	cout << tree << endl;
 
 	ret = tree.remove(9);
@@ -266,7 +266,7 @@ TEST(BinaryTreeUnitTest, removeRoot) {
 	cout << tree << endl;
 
 	ret = tree.remove(2);
-	EXPECT_FALSE(ret);
+	EXPECT_TRUE(ret);
 	cout << tree << endl;
 
   // <TechnicalDetails>
@@ -344,7 +344,7 @@ TEST(BinaryTreeUnitTest, removeMiddle) {
 	cout << tree << endl;
 
 	ret = tree.remove(5);
-	EXPECT_FALSE(ret);
+	EXPECT_TRUE(ret);
 	cout << tree << endl;
 
 	ret = tree.remove(2);
@@ -352,7 +352,7 @@ TEST(BinaryTreeUnitTest, removeMiddle) {
 	cout << tree << endl;
 
 	ret = tree.remove(2);
-	EXPECT_FALSE(ret);
+	EXPECT_TRUE(ret);
 	cout << tree << endl;
 
 	cout << "remove 2" << endl;
@@ -363,6 +363,168 @@ TEST(BinaryTreeUnitTest, removeMiddle) {
 	ret = tree.remove(7);
 	EXPECT_EQ(true, ret);
 	cout << tree << endl;
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests member api traverseInOrder
+TEST(BinaryTreeUnitTest, traverseInOrder) {
+
+	BinaryTree<uint32_t> tree;
+
+	bool ret =  tree.insert(4);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(2);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(1);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(3);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(6);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(5);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(7);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+    std::ostringstream out;
+    tree.traverseInOrder(out);
+
+	cout << out.str() << endl;
+    EXPECT_EQ("L L 1 2 R 3 4 R L 5 6 R 7 ", out.str());
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests member api traversePostOrder
+TEST(BinaryTreeUnitTest, traversePostOrder) {
+
+	BinaryTree<uint32_t> tree;
+
+	bool ret =  tree.insert(4);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(2);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(1);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(3);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(6);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(5);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(7);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+    std::ostringstream out;
+    tree.traversePostOrder(out);
+
+	cout << out.str() << endl;
+    EXPECT_EQ("L L 1 R 3 2 R L 5 R 7 6 4 ", out.str());
+
+  // <TechnicalDetails>
+  //
+  // EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expected value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case EXPECT_EQ is preferred.
+  //
+  // On the other hand, EXPECT_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests member api traverseAndSum
+TEST(BinaryTreeUnitTest, traverseAndSum) {
+
+	BinaryTree<uint32_t> tree;
+
+	bool ret =  tree.insert(4);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(2);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(1);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(3);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(6);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(5);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+	ret = tree.insert(7);
+	EXPECT_EQ(true, ret);
+	cout << tree << endl;
+
+    auto sum = tree.traverseAndSum();
+    EXPECT_EQ(1776, sum);
 
   // <TechnicalDetails>
   //

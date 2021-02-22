@@ -247,7 +247,71 @@ Note:
 The length of the given array will not exceed 50,000.
 All the numbers in the input array are in the range of 32-bit integer.
      */ 
-    static int findImportantReversePairs(const std::vector<int>& nums);
+    // static int findImportantReversePairs(const std::vector<int>& nums);
+
+
+    /**
+Create a sorting function which sorts numbers not by numerical order, but by number length! This means sorting 
+numbers with the least amount of digits first, up to the numbers with the most digits.
+
+numberLenSort([1, 54, 1, 2, 463, 2]) ➞ [1, 1, 2, 2, 54, 463]
+
+numberLenSort([999, 421, 22, 990, 32]) ➞ [22, 32, 999, 421, 990]
+
+numberLenSort([9, 8, 7, 6, 5, 4, 31, 2, 1, 3]) ➞ [9, 8, 7, 6, 5, 4, 2, 1, 3, 31]
+
+If two numbers have the same number of digits, return them in the order they first appeared (this makes it 
+different to just sorting the numbers normally).
+     */ 
+    static std::vector<int> sortByNumberLengthMap(const std::vector<int>& nums);
+
+    static std::vector<int> sortByNumberLengthList(const std::vector<int>& nums);
+
+
+    /**
+Given n pairs of parentheses, write a function to generate all combinations of well-formed 
+parentheses.
+
+Example 1:
+
+Input: n = 3
+Output: ["((()))","(()())","(())()","()(())","()()()"]
+Example 2:
+
+Input: n = 1
+Output: ["()"]
+ 
+
+Constraints:
+
+1 <= n <= 8
+     */ 
+    // static std::vector<std::string> generateParenthesis(uint n);
+
+
+/**
+Given n non-negative integers a1, a2, ..., an , where each represents a point at coordinate 
+(i, ai). n vertical lines are drawn such that the two endpoints of the line i is at (i, ai) 
+and (i, 0). Find two lines, which, together with the x-axis forms a container, such that the 
+container contains the most water.
+
+Input: height = [1,8,6,2,5,4,8,3,7]
+Output: 49
+Explanation: The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this 
+case, the max area of water (blue section) the container can contain is 49 (9-2)*7.
+
+Input: height = [1,1]
+Output: 1
+
+Input: height = [4,3,2,1,4]
+Output: 16
+
+Input: height = [1,2,1]
+Output: 2
+ */
+
+    static uint maxArea(const std::vector<uint>& height);
+
 
 private:
 
@@ -284,6 +348,7 @@ private:
     static std::vector<std::vector<uint32_t>> findTargetSumCombinationTemp(uint32_t input[], 
         uint32_t uLength, uint32_t uTargetSum);
 
+    static std::string generateParenthesisRecursive(uint n, std::string prefix);
 };
 
 

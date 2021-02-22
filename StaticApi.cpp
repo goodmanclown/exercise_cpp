@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iterator>
 #include <iostream>
+#include <list>
 #include <sstream>
 #include <map>
 #include <unordered_map>
@@ -461,46 +462,135 @@ int StaticApi::findMaxPointsOnLine(const vector<pair<int, int>>& points) {
     return maxNumOfPoints;
 }
 
-int StaticApi::findImportantReversePairs(const std::vector<int>& nums)
+vector<int> StaticApi::sortByNumberLengthMap(const vector<int>& nums)
 { 
-    if (nums.empty()) return 0;
+    vector<int> result;
 
-    int count = 0;
-    for (auto iterI = nums.cbegin(); iterI != nums.cend(); ++iterI)
-    {
-        const auto& valueI = *iterI;
-        
-        cout << "valueI= " << valueI << endl;
+    if (nums.empty()) return result;
 
-        // populate the rest of list into a bst
-        auto iterJ = iterI;
-        if (++iterJ == nums.cend()) break;
+    map<size_t, vector<int>> numByLength;
 
-        vector<int> sortedV(iterJ, nums.end());
-        sort(sortedV.begin(), sortedV.end());
-
-        cout << "sortedV= ";
-        for (const auto& entry: sortedV)
+    // define a map to store the numbers in the input vector sorted by length
+    for_each(nums.cbegin(), nums.cend(),
+        [&numByLength](const auto& entry)
         {
-            cout << entry << " ";
+            auto quotient = entry / 10;
+            auto count = 1;
+            while (quotient != 0)
+            {
+                quotient = quotient / 10;
+                ++count;
+            }
+
+            numByLength[count].push_back(entry);
         }
-        cout << endl;
+    );
 
-        const BinarySearchTree<int> bst(sortedV.data(), sortedV.size());
+    // now go thru the map and put the numbers in each index to the result array
+    for (const auto& kvp : numByLength)
+    {
+        copy(kvp.second.cbegin(), kvp.second.cend(), back_inserter(result));
+    }
 
-        cout << "bst= "; 
-        bst.traverse(cout);
-        cout << endl;
+    return result;
+}
 
-        const auto ret = bst.find(
-          [&valueI](const int& first) { return (valueI > 2*first); },
-          [&valueI](const int& first) { return (valueI > 2*first); });
+vector<int> StaticApi::sortByNumberLengthList(const vector<int>& nums)
+{ 
+    vector<int> result;
 
-        if (ret != nullptr)
+    if (nums.empty()) return result;
+
+    // define a lambda to return the length of a number
+    auto findNumLength = [](const int& entry) -> size_t
         {
-            ++count;
+            auto quotient = entry / 10;
+            auto numLength = 1;
+            while (quotient != 0)
+            {
+                quotient = quotient / 10;
+                ++numLength;
+            }
+
+            return numLength;
+        };
+
+    // define a list to store the numbers in the input vector
+    list<int> numByLength(nums.cbegin(), nums.cend());
+
+    // now sort the list by the length of number, and maintain the order 
+    auto outIterEnd = numByLength.end();
+    --outIterEnd;
+    for (auto outIter = numByLength.begin(); outIter != outIterEnd; ++outIter )
+    {
+        auto minNum = *outIter;
+        auto minIter = outIter;
+
+        auto inIter = outIter;
+        ++inIter;
+        for (; inIter != numByLength.end(); ++inIter)
+        {
+            if (findNumLength(minNum) > findNumLength(*inIter))
+            {
+                minNum = *inIter;
+                minIter = inIter;
+            }
+        }
+
+        if (outIter != minIter)
+        {
+            // move minIter to the front of outIter
+            numByLength.insert(outIter, *minIter);
+            numByLength.erase(minIter);
         }
     }
 
-    return count;
+    // now copy the list to the result
+    copy(numByLength.cbegin(), numByLength.cend(), back_inserter(result));
+
+    return result;
+}
+
+
+uint StaticApi::maxArea(const vector<uint>& height)
+{
+    if (height.empty()) return 0;
+
+    uint resultMaxArea = 0;
+    for (size_t indexOuterLoop = 0; indexOuterLoop < height.size() - 1; ++indexOuterLoop)
+    {
+        auto yAxis = height[indexOuterLoop];
+
+        for (size_t indexInnerLoop = indexOuterLoop + 1; indexInnerLoop < height.size(); ++indexInnerLoop)
+        {
+            if (height[indexInnerLoop] >= yAxis)
+            {  // this vertical line can be the opposite side of the container with height of yAxis
+               // calculate the area upto this line
+
+        	    cout << "y " << yAxis << ", x " << (indexInnerLoop - indexOuterLoop) << endl;
+
+                auto tmpMaxArea = yAxis * (indexInnerLoop - indexOuterLoop);
+
+                if (tmpMaxArea > resultMaxArea)
+                {
+                    resultMaxArea = tmpMaxArea;
+                }
+            }
+            else
+            {  // reduce the height of the container to this vertical line
+               // calculate the area upto this line
+
+        	    cout << "y " << height[indexInnerLoop] << ", x " << (indexInnerLoop - indexOuterLoop) << endl;
+               
+                auto tmpMaxArea = height[indexInnerLoop] * (indexInnerLoop - indexOuterLoop);
+
+                if (tmpMaxArea > resultMaxArea)
+                {
+                    resultMaxArea = tmpMaxArea;
+                }
+            }
+        }
+    }
+
+    return resultMaxArea;
 }

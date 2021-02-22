@@ -1,3 +1,5 @@
+#pragma once
+
 /**
  * class representing an entry in the name index of phone book
  * it is a subclass of BinaryTreeNode since it will be stored in a BinaryTree
@@ -7,12 +9,13 @@
  */ 
 
 #include "BinaryTreeNode.hxx"
+#include "PhoneBook.hxx"
 
+#include <algorithm>
+#include <memory>
 #include <string>
 
 using std::string;
-
-class PhoneBookEntry;
 
 class PhoneBookNameIndexEntry : public BinaryTreeNode<string> {
 
@@ -25,27 +28,47 @@ public:
 	 * @param: name - a character of the name
 	 *
 	 */
-	PhoneBookNameIndexEntry(const string& name):BinaryTreeNode<string>(name) { };
+	PhoneBookNameIndexEntry(const char name[]):BinaryTreeNode<string>(name) {};
+
+
+	/**
+	 * Constructor
+	 *
+	 * @param: name - a character of the name
+	 *
+	 */
+	PhoneBookNameIndexEntry(const string& name):BinaryTreeNode<string>(name) {};
 
 
 	/**
 	 * Destructor
 	 */
-	virtual ~PhoneBookNameIndexEntry() { };
+    ~PhoneBookNameIndexEntry() = default;
 
 
 	/**
-	 *
-	 * @return a pointer to mPhoneBookEntry
+	 * @return a pointer to mPhoneBook
 	 */
-	PhoneBookEntry* getPhoneBookEntry() { return mPhoneBookEntry; };
+	const PhoneBook& getPhoneBook() const { return mPhoneBook; };
 
 
 	/**
 	 *
 	 * @param entry - a pointer to mPhoneBookEntry
+     * @return true if added
 	 */
-	void setPhoneBookEntry(PhoneBookEntry* entry) { mPhoneBookEntry = entry; };
+	bool adPhoneBookEntry(PhoneBookEntryPtr entry) {
+        return mPhoneBook.add(entry);
+    };
+
+    void removePhoneBook() {
+        mPhoneBook.clear();
+    };
+
+
+    void remove(uint32_t phone) {
+        mPhoneBook.remove(phone);
+    };
 
 
 protected:
@@ -56,8 +79,10 @@ private:
 	/**
 	 * a PhoneBookEntry
 	 */
-	PhoneBookEntry*	mPhoneBookEntry;
+	PhoneBook   mPhoneBook;
 
 };
 
+
+using PhoneBookNameIndexEntryPtr = std::shared_ptr<PhoneBookNameIndexEntry>;
 

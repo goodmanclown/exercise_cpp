@@ -1,25 +1,34 @@
 #include "PhoneBook.hxx"
 
-#include "PhoneBookEntry.hxx"
+#include <algorithm>
+#include <iostream>
 
 using namespace std;
 
 bool PhoneBook::add(const char name[], uint32_t phone, const char address[])
 {
 	// create a PhoneBookEntry with the input
-	PhoneBookEntry* entry = new (nothrow) PhoneBookEntry(name, phone, address);
+	PhoneBookEntryPtr entry = make_shared<PhoneBookEntry>(name, phone, address);
 
 	return add(entry);
 }
 	
 
-bool PhoneBook::add(PhoneBookEntry* entry)
+bool PhoneBook::add(PhoneBookEntryPtr entry)
 {
 	// is input valid
-	if (0 == entry) return false;
+	if (nullptr == entry) return false;
+
+    // check if the entry is in this list
+    auto iter = begin();
+    for (; iter != end(); ++iter) {
+        if (*(*iter) == *entry) {
+            return false;
+        }
+    }
 
 	// insert this entry into the list
-	insert(entry);
+	push_back(entry);
 
 	return true;
 }
@@ -27,61 +36,46 @@ bool PhoneBook::add(PhoneBookEntry* entry)
 
 bool PhoneBook::remove(uint32_t phone)
 {
-	// see if this phone is in the head
-	if (mHead != NULL && mHead->getValue() == phone) {
-		// we are at the head
-		SingLinkedListNodePtr entry = mHead;
+    // check if the phone number is in this list
+    auto iter = begin();
+    for (; iter != end(); ++iter) {
+        const auto& vPhone = (*iter)->getPhone();
+        bool ret = false;
+        for (const auto& entry : vPhone) {
+            if (entry == phone) {
+                ret = true;
+                break;
+            }
+        }
 
-		SingLinkedListNodePtr next = entry->getNextPtr();
+        if (ret == true) {
+            break;
+        }
+    }
 
-		// set next as head
-		mHead = next;
+    if (iter == end()) return false;
 
-		// delete the entry
-		delete entry;
-	
-		mLength--;
+    erase(iter);
 
-		return true;
-	}
-	else {
-		// if not
-		SingLinkedListNodePtr entry = find(phone);
-	
-		// phone is found?
-		if (NULL == entry) return false;
-
-		// since phone number is unique, use less api to find the entry immediately before the entry
-		// to be removed
-		SingLinkedListNodePtr prior = less(phone);
-	
-		if (NULL != prior) {
-			SingLinkedListNodePtr next = entry->getNextPtr();
-
-			// set next to after prior
-			prior->setNextPtr(next);
-
-			// delete the entry
-			delete entry;
-
-			mLength--;
-
-			return true;
-		}
-	}
-
-	return false;
+	return true;
 }
 
 
 ostream& operator<<(ostream& out, const PhoneBook& tree)
 {
 	// is tree empty?
-	if (NULL == tree.mHead) {
-		return (out << "empty");
+	if (tree.empty() == true) {
+		return out << "empty";
 	}
 	else {
 		// traverse down the root to print out values of nodes
-		return tree.traverse(out, *(tree.mHead));
+        for_each(tree.cbegin(), tree.cend(), 
+            [&out](const auto& entry)
+            {
+                entry->append(out);
+            }
+        );
+
+        return out;
 	}
 }

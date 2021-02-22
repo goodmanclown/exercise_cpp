@@ -1,19 +1,21 @@
-#ifndef __PHONE_BOOK_ENTRY_
-#define _PHONE_BOOK_ENTRY_
+#pragma once
+
 
 /**
  * class representing an entry in the phone book
- * it is a subclass of SingLinkedListNode since it will be stored in a singular linked list
  * the phone number is stored as mValue of the parent
  */ 
 
-#include "SingLinkedListNode.hxx"
-
 #include <stdint.h>
-#include <string.h>
+
+#include <algorithm>
+#include <memory>
+#include <string>
+#include <ostream>
+#include <vector>
 
 
-class PhoneBookEntry : public SingLinkedListNode {
+class PhoneBookEntry {
 
 public:
 
@@ -26,16 +28,12 @@ public:
 	 * @param: address - a string
 	 *
 	 */
-	PhoneBookEntry(const char name[], uint32_t phone, const char address[]):SingLinkedListNode(phone),mAddress(0),mName(0) { 
-		uint32_t len = strlen(address);
-		mAddress = new char[len+1];
-		strncpy(mAddress, address, len);
-		mAddress[len] = '\0';
-
-		len = strlen(name);
-		mName = new char[len+1];
-		strncpy(mName, name, len);
-		mName[len] = '\0';
+	PhoneBookEntry(const char name[], 
+                uint32_t phone, 
+                const char address[])
+                :
+                mAddress(address),mName(name) { 
+        mPhone.push_back(phone);
 	};
 
 
@@ -45,23 +43,13 @@ public:
 	 * @param: rhs - a reference to PhoneBookEntry to be copied
 	 *
 	 */
-	PhoneBookEntry(const PhoneBookEntry& rhs):SingLinkedListNode(rhs),mAddress(0),mName(0) { 
-		uint32_t len = strlen(rhs.mAddress);
-		mAddress = new char[len+1];
-		strncpy(mAddress, rhs.mAddress, len);
-		mAddress[len] = '\0';
-
-		len = strlen(rhs.mName);
-		mName = new char[len+1];
-		strncpy(mName, rhs.mName, len);
-		mName[len] = '\0';
-	};
+	PhoneBookEntry(const PhoneBookEntry& rhs) = default;
 
 
 	/**
 	 * Destructor
 	 */
-	virtual ~PhoneBookEntry() { delete [] mAddress; delete [] mName; };
+	virtual ~PhoneBookEntry() = default;
 
 
 	/**
@@ -70,70 +58,69 @@ public:
 	  * @param: rhs - value to copied from
 	  *
 	  */
-	PhoneBookEntry& operator=(const PhoneBookEntry& rhs) { 
-		if (this == &rhs) return *this; 
-
-		SingLinkedListNode::operator=(rhs);
-
-		uint32_t len = strlen(rhs.mAddress);
-		mAddress = new char[len+1];
-		strncpy(mAddress, rhs.mAddress, len);
-		mAddress[len] = '\0';
-
-		len = strlen(rhs.mName);
-		mName = new char[len+1];
-		strncpy(mName, rhs.mName, len);
-		mName[len] = '\0';
-	};
+	PhoneBookEntry& operator=(const PhoneBookEntry& rhs) = default;
 
 
 	/**
-	 *
-    * @param address - a reference to char* to get mAddress
-	 *
-	 * @return length of mAddress
+	  * equal operator
+	  *
+	  * @param: rhs - value to compare with
+	  *
+	  */
+	bool operator==(const PhoneBookEntry& rhs) {
+        if (mName != rhs.mName) return false;
+
+        if (mAddress != rhs.mAddress) return false;
+
+        if (mPhone.size() != rhs.mPhone.size()) return false;
+
+        const auto& ret = std::mismatch(mPhone.cbegin(), mPhone.cend(), rhs.mPhone.cbegin(),
+            [] (const auto& first, const auto& second) 
+            {
+                return first == second;
+            }
+        );
+
+        // no mismatch if first element points to end of mPhone
+        return (ret.first == mPhone.cend());
+    };
+
+	/**
+	 * @return reference to mAddress
 	 */
-	uint32_t getAddress(char*& address) const { 
-		if (0 == mAddress) return 0;
-
-		address = mAddress; 
-
-		return strlen(mAddress); 
-	}
+	const std::string& getAddress() const { return mAddress; };
 
 
 	/**
-    *
-    * @param name - a reference to char* to get mName
-	 *
-	 * @return length of mName
+	 * @return refernece to mName
 	 */
-	uint32_t getName(char*& name) const { 
-		if (0 == mName) return 0;
-
-		name = mName;
-
-		return strlen(mName); 
-	};
+	const std::string& getName() const { return mName; };
 
 
 	/**
 	 * @return mPhone
 	 */
-	uint32_t	getPhone() const { return getValue(); };
+	const std::vector<uint32_t>& getPhone() const { return mPhone; };
 
 
-protected:
+	/**
+	 * @return mPhone
+	 */
+	void addPhone(uint32_t phone) { mPhone.push_back(phone); };
+
 
 	/**
 	 * @param: out - a reference to output stream to append to
     *
 	 * @return ostream of the content of this object
     */
-	virtual ostream& append(ostream&out) const { 
+	virtual std::ostream& append(std::ostream& out) const { 
 		out << mName << " ";
 
-		SingLinkedListNode::append(out);
+        for (const auto& entry : mPhone)
+        {
+		    out << entry << " ";
+        }
 
 		out << mAddress << std::endl;
 
@@ -145,15 +132,20 @@ private:
 	/**
 	 * address
 	 */
-	char*	mAddress;
+	std::string	mAddress;
 
 
 	/**
 	 * name
 	 */
-	char*	mName;
+	std::string	mName;
 
+
+    /**
+     * phone
+     */
+    std::vector<uint32_t> mPhone;
 
 };
 
-#endif // _PHONE_BOOK_ENTRY_
+using PhoneBookEntryPtr = std::shared_ptr<PhoneBookEntry>;

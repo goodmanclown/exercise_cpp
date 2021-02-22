@@ -162,9 +162,9 @@ public:
       }
 
       // move down the root to find a node that matches the input value
-      return find(std::bind(mDefaultCompFunc, std::placeholders::_1, value), 
+      return find(std::bind(mDefaultCompFunc, value, std::placeholders::_1), 
             mRoot, 
-            std::bind(mPreOrderTraversalFunc, std::placeholders::_1, value));
+            std::bind(mPreOrderTraversalFunc, value, std::placeholders::_1));
    };
 
 
@@ -281,11 +281,15 @@ private:
     */
    void insert(BinaryTreeNodePtr<T> value, BinaryTreeNode<T>& node)
    {
+		std::cout << "insert value " << value->getValue() << ", node " << node.getValue() << std::endl;
+
       // if the value to be inserted is same as the node, just return
       if (*value == node) return;
 
       if (*value < node) 
       {
+		std::cout << "insert L" << std::endl;
+
          auto nextNode = node.getLessThanPtr();
          if (nextNode == nullptr)
          {
@@ -299,6 +303,8 @@ private:
       }
       else
       {
+		std::cout << "insert R" << std::endl;
+
          auto nextNode = node.getGreaterThanEqualToPtr();
          if (nextNode == nullptr)
          {
@@ -389,20 +395,29 @@ private:
                               BinaryTreeNodePtr<T> node, 
                               std::function<bool(const T&)> preOrderTraversalFunc) const
    {
-		std::cout << "find " << node->getValue() << std::endl;
+		std::cout << "find " << node->getValue() << " L " << node->getLessThanPtr().get() << " R " << node->getGreaterThanEqualToPtr().get() << std::endl;
 
       // if the input node has the same value
       if (compFunc(node->getValue()) == true) return node;
       else {
-         const auto nextNode = node->getLessThanPtr();
+         if (preOrderTraversalFunc(node->getValue()) == true) {
+            const auto nextNode = node->getLessThanPtr();
 
-         if (nullptr != nextNode && preOrderTraversalFunc(node->getLessThanPtr()->getValue()) == true) {
-            // move down the node to find another node that matches the input value
-            return find(compFunc, nextNode, preOrderTraversalFunc);
+            if (nextNode != nullptr) {
+
+		std::cout << "find L " << nextNode->getValue() << std::endl;
+
+               // move down the node to find another node that matches the input value
+               return find(compFunc, nextNode, preOrderTraversalFunc);
+            }
          }
          else {
             const auto nextNode = node->getGreaterThanEqualToPtr();
+
             if (nullptr != nextNode) {
+
+		std::cout << "find R " << nextNode->getValue() << std::endl;
+
                // move down the node to find another node that matches the input value
                return find(compFunc, nextNode, preOrderTraversalFunc);
             }
