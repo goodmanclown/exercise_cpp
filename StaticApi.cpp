@@ -594,3 +594,259 @@ uint StaticApi::maxArea(const vector<uint>& height)
 
     return resultMaxArea;
 }
+
+
+vector<pair<uint, uint>> StaticApi::merge(const vector<pair<uint, uint>>& intervals)
+{
+    vector<pair<uint, uint>> result;
+
+    if (intervals.empty()) return result;
+
+    if (intervals.size() == 1) return intervals;
+
+    auto iter = intervals.cbegin();
+
+    // first - start
+    // second - end
+    auto lastInterval = *iter;
+
+    for_each (++iter, intervals.cend(), 
+        [&lastInterval, &result](const auto& entry)
+        {
+            if (entry.first <= lastInterval.second)
+            {   // overlapped
+                lastInterval.second = entry.second;
+            }
+            else
+            {   // non-overlapped
+                result.emplace_back(lastInterval);
+
+                // update to the non-overlapped interval
+                lastInterval = entry;
+            }
+        }
+    );
+
+    result.emplace_back(lastInterval);
+
+    return result;
+}
+
+
+ int StaticApi::firstMissingPositive(const std::vector<int>& nums)
+ {
+    if (nums.size() < 3) return -1;
+
+    // go through the input and find the smallest and largest positive numbers
+    int smallest = 0;
+    int largest = 0;
+
+    for_each(nums.cbegin(), nums.cend(), 
+        [&smallest, &largest](const auto& entry)
+        {
+            // ignore negative number
+            if (entry < 0) return;
+
+            if (entry < smallest) smallest = entry;
+
+            if (entry > largest) largest = entry;
+        }
+    );
+
+    // now use the smallest and the largest to construct a vector 
+    // initialize the vector to -1
+    vector<int> tmpNums;
+    tmpNums.resize(largest-smallest+1);
+    fill(tmpNums.begin(), tmpNums.end(), -1);
+
+    // go through the input array and zero the entry using the input as index
+    for (const auto& entry : nums)
+    {
+        size_t indexToTmpNums = entry - smallest;
+        tmpNums[indexToTmpNums] = 0;
+    }
+
+    // go through the tmp array to look for the first index with a -1
+    for (size_t index; index < tmpNums.size(); ++index)
+    {
+        if (tmpNums[index] == -1)
+        {
+            return smallest+index;
+        } 
+    }
+
+    return -1;
+ }
+
+
+ string StaticApi::intToRomanUsingArray(int num) 
+ {
+    static array<string, 10> onesArray =
+        { "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX" };
+
+    static array<string, 10> tensArray =
+        { "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC" };
+
+    static array<string, 10> hundredsArray =
+        { "", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM" };
+
+    static array<string, 10> thousandsArray =
+        { "", "M", "MM", "MMM", "", "", "", "", "", "" };
+
+    string convertedRomanString;
+
+    // just return if out of bound
+    if (num <= 0 || num > 3999) return convertedRomanString;
+
+    int placeIndex = 1;
+    while (num > 0)
+    {
+        int value = num % 10;
+
+        switch (placeIndex)
+        {
+            case 1:
+                convertedRomanString = onesArray[value] + convertedRomanString;
+            break;
+            
+            case 2:
+                convertedRomanString = tensArray[value] + convertedRomanString;
+            break;
+
+            case 3:
+                convertedRomanString = hundredsArray[value] + convertedRomanString;
+            break;
+
+            case 4:
+                convertedRomanString = thousandsArray[value] + convertedRomanString;
+            break;
+        }
+
+        num = num / 10;
+
+        ++placeIndex;
+    }
+
+    return convertedRomanString;
+ }
+
+string StaticApi::intToRomanUsingLambda(int num) 
+{
+    auto intToRomanLessThanFour = [](int num, const string& symbol) 
+    {
+        string convertedRomanString;
+
+        if (num < 0) return convertedRomanString;
+        
+        for (int i = 0; i < num; ++i)
+        {
+            convertedRomanString += symbol;    
+        }
+
+        return convertedRomanString;
+    };
+
+    string convertedRomanString;
+
+    // just return if out of bound
+    if (num <= 0 || num > 3999) return convertedRomanString;
+
+    int placeIndex = 1;
+    while (num > 0)
+    {
+        int value = num % 10;
+
+        switch (placeIndex)
+        {
+            case 1:
+            {
+                if (value < 4)
+                {
+                    convertedRomanString = intToRomanLessThanFour(value, "I") + convertedRomanString;
+                }
+                else if (value == 4)
+                {
+                    convertedRomanString = "IV" + convertedRomanString;
+                }
+                else if (value == 5)
+                {
+                    convertedRomanString = "V" + convertedRomanString;
+                }
+                else if (value < 9)
+                {
+                    convertedRomanString = "V" + intToRomanLessThanFour(value - 5, "I") + convertedRomanString;
+                }
+                else if (value == 9)
+                {
+                    convertedRomanString = "IX" + convertedRomanString;
+                }
+            }
+            break;
+            
+            case 2:
+            {
+                if (value < 4)
+                {
+                    convertedRomanString = intToRomanLessThanFour(value, "X") + convertedRomanString;
+                }
+                else if (value == 4)
+                {
+                    convertedRomanString = "XL" + convertedRomanString;
+                }
+                else if (value == 5)
+                {
+                    convertedRomanString = "L" + convertedRomanString;
+                }
+                else if (value < 9)
+                {
+                    convertedRomanString = "L" + intToRomanLessThanFour(value - 5, "X") + convertedRomanString;
+                }
+                else if (value == 9)
+                {
+                    convertedRomanString = "XC" + convertedRomanString;
+                }
+            }
+            break;
+
+            case 3:
+            {
+                if (value < 4)
+                {
+                    convertedRomanString = intToRomanLessThanFour(value, "C") + convertedRomanString;
+                }
+                else if (value == 4)
+                {
+                    convertedRomanString = "CD" + convertedRomanString;
+                }
+                else if (value == 5)
+                {
+                    convertedRomanString = "D" + convertedRomanString;
+                }
+                else if (value < 9)
+                {
+                    convertedRomanString = "D" + intToRomanLessThanFour(value - 5, "C") + convertedRomanString;
+                }
+                else if (value == 9)
+                {
+                    convertedRomanString = "CM" + convertedRomanString;
+                }
+            }
+            break;
+
+            case 4:
+            {
+                if (value < 4)
+                {
+                    convertedRomanString = intToRomanLessThanFour(value, "M") + convertedRomanString;
+                }
+            }
+            break;
+        }
+
+        num = num / 10;
+
+        ++placeIndex;
+    }
+
+    return convertedRomanString;
+ }

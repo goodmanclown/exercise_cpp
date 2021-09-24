@@ -1053,6 +1053,136 @@ TEST_F(MaxAreaTestFixture, maxArea) {
 }
 
 
+// Tests MergInterval()
+class MergeIntervalTestFixture : public ::testing::Test {
+    public:
+
+        MergeIntervalTestFixture() = default;
+
+        ~MergeIntervalTestFixture() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 2u;
+
+        array<vector<pair<uint, uint>>, TEST_SIZE> inputTarget {
+            { 
+                { {1, 3}, {2, 6}, {8, 10}, {15, 18} },
+                { {1, 4}, {4, 5} }
+            } 
+        };
+
+        std::array<vector<pair<uint, uint>>, TEST_SIZE> expectResult { 
+            {
+                { {1, 6}, {8, 10}, {15, 18} },
+                { {1, 5} }
+            }
+        };
+};
+
+// Tests member api insert
+TEST_F(MergeIntervalTestFixture, merge) {
+
+    std::array<vector<pair<uint, uint>>, TEST_SIZE> result = { };
+
+    transform(inputTarget.cbegin(), inputTarget.cend(), 
+        result.begin(),
+        [] (const auto& entry) {
+            return StaticApi::merge(entry);
+        }
+    );
+
+    EXPECT_EQ(expectResult, result);
+
+  // <TechnicalDetails>
+  //
+  //   EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expect12ed value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case expect12_EQ is preferred.
+  //
+  // On the other hand, expect12_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+
+// Tests MergInterval()
+class IntToRomanTestFixture : public ::testing::Test {
+    public:
+
+        IntToRomanTestFixture() = default;
+
+        ~IntToRomanTestFixture() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 7u;
+
+	    array<int, TEST_SIZE> inputTarget { { 0, 3, 4, 9, 58, 1994, 4000 } };
+
+        std::array<std::string, TEST_SIZE> expectResult { 
+            {
+            "",
+            "III",
+            "IV",
+            "IX",
+            "LVIII",
+            "MCMXCIV",
+            ""
+            }
+        };
+};
+
+// Tests member api insert
+TEST_F(IntToRomanTestFixture, convert) {
+
+    std::array<std::string, TEST_SIZE> result = { };
+
+    transform(inputTarget.cbegin(), inputTarget.cend(), 
+        result.begin(),
+        [] (const auto& entry) {
+            return StaticApi::intToRomanUsingArray(entry);
+        }
+    );
+
+    transform(inputTarget.cbegin(), inputTarget.cend(), 
+        result.begin(),
+        [] (const auto& entry) {
+            return StaticApi::intToRomanUsingLambda(entry);
+        }
+    );
+
+    EXPECT_EQ(expectResult, result);
+
+  // <TechnicalDetails>
+  //
+  //   EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expect12ed value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case expect12_EQ is preferred.
+  //
+  // On the other hand, expect12_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
 // Step 3. Call RUN_ALL_TESTS() in main().
 //
 // We do this by linking in src/gtest_main.cc file, which consists of
