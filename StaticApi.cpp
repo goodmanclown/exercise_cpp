@@ -3,12 +3,14 @@
 
 #include <unistd.h>
 #include <algorithm>
+#include <functional>
 #include <iterator>
 #include <iostream>
 #include <list>
 #include <sstream>
 #include <map>
 #include <unordered_map>
+#include <unordered_set>
 #include <utility>
 
 using namespace std;
@@ -732,7 +734,7 @@ vector<pair<uint, uint>> StaticApi::merge(const vector<pair<uint, uint>>& interv
 
 string StaticApi::intToRomanUsingLambda(int num) 
 {
-    auto intToRomanLessThanFour = [](int num, const string& symbol) 
+    auto intToRomanOnes = [](int num, const string& symbol)
     {
         string convertedRomanString;
 
@@ -746,106 +748,65 @@ string StaticApi::intToRomanUsingLambda(int num)
         return convertedRomanString;
     };
 
+    auto intToRomanHelper = [](int num, 
+                                const string& symbolOne, 
+                                const string& symbolFive, 
+                                const string& symbolTen,
+                                function<string(int, string)> intToRomanOnesApi)
+    {
+        string convertedRomanString;
+
+        if (num < 4)
+        {
+            convertedRomanString = intToRomanOnesApi(num, symbolOne) + convertedRomanString;
+        }
+        else if (num == 4)
+        {
+            convertedRomanString = symbolOne + symbolFive + convertedRomanString;
+        }
+        else if (num == 5)
+        {
+            convertedRomanString = symbolFive + convertedRomanString;
+        }
+        else if (num < 9)
+        {
+            convertedRomanString = symbolFive + intToRomanOnesApi(num - 5, symbolOne) + convertedRomanString;
+        }
+        else if (num == 9)
+        {
+           convertedRomanString = symbolOne + symbolTen + convertedRomanString;
+        }
+
+        return convertedRomanString;
+    };
+
+    array<tuple<string, string, string>, 4> symbol {
+        {
+            tuple<string, string, string>( "I", "V", "X" ),
+            tuple<string, string, string>( "X", "L", "C" ),
+            tuple<string, string, string>( "C", "D", "M" ),
+            tuple<string, string, string>( "M", "", "" )
+        }
+    };
+
     string convertedRomanString;
 
     // just return if out of bound
     if (num <= 0 || num > 3999) return convertedRomanString;
 
-    int placeIndex = 1;
+    int placeIndex = 0;
     while (num > 0)
     {
-        int value = num % 10;
+        string symbolOne;
+        string symbolFive;
+        string symbolTen;
+        tie(symbolOne, symbolFive, symbolTen) = symbol[placeIndex++];
 
-        switch (placeIndex)
-        {
-            case 1:
-            {
-                if (value < 4)
-                {
-                    convertedRomanString = intToRomanLessThanFour(value, "I") + convertedRomanString;
-                }
-                else if (value == 4)
-                {
-                    convertedRomanString = "IV" + convertedRomanString;
-                }
-                else if (value == 5)
-                {
-                    convertedRomanString = "V" + convertedRomanString;
-                }
-                else if (value < 9)
-                {
-                    convertedRomanString = "V" + intToRomanLessThanFour(value - 5, "I") + convertedRomanString;
-                }
-                else if (value == 9)
-                {
-                    convertedRomanString = "IX" + convertedRomanString;
-                }
-            }
-            break;
-            
-            case 2:
-            {
-                if (value < 4)
-                {
-                    convertedRomanString = intToRomanLessThanFour(value, "X") + convertedRomanString;
-                }
-                else if (value == 4)
-                {
-                    convertedRomanString = "XL" + convertedRomanString;
-                }
-                else if (value == 5)
-                {
-                    convertedRomanString = "L" + convertedRomanString;
-                }
-                else if (value < 9)
-                {
-                    convertedRomanString = "L" + intToRomanLessThanFour(value - 5, "X") + convertedRomanString;
-                }
-                else if (value == 9)
-                {
-                    convertedRomanString = "XC" + convertedRomanString;
-                }
-            }
-            break;
-
-            case 3:
-            {
-                if (value < 4)
-                {
-                    convertedRomanString = intToRomanLessThanFour(value, "C") + convertedRomanString;
-                }
-                else if (value == 4)
-                {
-                    convertedRomanString = "CD" + convertedRomanString;
-                }
-                else if (value == 5)
-                {
-                    convertedRomanString = "D" + convertedRomanString;
-                }
-                else if (value < 9)
-                {
-                    convertedRomanString = "D" + intToRomanLessThanFour(value - 5, "C") + convertedRomanString;
-                }
-                else if (value == 9)
-                {
-                    convertedRomanString = "CM" + convertedRomanString;
-                }
-            }
-            break;
-
-            case 4:
-            {
-                if (value < 4)
-                {
-                    convertedRomanString = intToRomanLessThanFour(value, "M") + convertedRomanString;
-                }
-            }
-            break;
-        }
+        convertedRomanString = intToRomanHelper(num %10, symbolOne, symbolFive, symbolTen, 
+                                intToRomanOnes) + 
+                                convertedRomanString;
 
         num = num / 10;
-
-        ++placeIndex;
     }
 
     return convertedRomanString;
