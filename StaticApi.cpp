@@ -266,9 +266,8 @@ vector<vector<uint32_t>> StaticApi::findTargetSumCombination(uint32_t input[], u
     }
 
     // populate the input with the entries sorted
-    size_t index = 0;
     for_each(sortMap.cbegin(), sortMap.cend(), 
-        [&](auto& entry) 
+        [&input, index = 0] (auto& entry) mutable
         {
             size_t occurrences = entry.second;
             while (occurrences > 0)
@@ -517,38 +516,23 @@ vector<int> StaticApi::sortByNumberLengthList(const vector<int>& nums)
             return numLength;
         };
 
-    // define a list to store the numbers in the input vector
-    list<int> numByLength(nums.cbegin(), nums.cend());
+    map<size_t, vector<int>> sortByLength;
 
-    // now sort the list by the length of number, and maintain the order 
-    auto outIterEnd = numByLength.end();
-    --outIterEnd;
-    for (auto outIter = numByLength.begin(); outIter != outIterEnd; ++outIter )
+    for (const auto& entry : nums)
     {
-        auto minNum = *outIter;
-        auto minIter = outIter;
+        auto len = findNumLength(entry);
 
-        auto inIter = outIter;
-        ++inIter;
-        for (; inIter != numByLength.end(); ++inIter)
-        {
-            if (findNumLength(minNum) > findNumLength(*inIter))
-            {
-                minNum = *inIter;
-                minIter = inIter;
-            }
-        }
-
-        if (outIter != minIter)
-        {
-            // move minIter to the front of outIter
-            numByLength.insert(outIter, *minIter);
-            numByLength.erase(minIter);
-        }
+        sortByLength[len].push_back(entry);
     }
 
     // now copy the list to the result
-    copy(numByLength.cbegin(), numByLength.cend(), back_inserter(result));
+    for (const auto& kvp : sortByLength)
+    {
+        for (const auto& entry : kvp.second)
+        {
+            result.push_back(entry);
+        }
+    }
 
     return result;
 }
@@ -811,3 +795,149 @@ string StaticApi::intToRomanUsingLambda(int num)
 
     return convertedRomanString;
  }
+
+
+vector<string> StaticApi::restoreValidIPAddress(const std::string& digitString)
+{
+    if (digitString.empty() == true) return {};
+
+    return restoreValidIPAddressRecursive(4, digitString, "");
+}
+
+vector<string> StaticApi::restoreValidIPAddressRecursive(size_t minDigits, const string& digitString, const string& prefix)
+{
+    if (digitString.length() < minDigits) return {};
+
+    if (minDigits == 1)
+    {
+        if (digitString.length() == 1 || 
+            (digitString.length() > 1 && digitString.at(0) != '0' && stoi(digitString) <= 255))
+        {
+            return { prefix + "." + digitString };
+        }
+
+        return {};
+    }
+
+    vector<string> validIPAddressVec;
+
+    for (size_t subStrLen = 1; subStrLen < digitString.length(); ++subStrLen)
+    {
+        auto validIPAddress = digitString.substr(0, subStrLen);
+
+        if (stoi(validIPAddress) > 255) break;
+
+        if (prefix.empty() != true)
+        {
+            validIPAddress = prefix + "." + validIPAddress;
+        }
+        
+        auto ret = restoreValidIPAddressRecursive(minDigits - 1, digitString.substr(subStrLen), validIPAddress);
+        if (ret.empty() != true)
+        {
+            validIPAddressVec.insert(validIPAddressVec.begin(), ret.begin(), ret.end());
+        }
+
+        if (digitString.at(0) == '0')
+        {   // 0 is only valid by itself
+            break;
+        }
+    }
+
+    return validIPAddressVec;
+}
+
+
+list<int> StaticApi::sortList(list<int>& head)
+{
+    if (head.empty() == true) return { };
+
+    if (head.size() == 1) return head;
+
+    if (head.size() == 2) 
+    {
+        auto temp = head.front();
+        if (temp > head.back())
+        {   // just swap
+            head.pop_front();
+            head.push_back(temp);
+        }
+    }
+    
+    for (auto outIter = head.begin(); outIter != head.end(); )
+    {
+        auto inIter = outIter;
+
+        bool swapped = false;
+        for (++inIter; inIter != head.end() && swapped == false; )
+        {
+            if (*outIter > *inIter)
+            {
+                swapped = true;
+                auto temp = *outIter;
+                outIter = head.erase(outIter);
+                ++inIter;
+                head.insert(inIter, temp);
+                break;
+            }
+            
+            ++inIter;
+        }
+
+        if (swapped == false)
+        {
+            ++outIter;
+        }
+    }
+
+    return head;
+}
+
+bool StaticApi::canJump(const std::vector<int>& nums)
+{
+    if (nums.empty()) return false;
+
+    size_t lastIndex = nums.size() - 1;
+    size_t landedIndex = 0;
+    for (size_t index = 0; index < nums.size(); ++index)
+    {
+        const auto& entry = nums.at(index);
+
+        // invalid input
+        if (entry < 0) return false;
+
+        if (landedIndex < lastIndex)
+        {   // we are not yet at the last index
+            // but can't jump anymore
+            if (entry == 0) return false;
+
+            landedIndex += entry;
+        }
+
+        if (landedIndex == lastIndex)
+        {   // landed
+            return true;
+        }
+        else if (landedIndex > lastIndex)
+        {   // jumped past the last Index
+            return false;
+        }
+    }
+
+    return false;
+}
+
+std::vector<int> StaticApi::rotate(const std::vector<int>& nums, uint32_t k)
+{
+    // nothing to roate
+    if (nums.empty() || nums.size() == 1 || k == 0) return nums;
+
+    std::vector<int> result;
+
+    // find the iterator from the back
+    auto iter = nums.rbegin();
+    
+    result.insert(result.begin(), nums.end()-k, nums.end());
+
+    result.insert(result.end(), nums.begin(), nums.end()-k-1);
+}

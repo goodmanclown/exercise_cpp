@@ -1,5 +1,6 @@
 #include <stdint.h>
 
+#include <list>
 #include <vector>
 #include <string>
 #include <array>
@@ -425,6 +426,98 @@ Constraints:
 
     static std::string intToRomanUsingLambda(int num);
 
+    static std::list<int> sortList(std::list<int>& head);
+/**
+Given a string s containing only digits, return all possible valid IP addresses that can be obtained from s. You can return them in any order.
+
+A valid IP address consists of exactly four integers, each integer is between 0 and 255, separated by single dots and cannot have leading zeros. For example, "0.1.2.201" and "192.168.1.1" are valid IP addresses and "0.011.255.245", "192.168.1.312" and "192.168@1.1" are invalid IP addresses. 
+
+ 
+
+Example 1:
+
+Input: s = "25525511135"
+Output: ["255.255.11.135","255.255.111.35"]
+Example 2:
+
+Input: s = "0000"
+Output: ["0.0.0.0"]
+Example 3:
+
+Input: s = "1111"
+Output: ["1.1.1.1"]
+Example 4:
+
+Input: s = "010010"
+Output: ["0.10.0.10","0.100.1.0"]
+Example 5:
+
+Input: s = "101023"
+Output: ["1.0.10.23","1.0.102.3","10.1.0.23","10.10.2.3","101.0.2.3"]
+ 
+
+Constraints:
+
+0 <= s.length <= 3000
+s consists of digits only.
+ */
+    static std::vector<std::string> restoreValidIPAddress(const std::string& digitString);
+
+/**
+You are given an integer array nums. You are initially positioned at the array's first index, and each element in the array represents your maximum jump length at that position.
+
+Return true if you can reach the last index, or false otherwise.
+
+Example 1:
+
+Input: nums = [1,3,1,1,4]
+Output: true
+Explanation: Jump 1 step from index 0 to 1, then 3 steps to the last index.
+Example 2:
+
+Input: nums = [3,2,1,0,4]
+Output: false
+Explanation: You will always arrive at index 3 no matter what. Its maximum jump length is 0, which makes it impossible to reach the last index.
+ 
+
+Constraints:
+
+1 <= nums.length <= 104
+0 <= nums[i] <= 105
+ */
+    static bool canJump(const std::vector<int>& nums);
+
+/**
+Given an array, rotate the array to the right by k steps, where k is non-negative.
+
+ 
+
+Example 1:
+
+Input: nums = [1,2,3,4,5,6,7], k = 3
+Output: [5,6,7,1,2,3,4]
+Explanation:
+rotate 1 steps to the right: [7,1,2,3,4,5,6]
+rotate 2 steps to the right: [6,7,1,2,3,4,5]
+rotate 3 steps to the right: [5,6,7,1,2,3,4]
+Example 2:
+
+Input: nums = [-1,-100,3,99], k = 2
+Output: [3,99,-1,-100]
+Explanation: 
+rotate 1 steps to the right: [99,-1,-100,3]
+rotate 2 steps to the right: [3,99,-1,-100]
+ 
+
+Constraints:
+
+1 <= nums.length <= 105
+-231 <= nums[i] <= 231 - 1
+0 <= k <= 105
+ */
+    static std::vector<int> rotate(const std::vector<int>& nums, uint32_t k);
+
+
 private:
 
 	/** 
@@ -461,6 +554,8 @@ private:
         uint32_t uLength, uint32_t uTargetSum);
 
     static std::string generateParenthesisRecursive(uint n, std::string prefix);
+
+    static std::vector<std::string> restoreValidIPAddressRecursive(size_t minDigits, const std::string& digitString, const std::string& prefix);
 };
 
 

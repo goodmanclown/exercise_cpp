@@ -1115,7 +1115,7 @@ TEST_F(MergeIntervalTestFixture, merge) {
 }
 
 
-// Tests MergInterval()
+// Tests IntToRoman
 class IntToRomanTestFixture : public ::testing::Test {
     public:
 
@@ -1162,6 +1162,208 @@ TEST_F(IntToRomanTestFixture, convert) {
         result.begin(),
         [] (const auto& entry) {
             return StaticApi::intToRomanUsingLambda(entry);
+        }
+    );
+
+    EXPECT_EQ(expectResult, result);
+
+  // <TechnicalDetails>
+  //
+  //   EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expect12ed value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case expect12_EQ is preferred.
+  //
+  // On the other hand, expect12_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests restoreValidIPAddress
+class RestoreValidIPAddressTestFixture : public ::testing::Test {
+    public:
+
+        RestoreValidIPAddressTestFixture() = default;
+
+        ~RestoreValidIPAddressTestFixture() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 6u;
+
+	    array<std::string, TEST_SIZE> inputTarget { 
+            { 
+                "", 
+                "0000",
+                "1111",
+                "010010",
+                "101023",
+                "000256"
+            } 
+        };
+
+        std::array<std::vector<std::string>, TEST_SIZE> expectResult { 
+            {
+                { },
+                { "0.0.0.0" },
+                { "1.1.1.1" },
+                { "0.100.1.0", "0.10.0.10" },
+                { "101.0.2.3", "10.10.2.3", "10.1.0.23", "1.0.102.3", "1.0.10.23" },
+                { },
+            }
+        };
+};
+
+// Tests member api insert
+TEST_F(RestoreValidIPAddressTestFixture, convert) {
+
+    std::array<std::vector<std::string>, TEST_SIZE> result = { };
+
+    transform(inputTarget.cbegin(), inputTarget.cend(), 
+        result.begin(),
+        [] (const auto& entry) {
+            return StaticApi::restoreValidIPAddress(entry);
+        }
+    );
+
+    EXPECT_EQ(expectResult, result);
+
+  // <TechnicalDetails>
+  //
+  //   EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expect12ed value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case expect12_EQ is preferred.
+  //
+  // On the other hand, expect12_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests sortList
+class SortListTestFixture : public ::testing::Test {
+    public:
+
+        SortListTestFixture() = default;
+
+        ~SortListTestFixture() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 3u;
+
+	    array<std::list<int>, TEST_SIZE> inputTarget { 
+            { 
+                { 4,2,1,3 }, 
+                { -1,5,3,4,0 },
+                { }
+            } 
+        };
+
+        std::array<std::list<int>, TEST_SIZE> expectResult { 
+            {
+                { 1, 2, 3, 4},
+                { -1, 0, 3, 4, 5 },
+                { },
+            }
+        };
+};
+
+// Tests member api insert
+TEST_F(SortListTestFixture, sort) {
+
+    std::array<std::list<int>, TEST_SIZE> result = { };
+
+    transform(inputTarget.cbegin(), inputTarget.cend(), 
+        result.begin(),
+        [] (auto entry) {
+            StaticApi::sortList(entry);
+            return entry;
+        }
+    );
+
+    EXPECT_EQ(expectResult, result);
+
+  // <TechnicalDetails>
+  //
+  //   EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expect12ed value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case expect12_EQ is preferred.
+  //
+  // On the other hand, expect12_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
+// Tests canJump
+class CanJumpTestFixture : public ::testing::Test {
+    public:
+
+        CanJumpTestFixture() = default;
+
+        ~CanJumpTestFixture() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 6u;
+
+	    array<std::vector<int>, TEST_SIZE> inputTarget { 
+            { 
+                { 1,3,1,1,4 }, 
+                { 1,3,1,1,0 }, 
+                { 0 },
+                { -1 },
+                { 3,2,1,0,4 },
+                { }
+            } 
+        };
+
+        std::array<bool, TEST_SIZE> expectResult { 
+            {
+                true,
+                true,
+                true,
+                false,
+                false,
+                false
+            }
+        };
+};
+
+// Tests member api insert
+TEST_F(CanJumpTestFixture, canJump) {
+
+    std::array<bool, TEST_SIZE> result = { };
+
+    transform(inputTarget.cbegin(), inputTarget.cend(), 
+        result.begin(),
+        [] (const auto& entry) {
+            return StaticApi::canJump(entry);
         }
     );
 
