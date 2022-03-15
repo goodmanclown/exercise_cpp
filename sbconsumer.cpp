@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
-    size_t uSharedBufferSize = 0;
+    size_t uNumberOfBuffer = 0;
     string sStringToSearch;
 
     vector<char*> argvWrapper(argv, argv+argc);
@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
                 exit(-1);
             }
 
-            uSharedBufferSize = atoi(argvWrapper.front());
+            uNumberOfBuffer = atoi(argvWrapper.front());
         }
         else if (strcasecmp(arg, "-s") == 0)
         {
@@ -60,20 +60,20 @@ int main(int argc, char* argv[])
         argvWrapper.erase(argvWrapper.begin());
     }
 
-    if (uSharedBufferSize <= 0 || uSharedBufferSize > 65535 || sStringToSearch.empty())
+    if (uNumberOfBuffer <= 0 || uNumberOfBuffer > 65535 || sStringToSearch.empty())
     {
         PrintUsage();
         exit(-1);
     }
-    SharedBufferConsumer sbc(uSharedBufferSize, sStringToSearch);
+    SharedBufferConsumer sbc(uNumberOfBuffer, sStringToSearch);
     sbc.Start();
 }
 
 
 void PrintUsage()
 {
-    cout << "usage: sbconsumer -n shared_buffer_size -s string_to_search" << endl;
-    cout << "shared_buffer_size: range 1..65525" << endl;
-    cout << "string_to_search: a substring to search in a sentence.  enclosed with double quotes" << endl;
-    cout << "                  if there is space in the substring, e.g., \"there is\"" << endl;
+    cout << "usage: sbconsumer -n number_of_shared_buffer -s string_to_search" << endl;
+    cout << "number_of_shared_buffer: range 1..65525" << endl;
+    cout << "string_to_search: a non-empty ASCII substring to search in a sentence.  enclosed with double quotes" << endl;
+    cout << "                  if there is any space in the substring, e.g., \"there is\"" << endl;
 }

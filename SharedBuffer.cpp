@@ -75,6 +75,9 @@ SharedBuffer::Unpack()
         if (uExpectedSentenceLength == 0 || uExpectedSentenceLength > SENTENCE_LENGTH_MAX
             || uExpectedSentenceLength > iAvailableContentLength)
         {
+            // something wrong with this buffer
+            // throw out any sentence unpack
+            vSentences.clear();
             break;
         }
 
@@ -92,10 +95,16 @@ SharedBuffer::Unpack()
             }
         }
 
-        if (sSentence.length() == uExpectedSentenceLength)
-        {   // constructed sentence length match expected length
-            vSentences.push_back(sSentence);
+        if (sSentence.length() != uExpectedSentenceLength)
+        {
+            // something wrong with this buffer
+            // throw out any sentence unpack
+            vSentences.clear();
+            break;
         }
+
+        // constructed sentence length match expected length
+        vSentences.push_back(sSentence);
 
         // reduce available length
         iAvailableContentLength = iAvailableContentLength - uExpectedSentenceLength - SENTENCE_LENGTH_SIZE;

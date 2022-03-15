@@ -1,7 +1,6 @@
 #pragma once
 
 #include "SharedBufferArray.hxx"
-#include "SharedBufferQueue.hxx"
 
 #include <atomic>
 #include <string>
@@ -67,15 +66,6 @@ private:
      */
     SharedBufferArray        m_cSharedBufferArray;
 
-    /**
-     * Shared Buffer Reader thread
-     */
-    std::thread         m_tSharedBufferReaderThread;
-
-    /**
-     * Shared Buffer Content Queue
-     */
-    SharedBufferQueue      m_qSharedBufferQueue;
 };
 
 

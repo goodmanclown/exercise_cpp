@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
-    size_t uSharedBufferSize = 0;
+    size_t uNumberOfBuffer = 0;
     string sFilePathName;
 
     vector<char*> argvWrapper(argv, argv+argc);
@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
                 exit(-1);
             }
 
-            uSharedBufferSize = atoi(argvWrapper.front());
+            uNumberOfBuffer = atoi(argvWrapper.front());
         }
         else if (strcasecmp(arg, "-f") == 0)
         {
@@ -60,19 +60,19 @@ int main(int argc, char* argv[])
         argvWrapper.erase(argvWrapper.begin());
     }
 
-    if (uSharedBufferSize <= 0 || uSharedBufferSize > 65535 || sFilePathName.empty())
+    if (uNumberOfBuffer <= 0 || uNumberOfBuffer > 65535 || sFilePathName.empty())
     {
         PrintUsage();
         exit(-1);
     }
-    SharedBufferProducer sbp(uSharedBufferSize, sFilePathName);
+    SharedBufferProducer sbp(uNumberOfBuffer, sFilePathName);
     sbp.Start();
 }
 
 
 void PrintUsage()
 {
-    cout << "usage: sbproducer -n shared_buffer_size -f file_path_name" << endl;
-    cout << "shared_buffer_size: range 1..65535" << endl;
+    cout << "usage: sbproducer -n number_of_shared_buffer -f file_path_name" << endl;
+    cout << "number_of_shared_buffer: range 1..65535" << endl;
     cout << "file_path_name: a valid path and name to input file" << endl;
 }

@@ -65,4 +65,6 @@ SharedBufferConsumer::Start()
         break;
         }
     }
+
+    m_cSharedBufferArray.Close();
 }
