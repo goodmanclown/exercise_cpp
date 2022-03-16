@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <atomic>
 #include <string>
 
 /**
@@ -86,7 +86,8 @@ private:
     /**
      * @brief merged file index
      */
-    size_t  m_uMergedFileIndex;
+    std::atomic_size_t  m_uMergedFileIndex;
+
 };
 
 

@@ -1,6 +1,7 @@
 #include "FileSortMergeSort.hxx"
 
 #include <fstream>
+#include <future>
 #include <iostream>
 #include <set>
 #include <sstream>
@@ -20,7 +21,6 @@ FileSortMergeSort::Start()
 
     // open the file
     ifstream fInputFile(m_sFilePathName);
-
     if (!fInputFile.is_open())
     {
         cerr << "cannot open input file: " << m_sFilePathName << endl;
@@ -77,6 +77,9 @@ FileSortMergeSort::Start()
         } 
     }
 
+    // close the input file
+    fInputFile.close();
+
     if (uCountLinesRead > 0)
     {
         // close the output temp. file
@@ -90,15 +93,22 @@ FileSortMergeSort::Start()
         return;
     }
 
-    vector<string> vMergedFiles;
-
-    // sort each temp. file on its own
+    // sort each temp. file on its own thread
+    vector<future<bool>>  vSortFileContentResult;
     for (const auto& entry : vTempFilesOpened)
     {
-        // complexity is O(Nlog(N))
-        if (SortFileContent(entry))
+        auto fRet = async(std::launch::async, &FileSortMergeSort::SortFileContent, this, entry);
+
+        vSortFileContentResult.push_back(move(fRet));
+    }
+
+    vector<string> vMergedFiles;
+    for (size_t index = 0; index < vSortFileContentResult.size(); ++index)
+    {
+        // wait for the future to complete
+        if (vSortFileContentResult[index].get() == true)
         {
-            vMergedFiles.push_back(entry);
+            vMergedFiles.push_back(vTempFilesOpened[index]);
         }
     }
 
@@ -109,14 +119,24 @@ FileSortMergeSort::Start()
             vMergedFiles.push_back("");
         }
 
-        vector<string> vMergedFilesTemp;
+        // merge each pair of temp. files on its own thread
+        vector<future<string>>  vMergeFileContentResult;
         for (size_t index=0; index < vMergedFiles.size()-1; index=index+2)
         {   
-            // complexity is O(Nlog(N))
-            auto sMergeFilePathName = MergeFileContent(vMergedFiles[index], vMergedFiles[index+1]);
-            if (!sMergeFilePathName.empty())
+            auto fRet = async(std::launch::async, &FileSortMergeSort::MergeFileContent, this, 
+                                vMergedFiles[index], vMergedFiles[index+1]);
+
+            vMergeFileContentResult.push_back(move(fRet));
+        }
+
+        vector<string> vMergedFilesTemp;
+        for (size_t index=0; index < vMergeFileContentResult.size(); ++index)
+        {
+            // wait for the future to complete
+            auto sMergedFilePathName = vMergeFileContentResult[index].get();
+            if (!sMergedFilePathName.empty())
             {   // save the file name
-                vMergedFilesTemp.push_back(sMergeFilePathName);
+                vMergedFilesTemp.push_back(sMergedFilePathName);
             }
         }
 
@@ -131,7 +151,7 @@ FileSortMergeSort::Start()
 
     } while (vMergedFiles.size() > 1);
 
-    std::cout << endl << "sorted file is " << vMergedFiles[0].c_str() << endl;
+    std::cout << endl << "sorted file is " << vMergedFiles[0] << endl;
 }
 
 bool
