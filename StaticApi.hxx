@@ -344,8 +344,6 @@ intervals[i].length == 2
 /**
 Given an unsorted integer array nums, find the smallest missing positive integer.
 
- 
-
 Example 1:
 
 Input: nums = [1,2,0]
@@ -425,6 +423,33 @@ Constraints:
     static std::string intToRomanUsingArray(int num);
 
     static std::string intToRomanUsingLambda(int num);
+
+/**
+convert integer to written form
+
+Example 1:
+
+Input: num = 3
+Output: "three"
+Example 2:
+
+Input: num = 11
+Output: "eleven"
+Example 3:
+
+Input: num = 30
+Output: "thirty"
+Example 4:
+
+Input: num = 409
+Output: "four hundred and 9"
+Example 5:
+
+Input: num = 4678
+Output: "four thousand six hundred seventy eight"
+ 
+ */
+    static std::string intToWrittenUsingArray(int num);
 
     static std::list<int> sortList(std::list<int>& head);
 /**
@@ -518,6 +543,127 @@ Constraints:
     static std::vector<int> rotate(const std::vector<int>& nums, uint32_t k);
 
 
+/**
+Given an integer array nums sorted in non-decreasing order, remove some duplicates 
+in-place such that each unique element appears at most twice. The relative order of 
+the elements should be kept the same.
+
+Since it is impossible to change the length of the array in some languages, you must 
+instead have the result be placed in the first part of the array nums. More formally, 
+if there are k elements after removing the duplicates, then the first k elements of 
+nums should hold the final result. It does not matter what you leave beyond the first 
+k elements.
+
+Return k after placing the final result in the first k slots of nums.
+
+Do not allocate extra space for another array. You must do this by modifying the input 
+array in-place with O(1) extra memory.
+  
+ */
+    static size_t removeDuplicates(std::vector<int>& nums);
+
+/**
+You are given an array people where people[i] is the weight of the ith person, and an 
+infinite number of boats where each boat can carry a maximum weight of limit. Each boat 
+carries at most two people at the same time, provided the sum of the weight of those 
+people is at most limit.
+
+Return the minimum number of boats to carry every given person.
+
+Example 1:
+
+Input: people = [1,2], limit = 3
+Output: 1
+Explanation: 1 boat (1, 2)
+Example 2:
+
+Input: people = [3,2,2,1], limit = 3
+Output: 3
+Explanation: 3 boats (1, 2), (2) and (3)
+Example 3:
+
+Input: people = [3,5,3,4], limit = 5
+Output: 4
+Explanation: 4 boats (3), (3), (4), (5)
+ 
+
+Constraints:
+
+1 <= people.length <= 5 * 104
+1 <= people[i] <= limit <= 3 * 104
+ */
+    static int numRescueBoats(std::vector<int>& people, size_t limit);
+
+/**
+You are visiting a farm that has a single row of fruit trees arranged from left to right. 
+The trees are represented by an integer array fruits where fruits[i] is the type of fruit the ith tree produces.
+
+You want to collect as much fruit as possible. However, the owner has some strict rules that you must follow:
+
+You only have two baskets, and each basket can only hold a single type of fruit. 
+There is no limit on the amount of fruit each basket can hold.
+Starting from any tree of your choice, you must pick exactly one fruit from every tree 
+(including the start tree) while moving to the right. The picked fruits must fit in one of your baskets.
+
+Once you reach a tree with fruit that cannot fit in your baskets, you must stop.
+Given the integer array fruits, return the maximum number of fruits you can pick.
+ 
+
+Example 1:
+
+Input: fruits = [1,2,1]
+Output: 3
+Explanation: We can pick from all 3 trees.
+Example 2:
+
+Input: fruits = [0,1,2,2]
+Output: 3
+Explanation: We can pick from trees [1,2,2].
+If we had started at the first tree, we would only pick from trees [0,1].
+Example 3:
+
+Input: fruits = [1,2,3,2,2]
+Output: 4
+Explanation: We can pick from trees [2,3,2,2].
+If we had started at the first tree, we would only pick from trees [1,2].
+ 
+
+Constraints:
+
+1 <= fruits.length <= 105
+0 <= fruits[i] < fruits.length
+
+*/
+    static uint findMaxPickedFruits(std::vector<uint>& fruits);
+
+/**
+Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. Return the answer in any order.
+
+A mapping of digits to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.
+
+Example 1:
+
+Input: digits = "23"
+Output: ["ad","ae","af","bd","be","bf","cd","ce","cf"]
+Example 2:
+
+Input: digits = ""
+Output: []
+Example 3:
+
+Input: digits = "2"
+Output: ["a","b","c"]
+ 
+
+Constraints:
+
+0 <= digits.length <= 4
+digits[i] is a digit in the range ['2', '9'].
+
+return combinations found when an invalid character is encountered, i.e., digit not in the range ['2', '9']
+ */
+    static std::vector<std::string> letterCombinations(const std::string& digits);
+
 private:
 
 	/** 
@@ -556,6 +702,8 @@ private:
     static std::string generateParenthesisRecursive(uint n, std::string prefix);
 
     static std::vector<std::string> restoreValidIPAddressRecursive(size_t minDigits, const std::string& digitString, const std::string& prefix);
+
+    static std::vector<std::string> letterCombinationsRecursive(const std::string& digits, const std::string& prefix );
 };
 
 

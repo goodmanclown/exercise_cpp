@@ -502,7 +502,7 @@ TEST(StaticApi, findTargetSumCombination) {
 
 	auto ret = StaticApi::findTargetSumCombination(input, 4, 4);
 
-    EXPECT_EQ(ret.size(), 3);
+    EXPECT_EQ(ret.size(), 5);
 
   // <TechnicalDetails>
   //
@@ -1183,6 +1183,71 @@ TEST_F(IntToRomanTestFixture, convert) {
   // </TechnicalDetails>
 }
 
+// Tests IntToWritten
+class IntToWrittenTestFixture : public ::testing::Test {
+    public:
+
+        IntToWrittenTestFixture() = default;
+
+        ~IntToWrittenTestFixture() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 10u;
+
+	    array<int, TEST_SIZE> inputTarget { { 0, 3, 14, 29, 508, 1994, 4000, 11111, 62345, -16 } };
+
+        std::array<std::string, TEST_SIZE> expectResult { 
+            {
+            "zero",
+            "three",
+            "fourteen",
+            "twenty nine",
+            "five hundred and eight",
+            "one thousand nine hundred ninety four",
+            "four thousand",
+            "eleven thousand one hundred eleven",
+            "sixty two thousand three hundred forty five",
+            "negative sixteen",
+            }
+        };
+};
+
+// Tests member api insert
+TEST_F(IntToWrittenTestFixture, convert) {
+
+    std::array<std::string, TEST_SIZE> result = { };
+
+    transform(inputTarget.cbegin(), inputTarget.cend(), 
+        result.begin(),
+        [] (const auto& entry) 
+        {
+            return StaticApi::intToWrittenUsingArray(entry);
+        }
+    );
+
+    EXPECT_EQ(expectResult, result);
+
+  // <TechnicalDetails>
+  //
+  //   EXPECT_EQ(expected, actual) is the same as
+  //
+  //   EXPECT_TRUE((expected) == (actual))
+  //
+  // except that it will print both the expect12ed value and the actual
+  // value when the assertion fails.  This is very helpful for
+  // debugging.  Therefore in this case expect12_EQ is preferred.
+  //
+  // On the other hand, expect12_TRUE accepts any Boolean expression,
+  // and is thus more general.
+  //
+  // </TechnicalDetails>
+}
+
 // Tests restoreValidIPAddress
 class RestoreValidIPAddressTestFixture : public ::testing::Test {
     public:
@@ -1299,21 +1364,6 @@ TEST_F(SortListTestFixture, sort) {
     );
 
     EXPECT_EQ(expectResult, result);
-
-  // <TechnicalDetails>
-  //
-  //   EXPECT_EQ(expected, actual) is the same as
-  //
-  //   EXPECT_TRUE((expected) == (actual))
-  //
-  // except that it will print both the expect12ed value and the actual
-  // value when the assertion fails.  This is very helpful for
-  // debugging.  Therefore in this case expect12_EQ is preferred.
-  //
-  // On the other hand, expect12_TRUE accepts any Boolean expression,
-  // and is thus more general.
-  //
-  // </TechnicalDetails>
 }
 
 // Tests canJump
@@ -1355,7 +1405,7 @@ class CanJumpTestFixture : public ::testing::Test {
         };
 };
 
-// Tests member api insert
+// Tests member api canJump
 TEST_F(CanJumpTestFixture, canJump) {
 
     std::array<bool, TEST_SIZE> result = { };
@@ -1364,6 +1414,233 @@ TEST_F(CanJumpTestFixture, canJump) {
         result.begin(),
         [] (const auto& entry) {
             return StaticApi::canJump(entry);
+        }
+    );
+
+    EXPECT_EQ(expectResult, result);
+}
+
+// Tests removeduplicates
+class RemoveDuplicatesTestFixture : public ::testing::Test {
+    public:
+
+        RemoveDuplicatesTestFixture() = default;
+
+        ~RemoveDuplicatesTestFixture() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 3u;
+
+	    array<std::vector<int>, TEST_SIZE> inputTarget { 
+            { 
+                { }, 
+                { 1,1,1,2,2,3 }, 
+                { 0,0,1,1,1,1,2,3,3 } 
+            } 
+        };
+
+        std::array<std::pair<size_t, std::vector<int>>, TEST_SIZE> expectResult { 
+            {
+                { 0, { } }, 
+                { 5, { 1,1,2,2,3 } }, 
+                { 7, { 0,0,1,1,2,3,3 } }
+            }
+        };
+};
+
+// Tests member api insert
+TEST_F(RemoveDuplicatesTestFixture, remove) {
+
+    array<pair<size_t, vector<int>>, TEST_SIZE> result = { };
+
+    transform(inputTarget.cbegin(), inputTarget.cend(), 
+        result.begin(),
+        [] (const auto& entry) {
+
+            // make a copy for in-place modification
+            auto nums = entry;
+            auto k = StaticApi::removeDuplicates(nums);
+            return std::pair<size_t, std::vector<int>>( k, nums );
+        }
+    );
+
+    EXPECT_EQ(expectResult, result);
+}
+
+// Tests numRescueBoats
+class NumRescueBoatsTestFixture : public ::testing::Test {
+    public:
+
+        NumRescueBoatsTestFixture() = default;
+
+        ~NumRescueBoatsTestFixture() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 7u;
+
+	    array<std::pair<std::vector<int>, size_t>, TEST_SIZE> inputTarget { 
+            { 
+                { { }, 0 }, 
+                { { 1, 2 }, 0 }, 
+                { { 1, 2 }, 5 * 10000 }, 
+                { { 1, 2 }, 3 }, 
+                { { 3, 2, 2, 1 }, 3 }, 
+                { { 3, 2, 2, 1 }, 4 }, 
+                { { 3, 5, 3, 4 }, 5 }, 
+            } 
+        };
+
+        std::array<int, TEST_SIZE> expectResult { 
+            {
+                0, 
+                -1, 
+                -1, 
+                1,
+                3,
+                2,
+                4
+            }
+        };
+};
+
+// Tests member api numRescueBoats
+TEST_F(NumRescueBoatsTestFixture, numRescueBoats) {
+
+    array<int, TEST_SIZE> result = { };
+
+    transform(inputTarget.cbegin(), inputTarget.cend(), 
+        result.begin(),
+        [] (const auto& entry) {
+
+            // make a copy for in-place modification
+            auto people = entry.first;
+            auto limit = entry.second;
+            return StaticApi::numRescueBoats(people, limit);
+        }
+    );
+
+    EXPECT_EQ(expectResult, result);
+}
+
+// Tests findMaxPickedFruits
+class FindMaxPickedFruitsTestFixture : public ::testing::Test {
+    public:
+
+        FindMaxPickedFruitsTestFixture() = default;
+
+        ~FindMaxPickedFruitsTestFixture() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 7u;
+
+	    array<std::vector<uint>, TEST_SIZE> inputTarget { 
+            { 
+                { }, 
+                { 1, 2, 1 }, 
+                { 0, 1, 2, 2 }, 
+                { 1, 2, 3, 2, 2 }, 
+                { 1, 1, 1, 1, 1 }, 
+                { 1, 1, 1, 2, 2, 2 }, 
+                { 1, 2, 1, 2, 1, 2 }, 
+            } 
+        };
+
+        std::array<uint, TEST_SIZE> expectResult { 
+            {
+                0, 
+                3,
+                3,
+                4,
+                5,
+                6,
+                6
+            }
+        };
+};
+
+// Tests member api numRescueBoats
+TEST_F(FindMaxPickedFruitsTestFixture, findMaxPickedFruits) {
+
+    array<uint, TEST_SIZE> result = { };
+
+    transform(inputTarget.cbegin(), inputTarget.cend(), 
+        result.begin(),
+        [] (const auto& entry) 
+        {
+            auto fruits = entry;
+            return StaticApi::findMaxPickedFruits(fruits);
+        }
+    );
+
+    EXPECT_EQ(expectResult, result);
+}
+
+// Step 3. Call RUN_ALL_TESTS() in main().
+//
+// We do this by linking in src/gtest_main.cc file, which consists of
+// a main() function which calls RUN_ALL_TESTS() for us.
+//
+// This runs all the tests you've defined, prints the result, and
+// returns 0 if successful, or 1 otherwise.
+//
+// Did you notice that we didn't register the tests?  The
+// RUN_ALL_TESTS() macro magically knows about all the tests we
+// defined.  Isn't this convenient?
+
+class LetterCombinations : public ::testing::Test {
+    public:
+
+        LetterCombinations() = default;
+
+        ~LetterCombinations() = default;
+
+        void SetUp() override {};
+
+        void TearDown() override {};
+
+    protected:
+
+        static const size_t TEST_SIZE = 6u;
+
+	    array<string, TEST_SIZE> inputTarget { { "", "12345", "1", "2", "7", "9" } };
+
+        std::array<vector<string>, TEST_SIZE> expectResult { 
+            {
+                { },
+                { },
+                { },
+                { "a", "b", "c" },
+                { "p", "q", "r", "s" },
+                { "w", "x", "y", "z" },
+            }
+        };
+};
+
+// Tests member api insert
+TEST_F(LetterCombinations, convert) {
+
+    std::array<vector<string>, TEST_SIZE> result = { };
+
+    transform(inputTarget.cbegin(), inputTarget.cend(), 
+        result.begin(),
+        [] (const auto& entry) 
+        {
+            return StaticApi::letterCombinations(entry);
         }
     );
 
@@ -1384,15 +1661,3 @@ TEST_F(CanJumpTestFixture, canJump) {
   //
   // </TechnicalDetails>
 }
-
-// Step 3. Call RUN_ALL_TESTS() in main().
-//
-// We do this by linking in src/gtest_main.cc file, which consists of
-// a main() function which calls RUN_ALL_TESTS() for us.
-//
-// This runs all the tests you've defined, prints the result, and
-// returns 0 if successful, or 1 otherwise.
-//
-// Did you notice that we didn't register the tests?  The
-// RUN_ALL_TESTS() macro magically knows about all the tests we
-// defined.  Isn't this convenient?

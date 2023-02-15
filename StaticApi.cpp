@@ -7,8 +7,9 @@
 #include <iterator>
 #include <iostream>
 #include <list>
-#include <sstream>
 #include <map>
+#include <sstream>
+#include <stack>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -619,7 +620,7 @@ vector<pair<uint, uint>> StaticApi::merge(const vector<pair<uint, uint>>& interv
 }
 
 
- int StaticApi::firstMissingPositive(const std::vector<int>& nums)
+int StaticApi::firstMissingPositive(const std::vector<int>& nums)
  {
     if (nums.size() < 3) return -1;
 
@@ -794,7 +795,174 @@ string StaticApi::intToRomanUsingLambda(int num)
     }
 
     return convertedRomanString;
- }
+}
+
+
+ string StaticApi::intToWrittenUsingArray(int sNum) 
+ {
+    static array<string, 10> onesArray =
+        { "", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
+
+    static array<string, 10> teensArray =
+        { "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen" };
+
+    static array<string, 10> tensArray =
+        { "", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" };
+
+    static array<string, 10> placeArray =
+        { "", "", "hundred", "thousand", "thousand", "hundred thousand", "million", "million", "hundred million", "billion" };
+
+    string convertedWrittenString;
+
+    // remmber the sign of the input
+    bool neg = (sNum < 0);
+
+    // work with positive value of the input
+    uint num = (sNum > 0) ? sNum : -sNum;
+
+    if (num > 9999999999) return convertedWrittenString;
+
+    if (num == 0) 
+    {
+        return "zero";
+    }
+
+    // first go through the number, single out the digits and find the max place
+    int maxPlaceIndex = 0;
+    std::stack<uint> digitStack;
+    while (num > 0)
+    {
+        // single out the digit
+        uint digit = num % 10;
+
+        // save the digit
+        digitStack.push(digit);
+
+        num = num / 10;
+
+        ++maxPlaceIndex;
+    }
+
+    uint lastValue = 0;
+    int placeIndex = maxPlaceIndex;
+    while (!digitStack.empty())
+    {
+        uint value = digitStack.top();
+        digitStack.pop();
+
+        switch (placeIndex)
+        {
+            case 1:
+            case 4:
+            {
+                if (lastValue < 1)
+                {
+                    if (value)
+                    {
+                        convertedWrittenString = !convertedWrittenString.empty() 
+                                            ? convertedWrittenString + " and " + onesArray[value] + 
+                                                                            (!placeArray[placeIndex-1].empty() 
+                                                                            ? " " + placeArray[placeIndex-1]
+                                                                            : placeArray[placeIndex-1])
+                                            : onesArray[value] + 
+                                                        (!placeArray[placeIndex-1].empty() 
+                                                        ? " " + placeArray[placeIndex-1]
+                                                        : placeArray[placeIndex-1]);
+                    }
+                }
+                else if (lastValue == 1)
+                {
+                    if (value)
+                    {
+                        convertedWrittenString = !convertedWrittenString.empty() 
+                                                ? convertedWrittenString + " " + teensArray[value] + 
+                                                                            (!placeArray[placeIndex-1].empty() 
+                                                                            ? " " + placeArray[placeIndex-1]
+                                                                            : placeArray[placeIndex-1])
+                                                : teensArray[value] + 
+                                                        (!placeArray[placeIndex-1].empty() 
+                                                        ? " " + placeArray[placeIndex-1]
+                                                        : placeArray[placeIndex-1]);
+                    }
+                }
+                else if (lastValue > 1)
+                {
+                    if (value)
+                    {
+                        // form the written string
+                        convertedWrittenString = !convertedWrittenString.empty() 
+                                                ? convertedWrittenString + " " + onesArray[value] + 
+                                                                            (!placeArray[placeIndex-1].empty() 
+                                                                            ? " " + placeArray[placeIndex-1]
+                                                                            : placeArray[placeIndex-1])
+                                                : onesArray[value] + 
+                                                        (!placeArray[placeIndex-1].empty() 
+                                                        ? " " + placeArray[placeIndex-1]
+                                                        : placeArray[placeIndex-1]);
+                    }
+                }
+
+                // remember the value
+                lastValue = value;
+            }
+            break;
+            
+            case 2:
+            case 5:
+            {
+                if (value > 1)
+                {
+                    convertedWrittenString = !convertedWrittenString.empty() 
+                                                ? convertedWrittenString + " " + tensArray[value]
+                                                : tensArray[value];
+                }
+
+                // remember the value
+                lastValue = value;
+            }
+            break;
+
+            case 3:
+            {
+                if (lastValue < 1)
+                {
+                    if (value)
+                    {
+                        convertedWrittenString = !convertedWrittenString.empty() 
+                                            ? convertedWrittenString + " and " + onesArray[value] + " " + placeArray[placeIndex-1]
+                                            : onesArray[value] + " " + placeArray[placeIndex-1];
+                    }
+                }
+                else 
+                {
+                    if (value)
+                    {
+                        // form the written string
+                        convertedWrittenString = !convertedWrittenString.empty() 
+                                                ? convertedWrittenString + " " + onesArray[value] + " " + placeArray[placeIndex-1]
+                                                : onesArray[value] + " " + placeArray[placeIndex-1];
+                    }
+                }
+
+                // remember the value
+                lastValue = value;
+            }
+            break;
+        }
+
+        --placeIndex;
+    }
+
+    if (neg != true)
+    {
+        return convertedWrittenString;
+    }
+    else
+    {
+        return "negative " + convertedWrittenString;
+    }
+}
+
 
 
 vector<string> StaticApi::restoreValidIPAddress(const std::string& digitString)
@@ -935,9 +1103,244 @@ std::vector<int> StaticApi::rotate(const std::vector<int>& nums, uint32_t k)
     std::vector<int> result;
 
     // find the iterator from the back
-    auto iter = nums.rbegin();
-    
     result.insert(result.begin(), nums.end()-k, nums.end());
 
     result.insert(result.end(), nums.begin(), nums.end()-k-1);
+
+    return result;
+}
+
+size_t StaticApi::removeDuplicates(vector<int>& nums)
+{
+    if (nums.empty()) return 0;
+
+    auto iter = nums.begin();
+    int iLastNums = *iter;
+    uint8_t uDuplicateCount = 1;
+    ++iter;
+    while (iter != nums.end())
+    {
+        if (*iter != iLastNums)
+        {
+            iLastNums = *iter;
+            uDuplicateCount = 1;
+            ++iter;
+            continue;
+        }
+
+        ++uDuplicateCount;
+
+        if (uDuplicateCount > 2)
+        {   // erase the entry
+            iter = nums.erase(iter);
+
+            --uDuplicateCount;
+        }
+        else
+        {
+            ++iter;
+        }
+    }
+
+    return nums.size();
+}
+
+int StaticApi::numRescueBoats(vector<int>& people, size_t limit) 
+{
+    if (people.empty()) return 0;
+
+    if (people.size() > 5 * 10000) return -1;
+
+    if (limit == 0 || limit > 3 * 10000) return -1; 
+
+    size_t numBoats = 0;
+    for (size_t indexOuter = 0; indexOuter < people.size()-1; ++indexOuter)
+    {
+        if (people[indexOuter] < 0)
+        {   // data already used, go to the next one
+            continue;
+        }
+
+        size_t indexInner = indexOuter+1;
+        size_t targetIndexInner = indexInner;
+        int diffMin = -1;
+        for (; indexInner < people.size(); ++indexInner) 
+        {
+            if (people[indexInner] < 0)
+            {   // data already used, go to the next one
+                continue;
+            }
+
+            auto tempSum = people[indexOuter] + people[indexInner];
+            if (tempSum <= limit && (diffMin == -1 || diffMin > (limit - tempSum)))
+            {
+                targetIndexInner = indexInner;
+                diffMin = limit - tempSum;
+            }
+        }
+
+        if (diffMin >= 0)
+        {
+            // take this pair of outer and inner index
+            ++numBoats;
+
+            // invalidate the data
+            people[indexOuter] = -1;
+            people[targetIndexInner] = -1;
+        }
+        else
+        {
+            // take this outer index
+            ++numBoats;
+
+            // invalidate the data
+            people[indexOuter] = -1;
+        }
+    }
+
+    if (people[people.size()-1] > 0)
+    {   // the last one has not be removed
+        ++numBoats;
+    }
+
+    return numBoats;
+}
+
+
+uint StaticApi::findMaxPickedFruits(std::vector<uint>& fruits)
+{
+    uint uMaxPickedFruits = 0;
+
+    // if input is empty, just return
+    if (fruits.empty())
+    {
+        return uMaxPickedFruits;
+    }
+
+    // keep track of the number of type of fruits in the basket
+    uint uNumFruitTypeInBasket = 0;
+
+    // define a map with the key as the type of fruits and value the number of fruits of the type
+    unordered_map<uint, uint> basket;
+
+    // go through the input array
+    for (size_t outIndex = 0; outIndex < fruits.size(); ++outIndex)
+    {
+        for (size_t inIndex = outIndex; inIndex < fruits.size(); ++inIndex)
+        {
+            // get the type of fruit
+            auto type = fruits[inIndex];
+            
+            if (basket.find(type) != basket.cend())
+            {   // this is an old type
+                // just upcount
+                ++(basket[type]);
+            }
+            else if (uNumFruitTypeInBasket < 2)
+            {   // we still have space
+                // this is a new type
+                // just add to the basket
+                basket[type] = 1;
+
+                // remember the number of fruit types in the basket
+                ++uNumFruitTypeInBasket;
+            }
+            else
+            {   // no more space in our basket
+                break;
+            }
+        }
+
+        // find the number of fruits picked
+        size_t numPickedFruits = 0;
+        for (const auto& entry : basket)
+        {
+            numPickedFruits += entry.second;
+        }
+
+        // do we have more fruits this time
+        if (numPickedFruits > uMaxPickedFruits)
+        {   
+           uMaxPickedFruits = numPickedFruits;
+        }
+
+        // clear the buffer and try again
+        uNumFruitTypeInBasket = 0;
+        basket.clear();
+    }
+
+    return uMaxPickedFruits;
+}
+
+
+
+vector<string> StaticApi::letterCombinations(const string& digits)
+{
+    static const u_char MAX_NUM_DIGIT = 8;
+    static const u_char MAX_NUM_CHARACTER = 4;
+
+    // define a 2-dimensional array to keep the mapping of digits to characters
+    static array<array<string, MAX_NUM_CHARACTER>, MAX_NUM_DIGIT> digitToCharArray = {
+        {
+            { { "a", "b", "c", "" } },
+            { { "d", "e", "f", "" } },
+            { { "g", "h", "i", "" } },
+            { { "j", "k", "l", "" } },
+            { { "m", "n", "o", "" } },
+            { { "p", "q", "r", "s" } },
+            { { "t", "u", "v", "" } },
+            { { "w", "x", "y", "z" } }
+        }
+    };
+
+    vector<string> result;
+
+    if (digits.empty() || digits.size() >= 4) 
+    {   // out of bound, just return
+        return result;
+    }
+
+    // if there is only 1 digit, just return the corresponding mapping
+    if (digits.size() == 1)
+    {
+        char digit = digits[0];
+
+        char digitIndex = digit - '2';
+
+        if (digitIndex < 0 || digitIndex > 7) 
+        {
+            // out of bound, just return
+            return result;
+        }
+
+        const auto& chars = digitToCharArray[digitIndex];
+
+        for (const auto& cstr : chars)
+        {   // save to result
+            if (!cstr.empty())
+            {
+                result.push_back(cstr);
+            }
+        }
+    }
+    else 
+    {
+        for (size_t outIndex = 0; outIndex < MAX_NUM_DIGIT-1; ++outIndex)
+        {
+            char digit = digits[0];
+
+            char digitIndex = digit - '2';
+
+            if (digitIndex < 0 || digitIndex > 7) 
+            {
+                // out of bound, just return
+                return result;
+            }
+
+            const auto& chars = digitToCharArray[digitIndex];
+
+        }
+    }
+
+    return result;
 }
